@@ -1,57 +1,19 @@
-#include "Node.h"
+#include "../include/Node.h"
 
-Node::Node()
+Node& Node::operator= (const Point& p)
 {
-    // default ctor
-    x = 0.0;
-    y = 0.0;
-    z = 0.0;
-}
-
-Node::Node(double xcoor, double ycoor, double zcoor)
-{
-    //ctor
-    x = xcoor;
-    y = ycoor;
-    z = zcoor;
-}
-
-Node::Node(const Node& P)
-{
-    //copy ctor
-    x = P.x;
-    y = P.y;
-    z = P.z;
-}
-
-Node::~Node()
-{
-    //dtor
-}
-
-Node& Node::operator=(const Node & P)
-{
-    //assign operator
-    x = P.x;
-    y = P.y;
-    z = P.z;
+    (*this)(0) = p(0);
+    (*this)(1) = p(1);
+    (*this)(2) = p(2);
     return *this;
 }
 
-Node& Node::operator+(const Node& P)
+void Node::setID(unsigned ID)
 {
-    //Plus operator
-    x = x + P.x;
-    y = y + P.y;
-    z = z + P.z;
-    return *this;
+    this->ID = ID;
 }
 
-Node& Node::operator-(const Node& P)
+unsigned Node::getID()
 {
-    //Plus operator
-    x = x - P.x;
-    y = y - P.y;
-    z = z - P.z;
-    return *this;
+    return ID;
 }
