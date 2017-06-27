@@ -46,10 +46,11 @@ MeshInfomation& MeshInfomation::operator=(const MeshInfomation& rhs) {
 }
 
 void MeshInfomation::calculateNodenumbers() {
-    double dim = this->meshShape.getDimension(1);
     ShapeType shape = meshShape.getShape();
-    if(shape==CYLINDER || shape==OVAL || shape==SPHERIC) dim = dim*PI;
-    //dim1
+    double dim = this->meshShape.getDimension(1);
+
+    //dim 1
+    if(shape==CYLINDER || shape==OVAL || shape==SPHERIC) dim = 2.0*dim*PI;
     meshNode[0] = (unsigned)ROUNDED( dim / meshSize[0], 0.0);
 
     // In case CYLINDER or SPHERIC or OVAL, the node must greater than 8
@@ -60,7 +61,6 @@ void MeshInfomation::calculateNodenumbers() {
     }
 
     meshSize[0] = dim/(double)meshNode[0];
-
 
     //dim2
     if(shape != SPHERIC) {
@@ -85,13 +85,16 @@ void MeshInfomation::calculateNodenumbers() {
 
 ostream& MeshInfomation::print(ostream& out) {
     out << "Shape: " << this->meshShape.getShape() << endl;
+
     for(unsigned i = 1; i <= this->meshShape.getNumberOfDimension(); i++) {
         out << "Dim_" << i << ":\t" << this->meshShape.getDimension(i) << "(m)" << endl;
     }
     out << endl;
+
     for(unsigned i = 0; i < 3; i++) {
         out << "points_number_" << i + 1 << ":\t" << this->meshNode[i]  << endl;
         out << "size_" << i + 1 << ":\t" << this->meshSize[i]  << endl;
     }
+
     return out;
 }

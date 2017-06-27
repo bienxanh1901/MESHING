@@ -17,7 +17,6 @@ void Mesh::cubicPoints(){
     double dimX, dimY;
     double sizeX, sizeY;
     double startX, startY;
-    unsigned cnt = 0;
 
     dimX = DIM(1);
     dimY = DIM(2);
@@ -31,16 +30,13 @@ void Mesh::cubicPoints(){
         ratioY = SIZE(2)*(DIM(2) - DIM(5))/DIM(3);
     }
 
-    double stepX, stepY, stepZ;
-    unsigned i, j, k;
-    for(k = 0, stepZ = 0; k <= NODE(2); k++, stepZ+= SIZE(2)) {
+    for(double stepZ = 0; stepZ <= DIM(3) + EPS; stepZ+= SIZE(2)) {
 
-        for(j = 0, stepY = 0; j <= NODE(1); j++, stepY+= sizeY) {
+        for(double stepY = 0; stepY <= dimY + EPS; stepY+= sizeY) {
 
-            for(i = 0, stepX = 0; i <= NODE(0); i++, stepX+= sizeX) {
+            for(double stepX = 0; stepX <= dimX + EPS; stepX+= sizeX) {
 
                 this->points.push_back(Point(stepX + startX, stepY + startY, stepZ, ++this->numberOfPoints));
-
             }
         }
 

@@ -21,7 +21,7 @@ Macros
 
 // math define
 #define PI 3.14159265358979
-
+#define EPS 0.00000001
 #endif // DEFINE_H_INCLUDED
 
 

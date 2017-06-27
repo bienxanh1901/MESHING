@@ -2,108 +2,190 @@
 
 void Mesh::cylinderGeneration() {
 
-    cylinderPoints();
-    cylinderElem();
-    cylinderBoundariesBot();
-    cylinderBoundariesTop();
-    cylinderBoundariesAround();
+    this->cylinderPoints();
+    this->cylinderInternalFaces();
+//    cylinderElem();
+//    cylinderBoundariesBot();
+//    cylinderBoundariesTop();
+//    cylinderBoundariesAround();
 
 }
 
 void Mesh::cylinderPoints() {
 
-    baseNode();
-    extrudeNode();
+    this->basePoints();
+    this->extrudePoints();
 
 }
 
-void Mesh::baseNode(){
-
-    outerCircleNode();
-    innerRectangularNode();
-
-}
-
-void Mesh::outerCircleNode(){
+void Mesh::basePoints(){
 
     double angleSize = 2.0*PI/NODE(0);
-    double radiusX = DIM(1)/2.0;
+    double radiusX = DIM(1);
+    double radiusY = DIM(3);
     double halfRadius = 0.5*radiusX;
     double p2 = halfRadius/sqrt(2.0);
     double cornerX = halfRadius - p2*(1.0 - tan(PI/6.0))/sqrt(2.0);
-
-    double radiusY = DIM(3)/2.0;
     halfRadius = 0.5*radiusY;
     p2 = halfRadius/sqrt(2.0);
     double cornerY = halfRadius - p2*(1.0 - tan(PI/6.0))/sqrt(2.0);
-    unsigned sideNodes = NODE(0)/8;
+
+    unsigned sidePoints = NODE(0)/8;
     double costheta, sintheta;
     double coordX, coordY;
     double sizeX, sizeY;
 
+    //outer circle points
     for(double theta = -PI/4; theta < 7*PI/4; theta+= angleSize){
-
         costheta = cos(theta);
         sintheta = sin(theta);
 
         if(fabs(costheta) >= 1.0/sqrt(2.0)){
-
-            sizeX = (radiusX - cornerX/fabs(costheta))/sideNodes;
-            sizeY = (radiusY - cornerY/fabs(costheta))/sideNodes;
-
+            sizeX = (radiusX - cornerX/fabs(costheta))/sidePoints;
+            sizeY = (radiusY - cornerY/fabs(costheta))/sidePoints;
         }else{
-
-            sizeX = (radiusX - cornerX/fabs(sintheta))/sideNodes;
-            sizeY = (radiusY - cornerY/fabs(sintheta))/sideNodes;
-
+            sizeX = (radiusX - cornerX/fabs(sintheta))/sidePoints;
+            sizeY = (radiusY - cornerY/fabs(sintheta))/sidePoints;
         }
 
-        for(unsigned i = 0; i < sideNodes; i++){
-
+        for(unsigned i = 0; i < sidePoints; i++){
             coordX = (radiusX - (double)i*sizeX)*sintheta;
             coordY = (radiusY - (double)i*sizeY)*costheta;
-            this->nodes.push_back(Node(++this->numberOfNodes, coordX, coordY));
-
+            this->points.push_back(Point(coordX, coordY, 0.0, ++this->numberOfNodes));
         }
     }
-}
 
-void Mesh::innerRectangularNode(){
-
-    double radius = DIM(1)/2.0;
-    double halfRadius = 0.5*radius;
-    double p2 = halfRadius/sqrt(2.0);
-    double cornerX = halfRadius - p2*(1.0 - tan(PI/6.0))/sqrt(2.0);
-    double sizeX = 2.0*cornerX/(NODE(0)/4);
-    radius = DIM(3)/2.0;
-    halfRadius = 0.5*radius;
-    p2 = halfRadius/sqrt(2.0);
-    double cornerY = halfRadius - p2*(1.0 - tan(PI/6.0))/sqrt(2.0);
-    double sizeY = 2.0*cornerY/(NODE(0)/4);
-
+    // inner rectangular points
+    sizeX = 2.0*cornerX/(double)(NODE(0)/4);
+    sizeY = 2.0*cornerY/(double)(NODE(0)/4);
     for(double coordY = cornerY; coordY >= -cornerY; coordY-= sizeY){
 
         for(double coordX = -cornerX; coordX <= cornerX; coordX+= sizeX){
 
-            this->nodes.push_back(Node(++this->numberOfNodes, coordX, coordY, 0.0));
-
+            this->points.push_back(Point(coordX, coordY, 0.0, ++this->numberOfNodes));
         }
     }
 }
 
-void Mesh::extrudeNode(){
+void Mesh::extrudePoints(){
 
-    unsigned sideNodes = NODE(0)/8;
-    unsigned edgeNodes = NODE(0)/4 + 1;
-    unsigned baseNodes = NODE(0)*sideNodes + pow(edgeNodes,2);
+    unsigned sidePoints = NODE(0)/8;
+    unsigned edgePoints = NODE(0)/4 + 1;
+    unsigned base = NODE(0)*sidePoints + pow(edgePoints,2);
     Point point;
 
-    for(double coordZ = SIZE(1); coordZ <= DIM(2); coordZ+= SIZE(1)){
+    for(double coordZ = SIZE(1); coordZ <= DIM(2) + EPS; coordZ+= SIZE(1)){
 
-        for(unsigned i = 0; i < baseNodes; i++){
+        for(unsigned i = 0; i < base; i++){
 
-            point = this->nodes[i] + Point(0.0, 0.0, coordZ);
-            this->nodes.push_back(Node(point, ++this->numberOfNodes));
+            point = this->points[i] + Point(0.0, 0.0, coordZ);
+            this->points.push_back(Point(point, ++this->numberOfNodes));
+        }
+    }
+}
+
+void Mesh::cylinderInternalFaces() {
+
+    this->baseFaces();
+    this->extrudeFaces();
+
+}
+
+void Mesh::baseFaces(){
+    unsigned sidePoints = NODE(0)/8;
+    unsigned edgePoints = NODE(0)/4 + 1;
+    unsigned outerPoints = NODE(0)*sidePoints;
+    unsigned base = NODE(0)*sidePoints + pow(edgePoints,2);
+    unsigned j1, j2, i1, i2, tmp, tmp2;
+    containerPoints pointlist;
+
+    for(unsigned j = 0; j < NODE(0); j++) {
+
+        j1 = j*sidePoints;
+        j2 = (j+1)*sidePoints;
+        if(j == NODE(0) -1) j2 = 0;
+
+        for(unsigned i = 1; i < sidePoints; i++) {
+
+            pointlist.push_back(this->points[j1 + i]);
+            pointlist.push_back(this->points[j2 + i]);
+            pointlist.push_back(this->points[base + j2 + i]);
+            pointlist.push_back(this->points[base + j1 + i]);
+            this->faces.push_back(Face(pointlist, QUAD4, ++numberOfFaces));
+            pointlist.clear();
+
+            if(j == 0) {
+                pointlist.push_back(this->points[i - 1]);
+                pointlist.push_back(this->points[i]);
+                pointlist.push_back(this->points[base + i - 1]);
+                pointlist.push_back(this->points[base + i]);
+                this->faces.push_back(Face(pointlist, QUAD4, ++numberOfFaces));
+                pointlist.clear();
+            }
+
+
+            if(j < NODE(0) -1) {
+                pointlist.push_back(this->points[j2 + i - 1]);
+                pointlist.push_back(this->points[base + j2 + i - 1]);
+                pointlist.push_back(this->points[base + j2 + i - 1]);
+                pointlist.push_back(this->points[j2 + i]);
+                this->faces.push_back(Face(pointlist, QUAD4, ++numberOfFaces));
+                pointlist.clear();
+            }
+
+            pointlist.push_back(this->points[base + j1 + i - 1]);
+            pointlist.push_back(this->points[base + j1 + i]);
+            pointlist.push_back(this->points[base + j2 + i]);
+            pointlist.push_back(this->points[base + j2 + i - 1]);
+            this->faces.push_back(Face(pointlist, QUAD4, ++numberOfFaces));
+            pointlist.clear();
+        }
+
+        j1 = (j + 1)*sidePoints - 1;
+        j2 = (j + 2)*sidePoints - 1;
+        if(j == NODE(0) - 1) j2 = sidePoints - 1;
+        tmp = j/(edgePoints -1);
+        tmp2 = j%(edgePoints - 1);
+        switch(tmp){
+            case 0: i1 = outerPoints + j; i2 = i1 + 1; break;
+            case 1: i1 = outerPoints + edgePoints + tmp2*edgePoints - 1; i2 = i1 + edgePoints; break;
+            case 2: i1 = outerPoints + edgePoints*edgePoints - tmp2 - 1; i2 = i1 - 1; break;
+            case 3: i1 = outerPoints + (edgePoints - tmp2 - 1)*edgePoints; i2 = i1 - edgePoints; break;
+        }
+
+        node.push_back(this->points[j1]);
+        node.push_back(this->points[i1]);
+        node.push_back(this->points[i2]);
+        node.push_back(this->points[j2]);
+        node.push_back(this->points[base + j1]);
+        node.push_back(this->points[base + i1]);
+        node.push_back(this->points[base + i2]);
+        node.push_back(this->points[base + j2]);
+
+        this->elements.push_back(Element(node, HEX8, ++this->numberOfElems));
+        node.clear();
+
+    }
+
+    for(unsigned j = 1; j < edgePoints; j++){
+
+        j1 = outerPoints + (j-1)*edgePoints;
+        j2 = outerPoints + j*edgePoints;
+
+        for(unsigned i = 1; i < edgePoints; i++){
+
+            node.push_back(this->points[j1 + i - 1]);
+            node.push_back(this->points[j1 + i]);
+            node.push_back(this->points[j2 + i]);
+            node.push_back(this->points[j2 + i - 1]);
+            node.push_back(this->points[base + j1 + i - 1]);
+            node.push_back(this->points[base + j1 + i]);
+            node.push_back(this->points[base + j2 + i]);
+            node.push_back(this->points[base + j2 + i - 1]);
+
+            this->elements.push_back(Element(node, HEX8, ++this->numberOfElems));
+            node.clear();
+
         }
     }
 }
@@ -116,37 +198,37 @@ void Mesh::cylinderElem(){
 }
 
 void Mesh::baseElem(){
-    unsigned sideNodes = NODE(0)/8;
-    unsigned edgeNodes = NODE(0)/4 + 1;
-    unsigned outerNodes = NODE(0)*sideNodes;
-    unsigned baseNodes = NODE(0)*sideNodes + pow(edgeNodes,2);
+    unsigned sidePoints = NODE(0)/8;
+    unsigned edgePoints = NODE(0)/4 + 1;
+    unsigned outerPoints = NODE(0)*sidePoints;
+    unsigned base = NODE(0)*sidePoints + pow(edgePoints,2);
     unsigned j1, j2, i1, i2, tmp, tmp2, ID;
     containerNodes node;
     containerElements::iterator it;
 
     for(unsigned j = 0; j < NODE(0); j++){
 
-        j1 = j*sideNodes;
-        j2 = (j+1)*sideNodes;
+        j1 = j*sidePoints;
+        j2 = (j+1)*sidePoints;
         if(j == NODE(0) -1) j2 = 0;
 
-        for(unsigned i = 1; i < sideNodes; i++){
+        for(unsigned i = 1; i < sidePoints; i++){
 
-            node.push_back(this->nodes[j1 + i - 1]);
-            node.push_back(this->nodes[j1 + i]);
-            node.push_back(this->nodes[j2 + i]);
-            node.push_back(this->nodes[j2 + i - 1]);
-            node.push_back(this->nodes[baseNodes + j1 + i - 1]);
-            node.push_back(this->nodes[baseNodes + j1 + i]);
-            node.push_back(this->nodes[baseNodes + j2 + i]);
-            node.push_back(this->nodes[baseNodes + j2 + i - 1]);
+            node.push_back(this->points[j1 + i - 1]);
+            node.push_back(this->points[j1 + i]);
+            node.push_back(this->points[j2 + i]);
+            node.push_back(this->points[j2 + i - 1]);
+            node.push_back(this->points[base + j1 + i - 1]);
+            node.push_back(this->points[base + j1 + i]);
+            node.push_back(this->points[base + j2 + i]);
+            node.push_back(this->points[base + j2 + i - 1]);
 
             this->elements.push_back(Element(node, HEX8, ++this->numberOfElems));
             node.clear();
 
             if(j > 0){
 
-                ID = this->numberOfElems - sideNodes;
+                ID = this->numberOfElems - sidePoints;
                 it = this->elements.begin() + this->numberOfElems - 1;
                 it->addNeighbor(ID);
                 it = this->elements.begin() + ID - 1;
@@ -176,27 +258,27 @@ void Mesh::baseElem(){
 
         }
 
-        j1 = (j + 1)*sideNodes - 1;
-        j2 = (j + 2)*sideNodes - 1;
-        if(j == NODE(0) - 1) j2 = sideNodes - 1;
-        tmp = j/(edgeNodes -1);
-        tmp2 = j%(edgeNodes - 1);
+        j1 = (j + 1)*sidePoints - 1;
+        j2 = (j + 2)*sidePoints - 1;
+        if(j == NODE(0) - 1) j2 = sidePoints - 1;
+        tmp = j/(edgePoints -1);
+        tmp2 = j%(edgePoints - 1);
         switch(tmp){
 
-            case 0: i1 = outerNodes + j; i2 = i1 + 1; break;
-            case 1: i1 = outerNodes + edgeNodes + tmp2*edgeNodes - 1; i2 = i1 + edgeNodes; break;
-            case 2: i1 = outerNodes + edgeNodes*edgeNodes - tmp2 - 1; i2 = i1 - 1; break;
-            case 3: i1 = outerNodes + (edgeNodes - tmp2 - 1)*edgeNodes; i2 = i1 - edgeNodes; break;
+            case 0: i1 = outerPoints + j; i2 = i1 + 1; break;
+            case 1: i1 = outerPoints + edgePoints + tmp2*edgePoints - 1; i2 = i1 + edgePoints; break;
+            case 2: i1 = outerPoints + edgePoints*edgePoints - tmp2 - 1; i2 = i1 - 1; break;
+            case 3: i1 = outerPoints + (edgePoints - tmp2 - 1)*edgePoints; i2 = i1 - edgePoints; break;
         }
 
-        node.push_back(this->nodes[j1]);
-        node.push_back(this->nodes[i1]);
-        node.push_back(this->nodes[i2]);
-        node.push_back(this->nodes[j2]);
-        node.push_back(this->nodes[baseNodes + j1]);
-        node.push_back(this->nodes[baseNodes + i1]);
-        node.push_back(this->nodes[baseNodes + i2]);
-        node.push_back(this->nodes[baseNodes + j2]);
+        node.push_back(this->points[j1]);
+        node.push_back(this->points[i1]);
+        node.push_back(this->points[i2]);
+        node.push_back(this->points[j2]);
+        node.push_back(this->points[base + j1]);
+        node.push_back(this->points[base + i1]);
+        node.push_back(this->points[base + i2]);
+        node.push_back(this->points[base + j2]);
 
         this->elements.push_back(Element(node, HEX8, ++this->numberOfElems));
         node.clear();
@@ -209,7 +291,7 @@ void Mesh::baseElem(){
 
         if(j > 0){
 
-            ID = this->numberOfElems - sideNodes;
+            ID = this->numberOfElems - sidePoints;
             it = this->elements.begin() + this->numberOfElems - 1;
             it->addNeighbor(ID);
             it = this->elements.begin() + ID - 1;
@@ -219,7 +301,7 @@ void Mesh::baseElem(){
 
         if(j == NODE(0) -1){
 
-            ID = sideNodes;
+            ID = sidePoints;
             it = this->elements.begin() + this->numberOfElems - 1;
             it->addNeighbor(ID);
             it = this->elements.begin() + ID - 1;
@@ -228,28 +310,28 @@ void Mesh::baseElem(){
         }
     }
 
-    for(unsigned j = 1; j < edgeNodes; j++){
+    for(unsigned j = 1; j < edgePoints; j++){
 
-        j1 = outerNodes + (j-1)*edgeNodes;
-        j2 = outerNodes + j*edgeNodes;
+        j1 = outerPoints + (j-1)*edgePoints;
+        j2 = outerPoints + j*edgePoints;
 
-        for(unsigned i = 1; i < edgeNodes; i++){
+        for(unsigned i = 1; i < edgePoints; i++){
 
-            node.push_back(this->nodes[j1 + i - 1]);
-            node.push_back(this->nodes[j1 + i]);
-            node.push_back(this->nodes[j2 + i]);
-            node.push_back(this->nodes[j2 + i - 1]);
-            node.push_back(this->nodes[baseNodes + j1 + i - 1]);
-            node.push_back(this->nodes[baseNodes + j1 + i]);
-            node.push_back(this->nodes[baseNodes + j2 + i]);
-            node.push_back(this->nodes[baseNodes + j2 + i - 1]);
+            node.push_back(this->points[j1 + i - 1]);
+            node.push_back(this->points[j1 + i]);
+            node.push_back(this->points[j2 + i]);
+            node.push_back(this->points[j2 + i - 1]);
+            node.push_back(this->points[base + j1 + i - 1]);
+            node.push_back(this->points[base + j1 + i]);
+            node.push_back(this->points[base + j2 + i]);
+            node.push_back(this->points[base + j2 + i - 1]);
 
             this->elements.push_back(Element(node, HEX8, ++this->numberOfElems));
             node.clear();
 
             if(i == 1){
 
-                ID = outerNodes - (j - 1)*sideNodes;
+                ID = outerPoints - (j - 1)*sidePoints;
                 it = this->elements.begin() + this->numberOfElems - 1;
                 it->addNeighbor(ID);
                 it = this->elements.begin() + ID - 1;
@@ -263,9 +345,9 @@ void Mesh::baseElem(){
                 it = this->elements.begin() + ID - 1;
                 it->addNeighbor(this->numberOfElems);
 
-                if(i == edgeNodes - 1){
+                if(i == edgePoints - 1){
 
-                    ID = (i + j)*sideNodes;
+                    ID = (i + j)*sidePoints;
                     it = this->elements.begin() + this->numberOfElems - 1;
                     it->addNeighbor(ID);
                     it = this->elements.begin() + ID - 1;
@@ -276,7 +358,7 @@ void Mesh::baseElem(){
 
             if(j == 1){
 
-                ID = i*sideNodes;
+                ID = i*sidePoints;
                 it = this->elements.begin() + this->numberOfElems - 1;
                 it->addNeighbor(ID);
                 it = this->elements.begin() + ID - 1;
@@ -284,15 +366,15 @@ void Mesh::baseElem(){
 
             }else{
 
-                ID = this->numberOfElems - edgeNodes + 1;
+                ID = this->numberOfElems - edgePoints + 1;
                 it = this->elements.begin() + this->numberOfElems - 1;
                 it->addNeighbor(ID);
                 it = this->elements.begin() + ID - 1;
                 it->addNeighbor(this->numberOfElems);
 
-                if(j == edgeNodes - 1){
+                if(j == edgePoints - 1){
 
-                    ID = (3*j - i + 1)*sideNodes;
+                    ID = (3*j - i + 1)*sidePoints;
                     it = this->elements.begin() + this->numberOfElems - 1;
                     it->addNeighbor(ID);
                     it = this->elements.begin() + ID - 1;
@@ -304,10 +386,10 @@ void Mesh::baseElem(){
 }
 
 void Mesh::extrudeElem(){
-    unsigned sideNodes = NODE(0)/8;
-    unsigned edgeNodes = NODE(0)/4 + 1;
-    unsigned baseNodes = NODE(0)*sideNodes + pow(edgeNodes,2);
-    unsigned baseElems = NODE(0)*sideNodes + pow(edgeNodes - 1,2);
+    unsigned sidePoints = NODE(0)/8;
+    unsigned edgePoints = NODE(0)/4 + 1;
+    unsigned base = NODE(0)*sidePoints + pow(edgePoints,2);
+    unsigned baseElems = NODE(0)*sidePoints + pow(edgePoints - 1,2);
     unsigned ID;
     Node nodetmp;
     containerNodes node;
@@ -318,8 +400,8 @@ void Mesh::extrudeElem(){
 
             for(unsigned i = 1; i <= 8; i++){
                 nodetmp = this->elements[j].getNode(i);
-                ID = nodetmp.getID() + k*baseNodes - 1;
-                node.push_back(this->nodes[ID]);
+                ID = nodetmp.getID() + k*base - 1;
+                node.push_back(this->points[ID]);
             }
             this->elements.push_back(Element(node, HEX8, ++this->numberOfElems));
             node.clear();
@@ -346,52 +428,52 @@ void Mesh::extrudeElem(){
 }
 
 void Mesh::cylinderBoundariesBot(){
-    unsigned sideNodes = NODE(0)/8;
-    unsigned edgeNodes = NODE(0)/4 + 1;
-    unsigned outerNodes = NODE(0)*sideNodes;
+    unsigned sidePoints = NODE(0)/8;
+    unsigned edgePoints = NODE(0)/4 + 1;
+    unsigned outerPoints = NODE(0)*sidePoints;
     unsigned j1, j2, i1, i2, tmp, tmp2;
     containerNodes node;
     containerElements face;
 
     for(unsigned j = 0; j < NODE(0); j++){
-        j1 = j*sideNodes;
-        j2 = (j+1)*sideNodes;
+        j1 = j*sidePoints;
+        j2 = (j+1)*sidePoints;
         if(j == NODE(0) -1) j2 = 0;
-        for(unsigned i = 1; i < sideNodes; i++){
-            node.push_back(this->nodes[j1 + i - 1]);
-            node.push_back(this->nodes[j1 + i]);
-            node.push_back(this->nodes[j2 + i]);
-            node.push_back(this->nodes[j2 + i - 1]);
+        for(unsigned i = 1; i < sidePoints; i++){
+            node.push_back(this->points[j1 + i - 1]);
+            node.push_back(this->points[j1 + i]);
+            node.push_back(this->points[j2 + i]);
+            node.push_back(this->points[j2 + i - 1]);
             face.push_back(Element(node, QUAD4, 0));
             node.clear();
         }
-        j1 = (j + 1)*sideNodes - 1;
-        j2 = (j + 2)*sideNodes - 1;
-        if(j == NODE(0) - 1) j2 = sideNodes - 1;
-        tmp = j/(edgeNodes -1);
-        tmp2 = j%(edgeNodes - 1);
+        j1 = (j + 1)*sidePoints - 1;
+        j2 = (j + 2)*sidePoints - 1;
+        if(j == NODE(0) - 1) j2 = sidePoints - 1;
+        tmp = j/(edgePoints -1);
+        tmp2 = j%(edgePoints - 1);
         switch(tmp){
-            case 0: i1 = outerNodes + j; i2 = i1 + 1; break;
-            case 1: i1 = outerNodes + edgeNodes + tmp2*edgeNodes - 1; i2 = i1 + edgeNodes; break;
-            case 2: i1 = outerNodes + edgeNodes*edgeNodes - tmp2 - 1; i2 = i1 - 1; break;
-            case 3: i1 = outerNodes + (edgeNodes - tmp2 - 1)*edgeNodes; i2 = i1 - edgeNodes; break;
+            case 0: i1 = outerPoints + j; i2 = i1 + 1; break;
+            case 1: i1 = outerPoints + edgePoints + tmp2*edgePoints - 1; i2 = i1 + edgePoints; break;
+            case 2: i1 = outerPoints + edgePoints*edgePoints - tmp2 - 1; i2 = i1 - 1; break;
+            case 3: i1 = outerPoints + (edgePoints - tmp2 - 1)*edgePoints; i2 = i1 - edgePoints; break;
         }
-        node.push_back(this->nodes[j1]);
-        node.push_back(this->nodes[i1]);
-        node.push_back(this->nodes[i2]);
-        node.push_back(this->nodes[j2]);
+        node.push_back(this->points[j1]);
+        node.push_back(this->points[i1]);
+        node.push_back(this->points[i2]);
+        node.push_back(this->points[j2]);
         face.push_back(Element(node, QUAD4, 0));
         node.clear();
     }
 
-    for(unsigned j = 1; j < edgeNodes; j++){
-        j1 = outerNodes + (j-1)*edgeNodes;
-        j2 = outerNodes + j*edgeNodes;
-        for(unsigned i = 1; i < edgeNodes; i++){
-            node.push_back(this->nodes[j1 + i - 1]);
-            node.push_back(this->nodes[j1 + i]);
-            node.push_back(this->nodes[j2 + i]);
-            node.push_back(this->nodes[j2 + i - 1]);
+    for(unsigned j = 1; j < edgePoints; j++){
+        j1 = outerPoints + (j-1)*edgePoints;
+        j2 = outerPoints + j*edgePoints;
+        for(unsigned i = 1; i < edgePoints; i++){
+            node.push_back(this->points[j1 + i - 1]);
+            node.push_back(this->points[j1 + i]);
+            node.push_back(this->points[j2 + i]);
+            node.push_back(this->points[j2 + i - 1]);
             face.push_back(Element(node, QUAD4, 0));
             node.clear();
         }
@@ -401,16 +483,16 @@ void Mesh::cylinderBoundariesBot(){
 }
 
 void Mesh::cylinderBoundariesTop(){
-    unsigned sideNodes = NODE(0)/8;
-    unsigned edgeNodes = NODE(0)/4 + 1;
-    unsigned baseNodes = NODE(0)*sideNodes + pow(edgeNodes,2);
+    unsigned sidePoints = NODE(0)/8;
+    unsigned edgePoints = NODE(0)/4 + 1;
+    unsigned base = NODE(0)*sidePoints + pow(edgePoints,2);
     unsigned ID;
     containerNodes node;
     containerElements face1, face2;
     face1 = this->boundaries[0];
     for(containerElements::iterator j = face1.begin(); j != face1.end(); j++){
         for(unsigned i = 1; i <= 4; i++){
-            ID = (j->getNode(i)).getID() + NODE(1)*baseNodes - 1;
+            ID = (j->getNode(i)).getID() + NODE(1)*base - 1;
             node.push_back(nodes[ID]);
         }
         face2.push_back(Element(node, QUAD4, 0));
@@ -423,23 +505,23 @@ void Mesh::cylinderBoundariesTop(){
 
 void Mesh::cylinderBoundariesAround()
 {
-    unsigned sideNodes = NODE(0)/8;
-    unsigned edgeNodes = NODE(0)/4 + 1;
-    unsigned baseNodes = NODE(0)*sideNodes + pow(edgeNodes,2);
+    unsigned sidePoints = NODE(0)/8;
+    unsigned edgePoints = NODE(0)/4 + 1;
+    unsigned base = NODE(0)*sidePoints + pow(edgePoints,2);
     unsigned j1, j2, k1, k2;
     containerNodes node;
     containerElements face;
     for(unsigned k = 1; k <= NODE(1); k++){
-        k1 = (k-1)*baseNodes;
-        k2 = k*baseNodes;
+        k1 = (k-1)*base;
+        k2 = k*base;
         for(unsigned j = 1; j <= NODE(0); j++){
-            j1 = (j-1)*sideNodes;
-            j2 = j*sideNodes;
+            j1 = (j-1)*sidePoints;
+            j2 = j*sidePoints;
             if(j == NODE(0))j2 = 0;
-            node.push_back(this->nodes[k1 + j1]);
-            node.push_back(this->nodes[k2 + j1]);
-            node.push_back(this->nodes[k2 + j2 ]);
-            node.push_back(this->nodes[k1 + j2]);
+            node.push_back(this->points[k1 + j1]);
+            node.push_back(this->points[k2 + j1]);
+            node.push_back(this->points[k2 + j2 ]);
+            node.push_back(this->points[k1 + j2]);
             face.push_back(Element(node, QUAD4, 0));
             node.clear();
         }
