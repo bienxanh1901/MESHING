@@ -9,63 +9,53 @@
 using namespace std;
 
 
-namespace vtkFunc
-{
+namespace vtkFunc {
     // Declaration
-    inline string HEADER(int level)
-    {
+    inline string HEADER(int level) {
         std::stringstream header;
-        for(int i=0; i<level; i++)
-        {
-            header << TAB;
+        for(int i=0; i<level; i++) {
+            header << "\t";
         }
         return header.str();
     }
 
-    inline string TAG(string tagName)
-    {
+    inline string TAG(string tagName) {
         std::stringstream tag;
         tag << "<" << tagName << ">";
         return tag.str();
     }
 
-    inline string ENDTAG(string tagName)
-    {
+    inline string ENDTAG(string tagName) {
         std::stringstream endTag;
         endTag << "</" << tagName << ">";
         return endTag.str();
     }
 
-    inline string VTK_TAG(string gridType, string byteOrder)
-    {
+    inline string VTK_TAG(string gridType, string byteOrder) {
         std::stringstream vtk;
         vtk << "<VTKFile type=\"" << gridType << "\" version=\"0.1\" byte_order=\"" << byteOrder << "\">";
         return vtk.str();
     }
 
-    inline string PIECE_TAG(unsigned pointNumber, unsigned cellNumber)
-    {
+    inline string PIECE_TAG(unsigned pointNumber, unsigned cellNumber) {
         std::stringstream piece;
         piece << "<Piece NumberOfPoints=\"" << pointNumber << "\" NumberOfCells=\"" << cellNumber << "\">";
         return piece.str();
     }
 
-    inline string POINT_DATA_TAG(string type)
-    {
+    inline string POINT_DATA_TAG(string type) {
         std::stringstream pointTag;
         pointTag << "<PointData Scalars=\"" << type << "\">";
         return pointTag.str();
     }
 
-    inline string CELL_DATA_TAG(string type)
-    {
+    inline string CELL_DATA_TAG(string type) {
         std::stringstream cellTag;
         cellTag << "<CellData Scalars=\"" << type << "\">";
         return cellTag.str();
     }
 
-    inline string ARRAY_TAG(string dataType, string name, int component, string formatType)
-    {
+    inline string ARRAY_TAG(string dataType, string name, int component, string formatType) {
         std::stringstream arrTag;
         arrTag << "<DataArray type=\"" << dataType;
         if(name.compare("") != 0) arrTag << "\" Name=\"" << name;

@@ -1,8 +1,8 @@
 #include "../include/Mesh.h"
 
-void Mesh::cylinderGeneration(){
+void Mesh::cylinderGeneration() {
 
-    cylinderNode();
+    cylinderPoints();
     cylinderElem();
     cylinderBoundariesBot();
     cylinderBoundariesTop();
@@ -10,7 +10,7 @@ void Mesh::cylinderGeneration(){
 
 }
 
-void Mesh::cylinderNode(){
+void Mesh::cylinderPoints() {
 
     baseNode();
     extrudeNode();

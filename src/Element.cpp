@@ -1,102 +1,77 @@
 #include "../include/Element.h"
 
-Element::Element(){
-
+Element::Element() {
     this->ID = 0;
-    this->numberOfNodes = 0;
-    this->numberOfFaces = 0;
+    this->numberOfPoints = 0;
     this->elementType = INVALID_ELEM;
-    this->area = 0;
-    this->volume = 0;
-
 }
 
 Element::~Element(){
-
-    this->nodes.clear();
-    this->faces.clear();
-    this->neighbors.clear();
+    this->points.clear();
 }
 
-Element::Element(const Element& other){
-
+Element::Element(const Element& other) {
     this->ID = other.ID;
-    this->numberOfFaces = other.numberOfFaces;
-    this->numberOfNodes = other.numberOfNodes;
+    this->numberOfPoints = other.numberOfPoints;
     this->elementType = other.elementType;
-    this->area = other.area;
-    this->volume = other.volume;
     this->center = other.center;
     this->centroid = other.centroid;
-    this->norm = other.norm;
-    this->nodes = other.nodes;
-    this->faces = other.faces;
-    this->neighbors = other.neighbors;
+    this->points = other.points;
 }
 
-Element::Element(Node * nodeArr, elemType type, unsigned nNodes, unsigned elemID){
+Element::Element(Point * pointArr, elemType type, unsigned nPoints, unsigned elemID) {
     this->elementType = type;
     this->ID = elemID;
-    this->numberOfNodes = nNodes;
-    for(unsigned i=0; i<nNodes; i++)
+    this->numberOfPoints = nPoints;
+    for(unsigned i=0; i<nPoints; i++)
     {
-        (this->nodes).push_back(*(nodeArr+i));
+        (this->points).push_back(*(pointArr+i));
     }
-    geometryProperties();
 }
 
-Element::Element(const containerNodes& node, elemType type, unsigned elemID){
+Element::Element(const containerPoints& cPoints, elemType type, unsigned elemID) {
     this->elementType = type;
     this->ID = elemID;
-    this->numberOfNodes = node.size();
-    this->nodes = node;
-    geometryProperties();
+    this->numberOfPoints = cPoints.size();
+    this->points = cPoints;
 }
 
-Element& Element::operator=(const Element& other){
+Element& Element::operator=(const Element& other) {
     this->ID = other.ID;
-    this->numberOfFaces = other.numberOfFaces;
-    this->numberOfNodes = other.numberOfNodes;
+    this->numberOfPoints = other.numberOfPoints;
     this->elementType = other.elementType;
-    this->area = other.area;
-    this->volume = other.volume;
     this->center = other.center;
     this->centroid = other.centroid;
-    this->norm = other.norm;
-    this->nodes = other.nodes;
-    this->faces = other.faces;
-    this->neighbors = other.neighbors;
+    this->points = other.points;
     return *this;
 }
 
-void Element::clear(){
+void Element::clear() {
     this->ID = 0;
-    this->numberOfNodes = 0;
-    this->numberOfFaces = 0;
+    this->numberOfPoints = 0;
     this->elementType = INVALID_ELEM;
-    this->area = 0;
-    this->volume = 0;
-    this->nodes.clear();
-    this->faces.clear();
+    this->points.clear();
+    this->center = Point();
+    this->centroid = Point();
 }
 
-void Element::setID(unsigned ID){
+void Element::setID(unsigned ID) {
     this->ID = ID;
 }
 
-unsigned Element::getID(){
+unsigned Element::getID() {
     return this->ID;
 }
 
-Node& Element::getNode(unsigned ith){
-    return this->nodes[ith-1];
+Point& Element::getPoint(unsigned ith) {
+    return this->points[ith];
 }
 
-Element& Element::getFace(unsigned ith){
-    return this->faces[ith-1];
+containerPoints Element::getPointList() {
+    return this->points;
 }
 
-elemType Element::getType(){
+elemType Element::getType() {
     return this->elementType;
 }
 
@@ -108,66 +83,36 @@ Point Element::getCentroid(){
     return this->centroid;
 }
 
-double Element::getVolume(){
-    return this->volume;
+void Element::calcCenter() {
+    for(containerPoints::iterator it = this->points.begin(); it != this->points.end(); it++) {
+        this->center+= *it;
+    }
+    this->center/=(double)this->numberOfPoints;
 }
 
-double Element::getArea(){
-    return this->area;
-}
-
-typeVector<double> Element::getNormalVector(){
-    return this->norm;
-}
-
-void Element::addNeighbor(unsigned elemID){
-    this->neighbors.push_back(elemID);
-}
-
-vector<unsigned> Element::getNeighbor(){
-    return this->neighbors;
-
-
-}
-
-bool Element::operator ==(Element elem){
+bool Element::operator ==(Element elem) {
     if(this->elementType != elem.elementType) return false;
     unsigned cnt = 0;
-    for(containerNodes::iterator it = nodes.begin(); it != nodes.end(); it++){
-        for(containerNodes::iterator it2 = nodes.begin(); it2 != nodes.end(); it2++){
+    containerPoints other = elem.getPointList();
+    for(containerPoints::iterator it = this->points.begin(); it != this->points.end(); it++) {
+        for(containerPoints::iterator it2 = other.begin(); it2 != other.end(); it2++) {
             if(*it == *it2) cnt++;
         }
     }
-    if(cnt == this->numberOfNodes) return true;
+    if(cnt == this->numberOfPoints) return true;
     return false;
 }
 
-ostream& Element::print(ostream& out){
-    for(containerNodes::iterator i=this->nodes.begin(); i!=this->nodes.end(); i++)
-    {
-        out << i->getID() << " ";
+ostream& Element::print(ostream& out) {
+    for(containerPoints::iterator it = this->points.begin(); it != this->points.end(); it++) {
+        out << it->getID() << " ";
     }
     return out;
 }
 
-ostream& Element::printFace(ostream& out){
-    for(containerElements::iterator i = faces.begin(); i != faces.end(); i++)
-    {
-        out << *i << TAB;
-        Point centroid;
-        typeVector<double> normal;
-        centroid = i->getCentroid();
-        normal = i->getNormalVector();
-        out << i->getArea() << TAB << centroid << TAB << normal;
-        out << ENTER;
-    }
-    return out;
-}
-
-ostream& Element::printNode(ostream& out){
-    for(vector<Node>::iterator i = nodes.begin(); i != nodes.end(); i++)
-    {
-        out << i->getID() - 1 << TAB;
+ostream& Element::printPointsIDParaview(ostream& out){
+    for(containerPoints::iterator it = this->points.begin(); it != this->points.end(); it++) {
+        out << it->getID() - 1 << " ";
     }
     return out;
 }

@@ -1,20 +1,15 @@
-#include "../include/Element.h"
+#include "../include/Cell.h"
 
-void Element::tetrahedralProperties()
-{
-    setFaceOfTetrahedral();
-    calcVolumeCentroid();
-}
-
-void Element::setFaceOfTetrahedral()
-{
-    containerNodes node;
-    node = findFace(0, 1, 2);
-    this->faces.push_back(Element(node, TRI3, ++numberOfFaces));
-    node = findFace(1, 2, 3);
-    this->faces.push_back(Element(node, TRI3, ++numberOfFaces));
-    node = findFace(0, 1, 3);
-    this->faces.push_back(Element(node, TRI3, ++numberOfFaces));
-    node = findFace(0, 2, 3);
-    this->faces.push_back(Element(node, TRI3, ++numberOfFaces));
+void Cell::tetrahedralProperties() {
+    containerPoints pointlist;
+    containerFaces faces;
+    pointlist = findFace(0, 1, 2);
+    faces.push_back(Face(pointlist, TRI3));
+    pointlist = findFace(1, 2, 3);
+    faces.push_back(Face(pointlist, TRI3));
+    pointlist = findFace(0, 1, 3);
+    faces.push_back(Face(pointlist, TRI3));
+    pointlist = findFace(0, 2, 3);
+    faces.push_back(Face(pointlist, TRI3));
+    this->calcVolumeCentroid(faces);
 }

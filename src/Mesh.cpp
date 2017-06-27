@@ -1,80 +1,57 @@
 #include "../include/Mesh.h"
 
-Mesh::Mesh()
-{
-    this->numberOfNodes = 0;
-    this->numberOfElems = 0;
+Mesh::Mesh() {
+    this->numberOfPoints = 0;
+    this->numberOfCells = 0;
+    this->numberOfFaces = 0;
     this->numberOfBoundaries = 0;
-    this->numberOfFaces = 0;
 }
 
-Mesh::~Mesh()
-{
-    this->nodes.clear();
-    this->elements.clear();
-    this->boundaries.clear();
+Mesh::~Mesh() {
+    this->points.clear();
+    this->cells.clear();
     this->faces.clear();
+    this->neighbor.clear();
+    this->owner.clear();
+    this->boundaries.clear();
 }
 
-Mesh::Mesh(const Mesh& other)
-{
-    this->numberOfNodes = other.numberOfNodes;
-    this->numberOfElems = other.numberOfElems;
-    this->numberOfBoundaries = other.numberOfBoundaries;
+Mesh::Mesh(const Mesh& other) : meshInfo(other.meshInfo) {
+    this->numberOfPoints = other.numberOfPoints;
+    this->numberOfCells = other.numberOfCells;
     this->numberOfFaces = other.numberOfFaces;
-    this->meshInfo = other.meshInfo;
-    this->nodes = other.nodes;
-    this->elements = other.elements;
-    this->boundaries = other.boundaries;
+    this->numberOfBoundaries = other.numberOfBoundaries;
+    this->points = other.points;
+    this->cells = other.cells;
     this->faces = other.faces;
+    this->neighbor = other.neighbor;
+    this->owner = other.owner;
+    this->boundaries = other.boundaries;
 }
 
-Mesh::Mesh(MeshInfomation& info):meshInfo(info)
-{
-    this->numberOfNodes = 0;
-    this->numberOfElems = 0;
+Mesh::Mesh(MeshInfomation& info) : meshInfo(info) {
+    this->numberOfPoints = 0;
+    this->numberOfCells = 0;
     this->numberOfFaces = 0;
-    this->setNumberOfBoundaries();
+    this->numberOfBoundaries = 0;
     meshGeneration();
 }
 
 
-Mesh& Mesh::operator=(const Mesh& rhs)
-{
-    if (this == &rhs) return *this;
-
-    this->meshInfo = rhs.meshInfo;
-    this->numberOfNodes = rhs.numberOfNodes;
-    this->numberOfElems = rhs.numberOfElems;
-    this->numberOfFaces = rhs.numberOfFaces;
-    this->numberOfBoundaries = rhs.numberOfBoundaries;
-    this->nodes = rhs.nodes;
-    this->elements = rhs.elements;
-    this->faces = rhs.faces;
-    this->boundaries = rhs.boundaries;
-
+Mesh& Mesh::operator=(const Mesh& other) {
+    if (this == &other) return *this;
+    this->meshInfo = other.meshInfo;
+    this->numberOfPoints = other.numberOfPoints;
+    this->numberOfCells = other.numberOfCells;
+    this->numberOfFaces = other.numberOfFaces;
+    this->numberOfBoundaries = other.numberOfBoundaries;
+    this->points = other.points;
+    this->cells = other.cells;
+    this->faces = other.faces;
+    this->neighbor = other.neighbor;
+    this->owner = other.owner;
+    this->boundaries = other.boundaries;
     return *this;
-}
-
-void Mesh::setNumberOfBoundaries()
-{
-    ShapeType shapetype=meshInfo.meshShape.getShape();
-    switch(shapetype)
-    {
-        case RECTANGULAR:
-        case TRAPEZE:
-            numberOfBoundaries = 6;
-            break;
-        case CYLINDER:
-        case OVAL:
-            numberOfBoundaries = 3;
-            break;
-        case SPHERIC:
-            numberOfBoundaries = 1;
-            break;
-        //default:
-
-    }
 }
 
 void Mesh::meshGeneration()
@@ -88,10 +65,10 @@ void Mesh::meshGeneration()
             break;
         case CYLINDER:
         case OVAL:
-            cylinderGeneration();
+            //cylinderGeneration();
             break;
         case SPHERIC:
-            sphericGeneration();
+            //sphericGeneration();
             break;
         //default:
 

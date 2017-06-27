@@ -9,15 +9,14 @@
 #include <stdio.h>
 #include <cstdlib>
 
-#include "Node.h"
-#include "Element.h"
+#include "Cell.h"
+#include "Face.h"
 #include "Shape.h"
-#include "Element.h"
+#include "paraviewExp.h"
 #include "MeshInfomation.h"
 #include "../define/define.h"
 #include "../define/paraviewDefine.h"
 #include "../define/meshDefine.h"
-#include "paraviewExp.h"
 #include "../common/utilities.h"
 
 
@@ -37,61 +36,63 @@ class Mesh
         void writeTEACHMesh();
     protected:
     private:
-        typedef vector<Node> containerNodes;
-        typedef vector<Element> containerElements;
-        typedef vector<unsigned> containerIDs;
+        typedef vector<Cell> containerCells;
+        typedef vector<Face> containerFaces;
         MeshInfomation meshInfo;
-        unsigned numberOfNodes;
-        unsigned numberOfElems;
+        unsigned numberOfPoints;
+        unsigned numberOfCells;
         unsigned numberOfFaces;
+        unsigned numberOfInternalFaces;
         unsigned numberOfBoundaries;
-        containerNodes nodes;
-        containerElements elements;
-        containerElements faces;
-        vector<containerElements> boundaries;
-        vector<containerIDs> neighbor;
+        containerPoints points;
+        containerCells cells;
+        containerFaces faces;
+        containerIDs boundaries;
+        containerIDs neighbor;
+        containerIDs owner;
 
         // internal function
-        void setNumberOfBoundaries();
 
-        void sphericGeneration();
+//        void sphericGeneration();
 
 
         void generateCubicMesh();
-        void generateSphereMesh();
+//        void generateSphereMesh();
 
         // cubic mesh definition
         void cubicGeneration();
-        void cubicNode();
-        void trapezeNode();
-        void cubicFace();
-        void cubicInternalElement();
+        void cubicPoints();
+        void trapezePoints();
+        void cubicInternalFaces();
+        void cubicInternalCells();
         void cubicBoundariesLeftRight();
         void cubicBoundariesTopBot();
         void cubicBoundariesFrontRear();
-        void cubicFindNeighbor();
+//        void cubicFindNeighbor();
 
         // cylinder mesh definition
-        void cylinderGeneration();
-        void cylinderNode();
-        void cylinderElem();
-        void baseNode();
-        void baseElem();
-        void extrudeNode();
-        void extrudeElem();
-        void outerCircleNode();
-        void innerRectangularNode();
-        void cylinderBoundariesBot();
-        void cylinderBoundariesTop();
-        void cylinderBoundariesAround();
+//        void cylinderGeneration();
+        void cylinderPoints();
+//        void cylinderElem();
+//        void baseNode();
+//        void baseElem();
+//        void extrudeNode();
+//        void extrudeElem();
+//        void outerCircleNode();
+//        void innerRectangularNode();
+//        void cylinderBoundariesBot();
+//        void cylinderBoundariesTop();
+//        void cylinderBoundariesAround();
 
 
-        //export Mesh
-        void writeTEACHPoint();
-        void writeTEACHFaceOfCell();
-        void writeTEACHCell();
-        void writeTEACHBoundary();
+//        export Mesh
+        void writeMeshInfomation();
+        void writeTEACHPoints();
+        void writeTEACHCells();
+        void writeTEACHFaces();
         void writeTEACHNeighbor();
+        void writeTEACHOwner();
+        void writeTEACHBoundaries();
 
 };
 

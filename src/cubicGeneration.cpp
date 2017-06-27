@@ -1,136 +1,155 @@
 #include "../include/Mesh.h"
 
-void Mesh::cubicGeneration(){
+void Mesh::cubicGeneration() {
 
-    cubicNode();
-    if(this->meshInfo.meshShape.getShape()==TRAPEZE) trapezeNode();
-//    cubicFace();
-    cubicInternalElement();
-    cubicBoundariesLeftRight();
-    cubicBoundariesFrontRear();
-    cubicBoundariesTopBot();
-    cubicFindNeighbor();
-
+    this->cubicPoints();
+    this->cubicInternalFaces();
+    this->cubicInternalCells();
+    this->numberOfBoundaries = 6;
+    this->cubicBoundariesLeftRight();
+    this->cubicBoundariesFrontRear();
+    this->cubicBoundariesTopBot();
 }
 
-void Mesh::cubicNode(){
+void Mesh::cubicPoints(){
 
-    for(double stepZ = 0; stepZ <= DIM(3); stepZ+=SIZE(2)){
+    double ratioX, ratioY;
+    double dimX, dimY;
+    double sizeX, sizeY;
+    double startX, startY;
+    unsigned cnt = 0;
 
-        for(double stepY = 0; stepY <= DIM(2); stepY+=SIZE(1)){
+    dimX = DIM(1);
+    dimY = DIM(2);
+    sizeX = SIZE(0);
+    sizeY = SIZE(1);
+    startX = 0.0;
+    startY = 0.0;
 
-            for(double stepX = 0; stepX <= DIM(1); stepX+=SIZE(0)){
+    if(this->meshInfo.meshShape.getShape()==TRAPEZE){
+        ratioX = SIZE(2)*(DIM(1) - DIM(4))/DIM(3);
+        ratioY = SIZE(2)*(DIM(2) - DIM(5))/DIM(3);
+    }
 
-                this->nodes.push_back(Node(++this->numberOfNodes, stepX, stepY, stepZ));
+    double stepX, stepY, stepZ;
+    unsigned i, j, k;
+    for(k = 0, stepZ = 0; k <= NODE(2); k++, stepZ+= SIZE(2)) {
+
+        for(j = 0, stepY = 0; j <= NODE(1); j++, stepY+= sizeY) {
+
+            for(i = 0, stepX = 0; i <= NODE(0); i++, stepX+= sizeX) {
+
+                this->points.push_back(Point(stepX + startX, stepY + startY, stepZ, ++this->numberOfPoints));
 
             }
+        }
+
+        if(this->meshInfo.meshShape.getShape() == TRAPEZE){
+            dimX-= ratioX;
+            dimY-= ratioY;
+            sizeX = dimX/(double)NODE(0);
+            sizeY = dimY/(double)NODE(1);
+            startX = (DIM(1) - dimX)/2.0;
+            startY = (DIM(2) - dimY)/2.0;
         }
     }
 }
 
-void Mesh::trapezeNode(){
-    double dimRatioX = (DIM(1)-DIM(4))/2;
-    double dimRatioY = (DIM(2)-DIM(5))/2;
-    double meshDiffX = SIZE(0) - DIM(4)/(double)NODE(0);
-    double meshDiffY = SIZE(1) - DIM(5)/(double)NODE(1);
-    double transX, transY, signX, signY;
+void Mesh::cubicInternalFaces() {
 
-    for(unsigned k=0; k<=NODE(2); k++){
-        for(unsigned j=0; j<=NODE(1); j++){
-            signY = (double)(sgn((int)(NODE(1)/2)-j));
+    unsigned layerPoints = (NODE(1) + 1)*(NODE(0) + 1);
+    unsigned lengthPoints = NODE(0) + 1;
+    unsigned k1, k2, j1, j2, i1;
+    containerPoints pointlist;
 
-            if(j<NODE(1)/2)
-                 transY =signY*(double)k/(double)(NODE(2))*(dimRatioY-(double)j*meshDiffY);
-            else transY =signY*(double)k/(double)(NODE(2))*(dimRatioY-(double)(NODE(1)-j)*meshDiffY);
+    for(unsigned k = 1; k <= NODE(2); k++) {
+        k1 = (k - 1)*layerPoints;
+        k2 = k*layerPoints;
 
-            for(unsigned i=0; i<=NODE(0); i++){
-                signX = (double)(sgn((int)(NODE(0)/2)-i));
+        for(unsigned j = 1; j <= NODE(1); j++) {
+            j1 = (j - 1)*lengthPoints;
+            j2 = j*lengthPoints;
 
-                if(i<NODE(0)/2)
-                     transX =signX*(double)k/(double)(NODE(2))*(dimRatioX-(double)i*meshDiffX);
-                else transX =signX*(double)k/(double)(NODE(2))*(dimRatioX-(double)(NODE(0)-i)*meshDiffX);
+            for(unsigned i = 1; i <= NODE(0); i++) {
+                i1 = i - 1;
+                if(i < NODE(0)) {
+                    pointlist.push_back(this->points[k1 + j1 + i]);
+                    pointlist.push_back(this->points[k1 + j2 + i]);
+                    pointlist.push_back(this->points[k2 + j2 + i]);
+                    pointlist.push_back(this->points[k2 + j1 + i]);
+                    this->faces.push_back(Face(pointlist, QUAD4, ++numberOfFaces));
+                    pointlist.clear();
+                }
 
-                this->nodes.back().translate(transX, transY, 0.0);
+                if(j < NODE(1)) {
+                    pointlist.push_back(this->points[k1 + j2 + i1]);
+                    pointlist.push_back(this->points[k2 + j2 + i1]);
+                    pointlist.push_back(this->points[k2 + j2 + i]);
+                    pointlist.push_back(this->points[k1 + j2 + i]);
+                    this->faces.push_back(Face(pointlist, QUAD4, ++numberOfFaces));
+                    pointlist.clear();
+                }
+
+                if(k < NODE(2)) {
+                    pointlist.push_back(this->points[k1 + j1 + i1]);
+                    pointlist.push_back(this->points[k1 + j1 + i]);
+                    pointlist.push_back(this->points[k1 + j2 + i]);
+                    pointlist.push_back(this->points[k1 + j2 + i1]);
+                    this->faces.push_back(Face(pointlist, QUAD4, ++numberOfFaces));
+                    pointlist.clear();
+                }
             }
         }
     }
+
+    this->numberOfInternalFaces = this->numberOfFaces;
 }
 
+void Mesh::cubicInternalCells(){
 
-//void Mesh::cubicFace(){
-//    unsigned layerNodes = (NODE(1)+1)*(NODE(0)+1);
-//    unsigned lengthNodes = NODE(0)+1;
-//    containerNodes node;
-//    Element face;
-//    for(unsigned i=0; i<=NODE(0); i++){
-//        for(unsigned k=1; k<=NODE(2); k++){
-//            for(unsigned j=1; j<=NODE(1); j++){
-//                node.push_back(nodes[(k-1)*layerNodes + (j-1)*lengthNodes + i]);
-//                node.push_back(nodes[(k-1)*layerNodes +  j*lengthNodes+ i]);
-//                node.push_back(nodes[ k*layerNodes +  j*lengthNodes+ i]);
-//                node.push_back(nodes[ k*layerNodes + (j-1)*lengthNodes+ i]);
-//                face = Element(node, QUAD4, ++numberOfFaces);
-//                face.geometryProperties();
-//                faces.push_back(face);
-//                node.clear();
-//            }
-//        }
-//    }
-//
-//    for(unsigned j=0; j<=NODE(1); j++){
-//        for(unsigned k=1; k<=NODE(2); k++){
-//            for(unsigned i=1; i<=NODE(0); i++){
-//                node.push_back(nodes[(k-1)*layerNodes + j*lengthNodes + i-1]);
-//                node.push_back(nodes[(k-1)*layerNodes + j*lengthNodes+ i]);
-//                node.push_back(nodes[ k*layerNodes + j*lengthNodes+ i]);
-//                node.push_back(nodes[ k*layerNodes + j*lengthNodes+ i-1]);
-//                face = Element(node, QUAD4, ++numberOfFaces);
-//                face.geometryProperties();
-//                faces.push_back(face);
-//                node.clear();
-//            }
-//        }
-//    }
-//
-//    for(unsigned k=0; k<=NODE(2); k++){
-//        for(unsigned j=1; j<=NODE(1); j++){
-//            for(unsigned i=1; i<=NODE(0); i++){
-//                node.push_back(nodes[ k*layerNodes + (j-1)*lengthNodes + i-1]);
-//                node.push_back(nodes[ k*layerNodes + (j-1)*lengthNodes + i]);
-//                node.push_back(nodes[ k*layerNodes +  j*lengthNodes+ i]);
-//                node.push_back(nodes[ k*layerNodes +  j*lengthNodes+ i-1]);
-//                face = Element(node, QUAD4, ++numberOfFaces);
-//                face.geometryProperties();
-//                faces.push_back(face);
-//                node.clear();
-//            }
-//        }
-//    }
-//}
-
-void Mesh::cubicInternalElement(){
-    unsigned layerNodes = (NODE(1)+1)*(NODE(0)+1);
-    unsigned lengthNodes = NODE(0)+1;
-    containerNodes node;
+    unsigned layerPoints = (NODE(1) + 1)*(NODE(0) + 1);
+    unsigned lengthPoints = NODE(0) + 1;
+    unsigned layerCells = NODE(0)*NODE(1);
+    unsigned lengthCells = NODE(0);
+    unsigned k1, k2, j1, j2, i1;
+    containerPoints pointlist;
 
     for(unsigned k = 1; k <= NODE(2); k++){
+        k1 = (k - 1)*layerPoints;
+        k2 = k*layerPoints;
 
         for(unsigned j = 1; j <= NODE(1); j++){
+            j1 = (j - 1)*lengthPoints;
+            j2 = j*lengthPoints;
 
             for(unsigned i = 1; i <= NODE(0); i++){
+                i1 = i - 1;
+                pointlist.push_back(this->points[k1 + j1 + i1]);
+                pointlist.push_back(this->points[k1 + j1 + i]);
+                pointlist.push_back(this->points[k1 + j2 + i]);
+                pointlist.push_back(this->points[k1 + j2 + i1]);
+                pointlist.push_back(this->points[k2 + j1 + i1]);
+                pointlist.push_back(this->points[k2 + j1 + i]);
+                pointlist.push_back(this->points[k2 + j2 + i]);
+                pointlist.push_back(this->points[k2 + j2 + i1]);
 
-                node.push_back(this->nodes[(k-1)*layerNodes + (j-1)*lengthNodes + i-1]);
-                node.push_back(this->nodes[(k-1)*layerNodes + (j-1)*lengthNodes + i]);
-                node.push_back(this->nodes[(k-1)*layerNodes +  j*lengthNodes + i]);
-                node.push_back(this->nodes[(k-1)*layerNodes +  j*lengthNodes + i-1]);
-                node.push_back(this->nodes[ k*layerNodes + (j-1)*lengthNodes + i-1]);
-                node.push_back(this->nodes[ k*layerNodes + (j-1)*lengthNodes + i]);
-                node.push_back(this->nodes[ k*layerNodes +  j*lengthNodes + i]);
-                node.push_back(this->nodes[ k*layerNodes +  j*lengthNodes + i-1]);
+                this->cells.push_back(Cell(pointlist, HEX8, ++this->numberOfCells));
+                pointlist.clear();
 
-                this->elements.push_back(Element(node, HEX8, ++this->numberOfElems));
-                node.clear();
+                if(i < NODE(0)) {
+                    this->owner.push_back(this->numberOfCells);
+                    this->neighbor.push_back(this->numberOfCells + 1);
+                }
 
+                if(j < NODE(1)) {
+                    this->owner.push_back(this->numberOfCells );
+                    this->neighbor.push_back(this->numberOfCells + lengthCells);
+                }
+
+                if(k < NODE(2)) {
+                    this->owner.push_back(this->numberOfCells);
+                    this->neighbor.push_back(this->numberOfCells + layerCells);
+                }
             }
         }
     }
@@ -138,148 +157,153 @@ void Mesh::cubicInternalElement(){
 
 
 void Mesh::cubicBoundariesLeftRight(){
-    unsigned lengthNodes = NODE(0) + 1;
-    unsigned widthNodes = NODE(1) + 1;
-    unsigned layerNodes = lengthNodes*widthNodes;
-    unsigned j1, j2, k1, k2;
-    containerNodes nodeLeft, nodeRight;
-    containerElements faceLeft, faceRight;
 
+    unsigned lengthPoints = NODE(0) + 1;
+    unsigned widthPoints = NODE(1) + 1;
+    unsigned layerPoints = lengthPoints*widthPoints;
+    unsigned layerCells = NODE(0)*NODE(1);
+    unsigned j1, j2, j3, k1, k2, k3, i1;
+    containerPoints pointlist;
+
+    i1 = lengthPoints - 1;
     for(unsigned k = 1; k <= NODE(2); k++){
-
-        k1 = (k - 1)*layerNodes;
-        k2 = k*layerNodes;
+        k1 = (k - 1)*layerPoints;
+        k2 = k*layerPoints;
+        k3 = (k - 1)*layerCells;
 
         for(unsigned j = 1; j <= NODE(1); j++){
+            j1 = (j - 1)*lengthPoints;
+            j2 = j*lengthPoints;
+            j3 = (j - 1)*NODE(1);
 
-            j1 = (j - 1)*lengthNodes;
-            j2 = j*lengthNodes;
-
-            nodeLeft.push_back(this->nodes[k1 + j1]);
-            nodeLeft.push_back(this->nodes[k2 + j1]);
-            nodeLeft.push_back(this->nodes[k2 + j2]);
-            nodeLeft.push_back(this->nodes[k1 + j2]);
-            faceLeft.push_back(Element(nodeLeft, QUAD4, 0));
-
-            nodeRight.push_back(this->nodes[k1 + j1 + lengthNodes-1]);
-            nodeRight.push_back(this->nodes[k1 + j2 + lengthNodes-1]);
-            nodeRight.push_back(this->nodes[k2 + j2 + lengthNodes-1]);
-            nodeRight.push_back(this->nodes[k2 + j1 + lengthNodes-1]);
-            faceRight.push_back(Element(nodeRight, QUAD4, 0));
-
-            nodeLeft.clear();
-            nodeRight.clear();
+            pointlist.push_back(this->points[k1 + j1]);
+            pointlist.push_back(this->points[k2 + j1]);
+            pointlist.push_back(this->points[k2 + j2]);
+            pointlist.push_back(this->points[k1 + j2]);
+            this->faces.push_back(Face(pointlist, QUAD4, ++numberOfFaces));
+            pointlist.clear();
+            this->owner.push_back(k3 + j3 + 1);
         }
     }
+    this->boundaries.push_back(NODE(2)*NODE(1));
 
-    this->boundaries.push_back(faceLeft);
-    this->boundaries.push_back(faceRight);
-    faceLeft.clear();
-    faceRight.clear();
+    for(unsigned k = 1; k <= NODE(2); k++){
+        k1 = (k - 1)*layerPoints;
+        k2 = k*layerPoints;
+        k3 = (k - 1)*layerCells;
+
+        for(unsigned j = 1; j <= NODE(1); j++){
+            j1 = (j - 1)*lengthPoints;
+            j2 = j*lengthPoints;
+            j3 = (j - 1)*NODE(1);
+
+            pointlist.push_back(this->points[k1 + j1 + i1]);
+            pointlist.push_back(this->points[k1 + j2 + i1]);
+            pointlist.push_back(this->points[k2 + j2 + i1]);
+            pointlist.push_back(this->points[k2 + j1 + i1]);
+            this->faces.push_back(Face(pointlist, QUAD4, ++numberOfFaces));
+            pointlist.clear();
+            this->owner.push_back(k3 + j3 + i1);
+        }
+    }
+    this->boundaries.push_back(NODE(2)*NODE(1));
 }
 
 void Mesh::cubicBoundariesFrontRear(){
-    unsigned lengthNodes = NODE(0) + 1;
-    unsigned widthNodes = NODE(1) + 1;
-    unsigned layerNodes = lengthNodes*widthNodes;
-    unsigned j, k1, k2;
-    containerNodes nodeFront, nodeRear;
-    containerElements faceFront, faceRear;
 
-    j = NODE(1)*lengthNodes;
+    unsigned lengthPoints = NODE(0) + 1;
+    unsigned widthPoints = NODE(1) + 1;
+    unsigned layerPoints = lengthPoints*widthPoints;
+    unsigned layerCells = NODE(0)*NODE(1);
+    unsigned i1, k1, k2, k3, j1, j2;
+    containerPoints pointlist;
+
+    j1 = NODE(1)*lengthPoints;
+    j2 = (NODE(1) - 1)*NODE(0);
+    for(unsigned k = 1; k <= NODE(2); k++){
+
+        k1 = (k - 1)*layerPoints;
+        k2 = k*layerPoints;
+        k3 = (k - 1)*layerCells;
+
+        for(unsigned i = 1; i <= NODE(0); i++){
+            i1 = i - 1;
+            pointlist.push_back(this->points[k1 + i1]);
+            pointlist.push_back(this->points[k1 + i]);
+            pointlist.push_back(this->points[k2 + i]);
+            pointlist.push_back(this->points[k2 + i1]);
+            this->faces.push_back(Face(pointlist, QUAD4, ++numberOfFaces));
+            pointlist.clear();
+            this->owner.push_back(k3 + i);
+        }
+    }
+    this->boundaries.push_back(NODE(2)*NODE(0));
 
     for(unsigned k = 1; k <= NODE(2); k++){
 
-        k1 = (k - 1)*layerNodes ;
-        k2 = k*layerNodes;
-
+        k1 = (k - 1)*layerPoints;
+        k2 = k*layerPoints;
+        k3 = (k - 1)*layerCells;
         for(unsigned i = 1; i <= NODE(0); i++){
+            i1 = i - 1;
 
-            nodeFront.push_back(this->nodes[k1 + i - 1]);
-            nodeFront.push_back(this->nodes[k1 + i]);
-            nodeFront.push_back(this->nodes[k2 + i]);
-            nodeFront.push_back(this->nodes[k2 + i - 1]);
-            faceFront.push_back(Element(nodeFront, QUAD4, 0));
-
-            nodeRear.push_back(this->nodes[k1 + j + i - 1]);
-            nodeRear.push_back(this->nodes[k2 + j + i - 1]);
-            nodeRear.push_back(this->nodes[k2 + j + i]);
-            nodeRear.push_back(this->nodes[k1 + j + i]);
-            faceRear.push_back(Element(nodeRear, QUAD4, 0));
-
-            nodeFront.clear();
-            nodeRear.clear();
+            pointlist.push_back(this->points[k1 + j1 + i1]);
+            pointlist.push_back(this->points[k2 + j1 + i1]);
+            pointlist.push_back(this->points[k2 + j1 + i]);
+            pointlist.push_back(this->points[k1 + j1 + i]);
+            this->faces.push_back(Face(pointlist, QUAD4, ++numberOfFaces));
+            pointlist.clear();
+            this->owner.push_back(k3 + j2 + i);
         }
     }
-
-    this->boundaries.push_back(faceFront);
-    this->boundaries.push_back(faceRear);
-    faceFront.clear();
-    faceRear.clear();
+    this->boundaries.push_back(NODE(2)*NODE(0));
 }
 
 void Mesh::cubicBoundariesTopBot(){
-    unsigned lengthNodes = NODE(0) + 1;
-    unsigned widthNodes = NODE(1) + 1;
-    unsigned layerNodes = lengthNodes*widthNodes;
-    unsigned  k = layerNodes*NODE(2);
-    unsigned j1, j2;
-    containerNodes nodeBot, nodeTop;
-    containerElements faceBot, faceTop;
+    unsigned lengthPoints = NODE(0) + 1;
+    unsigned widthPoints = NODE(1) + 1;
+    unsigned layerPoints = lengthPoints*widthPoints;
+    unsigned layerCells = NODE(0)*NODE(1);
+    unsigned i1, j1, j2, j3, k1, k2;
+    containerPoints pointlist;
+
+    k1 = layerPoints*NODE(2);
+    k2 = layerCells*(NODE(2) - 1);
 
     for(unsigned j = 1; j <= NODE(1); j++){
-
-        j1 = (j - 1)*lengthNodes;
-        j2 = j*lengthNodes;
+        j1 = (j - 1)*lengthPoints;
+        j2 = j*lengthPoints;
+        j3 = (j - 1)*NODE(1);
 
         for(unsigned i = 1; i <= NODE(0); i++){
-
-            nodeBot.push_back(this->nodes[j1 + i - 1]);
-            nodeBot.push_back(this->nodes[j2 + i - 1]);
-            nodeBot.push_back(this->nodes[j2 + i]);
-            nodeBot.push_back(this->nodes[j1 + i]);
-            faceBot.push_back(Element(nodeBot, QUAD4, 0));
-
-            nodeTop.push_back(this->nodes[k + j1 + i - 1]);
-            nodeTop.push_back(this->nodes[k + j1 + i]);
-            nodeTop.push_back(this->nodes[k + j2 + i]);
-            nodeTop.push_back(this->nodes[k + j2 + i - 1]);
-            faceTop.push_back(Element(nodeTop, QUAD4, 0));
-
-            nodeBot.clear();
-            nodeTop.clear();
+            i1 = i - 1;
+            pointlist.push_back(this->points[j1 + i1]);
+            pointlist.push_back(this->points[j2 + i1]);
+            pointlist.push_back(this->points[j2 + i]);
+            pointlist.push_back(this->points[j1 + i]);
+            this->faces.push_back(Face(pointlist, QUAD4, ++numberOfFaces));
+            pointlist.clear();
+            this->owner.push_back(j3 + i);
         }
     }
+    this->boundaries.push_back(NODE(1)*NODE(0));
 
-    this->boundaries.push_back(faceBot);
-    this->boundaries.push_back(faceTop);
-    faceBot.clear();
-    faceTop.clear();
-}
+    for(unsigned j = 1; j <= NODE(1); j++){
+        j1 = (j - 1)*lengthPoints;
+        j2 = j*lengthPoints;
+        j3 = (j - 1)*NODE(1);
 
-void Mesh::cubicFindNeighbor(){
-    unsigned lengthElement = NODE(0);
-    unsigned layerElement = NODE(0)*NODE(1);
-    containerIDs elem;
-    for(unsigned k = 0; k < NODE(2); k++){
-
-        for(unsigned j = 0; j < NODE(1); j++){
-
-            for(unsigned i = 0; i < NODE(0); i++){
-
-                if(i > 0) elem.push_back(k*layerElement + j*lengthElement + i);
-                if(i < NODE(0)-1) elem.push_back(k*layerElement + j*lengthElement + i + 2);
-
-                if(j > 0) elem.push_back(k*layerElement + (j-1)*lengthElement + i+1);
-                if(j < NODE(1)-1) elem.push_back(k*layerElement + (j+1)*lengthElement + i+1);
-
-                if(k > 0) elem.push_back((k-1)*layerElement + j*lengthElement + i+1);
-                if(k < NODE(2)-1) elem.push_back((k+1)*layerElement + j*lengthElement + i+1);
-
-                this->neighbor.push_back(elem);
-                elem.clear();
-
-            }
+        for(unsigned i = 1; i <= NODE(0); i++){
+            i1 = i - 1;
+            pointlist.push_back(this->points[k1 + j1 + i1]);
+            pointlist.push_back(this->points[k1 + j1 + i]);
+            pointlist.push_back(this->points[k1 + j2 + i]);
+            pointlist.push_back(this->points[k1 + j2 + i1]);
+            this->faces.push_back(Face(pointlist, QUAD4, ++numberOfFaces));
+            pointlist.clear();
+            this->owner.push_back(k2 + j3 + i);
         }
     }
+    this->boundaries.push_back(NODE(1)*NODE(0));
+
 }

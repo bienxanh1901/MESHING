@@ -1,5 +1,13 @@
 #ifndef DEFINE_H_INCLUDED
 #define DEFINE_H_INCLUDED
+
+#include "../include/Point.h"
+#include <vector>
+
+using namespace std;
+
+typedef vector<unsigned> containerIDs;
+typedef vector<Point> containerPoints;
 /*=============================================================================
 Macros
 =============================================================================*/
