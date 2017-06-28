@@ -27,8 +27,9 @@ class Element{
         elemType getType();
         Point getCenter();
         Point getCentroid();
+        unsigned getNumberOfPoints();
         Point& getPoint(unsigned);
-        containerPoints getPointList();
+        containerPoints getPointsList();
         Element* getReference();
     protected:
         Point centroid;

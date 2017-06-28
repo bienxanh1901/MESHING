@@ -71,13 +71,16 @@ class Mesh
 //        void cubicFindNeighbor();
 
         // cylinder mesh definition
-//        void cylinderGeneration();
+        void cylinderGeneration();
         void cylinderPoints();
-//        void cylinderElem();
-//        void baseNode();
-//        void baseElem();
-//        void extrudeNode();
-//        void extrudeElem();
+        void basePoints();
+        void extrudePoints();
+        void cylinderInternalFaces();
+        void baseFaces();
+        void extrudeFaces();
+        void cylinderCells();
+        void baseCells();
+        void extrudeCells();
 //        void outerCircleNode();
 //        void innerRectangularNode();
 //        void cylinderBoundariesBot();

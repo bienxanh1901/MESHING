@@ -32,7 +32,37 @@
 			<Add option="-Wall" />
 			<Add option="-fexceptions" />
 		</Compiler>
+		<Unit filename="common/ShapeType.h" />
+		<Unit filename="common/element_type.h" />
+		<Unit filename="common/utilities.h" />
+		<Unit filename="define/define.h" />
+		<Unit filename="define/meshDefine.h" />
+		<Unit filename="define/paraviewDefine.h" />
+		<Unit filename="include/Cell.h" />
+		<Unit filename="include/Element.h" />
+		<Unit filename="include/Face.h" />
+		<Unit filename="include/Mesh.h" />
+		<Unit filename="include/MeshInfomation.h" />
+		<Unit filename="include/Point.h" />
+		<Unit filename="include/Shape.h" />
+		<Unit filename="include/paraviewExp.h" />
+		<Unit filename="include/typeVector.h" />
 		<Unit filename="main.cpp" />
+		<Unit filename="src/Cell.cpp" />
+		<Unit filename="src/Element.cpp" />
+		<Unit filename="src/Face.cpp" />
+		<Unit filename="src/Mesh.cpp" />
+		<Unit filename="src/MeshInfomation.cpp" />
+		<Unit filename="src/Point.cpp" />
+		<Unit filename="src/Shape.cpp" />
+		<Unit filename="src/cubicGeneration.cpp" />
+		<Unit filename="src/hexahedral.cpp" />
+		<Unit filename="src/quadrilateral.cpp" />
+		<Unit filename="src/tetrahedral.cpp" />
+		<Unit filename="src/triangle.cpp" />
+		<Unit filename="src/typeVector.cpp" />
+		<Unit filename="src/writeParaviewFormat.cpp" />
+		<Unit filename="src/writeTeachFormat.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

@@ -63,11 +63,15 @@ unsigned Element::getID() {
     return this->ID;
 }
 
+unsigned Element::getNumberOfPoints() {
+    return this->numberOfPoints;
+}
+
 Point& Element::getPoint(unsigned ith) {
     return this->points[ith];
 }
 
-containerPoints Element::getPointList() {
+containerPoints Element::getPointsList() {
     return this->points;
 }
 
@@ -93,7 +97,7 @@ void Element::calcCenter() {
 bool Element::operator ==(Element elem) {
     if(this->elementType != elem.elementType) return false;
     unsigned cnt = 0;
-    containerPoints other = elem.getPointList();
+    containerPoints other = elem.getPointsList();
     for(containerPoints::iterator it = this->points.begin(); it != this->points.end(); it++) {
         for(containerPoints::iterator it2 = other.begin(); it2 != other.end(); it2++) {
             if(*it == *it2) cnt++;
