@@ -61,14 +61,14 @@ void Mesh::meshGeneration()
     {
         case RECTANGULAR:
         case TRAPEZE:
-            cubicGeneration();
+            cubicGeneratior();
             break;
         case CYLINDER:
         case OVAL:
-            //cylinderGeneration();
+            cylinderGeneratior();
             break;
         case SPHERIC:
-            //sphericGeneration();
+            sphericGenerator();
             break;
         //default:
 

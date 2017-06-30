@@ -8,6 +8,7 @@
 #include <string>
 #include <stdio.h>
 #include <cstdlib>
+#include <algorithm>
 
 #include "Cell.h"
 #include "Face.h"
@@ -53,14 +54,8 @@ class Mesh
 
         // internal function
 
-//        void sphericGeneration();
-
-
-        void generateCubicMesh();
-//        void generateSphereMesh();
-
         // cubic mesh definition
-        void cubicGeneration();
+        void cubicGeneratior();
         void cubicPoints();
         void trapezePoints();
         void cubicInternalFaces();
@@ -68,10 +63,9 @@ class Mesh
         void cubicBoundariesLeftRight();
         void cubicBoundariesTopBot();
         void cubicBoundariesFrontRear();
-//        void cubicFindNeighbor();
 
         // cylinder mesh definition
-        void cylinderGeneration();
+        void cylinderGeneratior();
         void cylinderPoints();
         void basePoints();
         void extrudePoints();
@@ -81,11 +75,17 @@ class Mesh
         void cylinderCells();
         void baseCells();
         void extrudeCells();
-//        void outerCircleNode();
-//        void innerRectangularNode();
-//        void cylinderBoundariesBot();
-//        void cylinderBoundariesTop();
-//        void cylinderBoundariesAround();
+        void cylinderBoundariesBot();
+        void cylinderBoundariesTop();
+        void cylinderBoundariesAround();
+
+        // spheric mesh definition
+
+        void sphericGenerator();
+        void sphericPoints();
+        void sphericCells();
+        void firstPart();
+        TypeVector<double> cubic2Spheric(double&, double&, double&);
 
 
 //        export Mesh

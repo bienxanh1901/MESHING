@@ -1,6 +1,6 @@
 #include "../include/Mesh.h"
 
-void Mesh::cubicGeneration() {
+void Mesh::cubicGeneratior() {
 
     this->cubicPoints();
     this->cubicInternalFaces();

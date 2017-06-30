@@ -31,6 +31,7 @@ class TypeVector {
         bool operator<=(const TypeVector<T>&);
         bool operator!=(const TypeVector<T>&);
         TypeVector<T> cross(const TypeVector<T>&);
+        TypeVector<T> plus(const T, const T, const T);
         TypeVector<T> unit();
         T norm();
         T norm_sq();
@@ -38,6 +39,7 @@ class TypeVector {
         void add(const TypeVector<T>&);
         void subtract(const TypeVector<T>&);
         void translate(T, T, T);
+        TypeVector<T> rotate(T&, TypeVector<T>&);
         ostream& print(ostream&);
     protected:
         T coords[3];
@@ -211,6 +213,13 @@ TypeVector<T> TypeVector<T>::cross(const TypeVector<T>& rhs) {
 }
 
 template<class T>
+TypeVector<T> TypeVector<T>::plus(const T x, const T y, const T z) {
+    this->coords[0]*= x;
+    this->coords[1]*= y;
+    this->coords[2]*= z;
+}
+
+template<class T>
 TypeVector<T> TypeVector<T>::unit() {
     T nm = this->norm();
     return TypeVector<T>((*this)(0)/nm,
@@ -258,5 +267,24 @@ ostream& TypeVector<T>::print(ostream& out) {
 template<class T>
 void TypeVector<T>::translate(T x, T y, T z) {
     *this += TypeVector<T>(x,y,z);
+}
+
+template<class T>
+TypeVector<T> TypeVector<T>::rotate(T& angle, TypeVector<T>& axis)
+{
+    T costheta = cos(angle);
+    T sintheta = sin(angle);
+    T xrot, yrot, zrot;
+    xrot = this->coords[0]*(costheta+ pow(axis(0),2)*(1-costheta)) +
+           this->coords[1]*(axis(0)*axis(1)*(1-costheta) - axis(2)*sintheta) +
+           this->coords[2]*(axis(0)*axis(2)*(1-costheta) + axis(1)*sintheta);
+    yrot = this->coords[1]*(costheta+ pow(axis(1),2)*(1-costheta)) +
+           this->coords[0]*(axis(1)*axis(0)*(1-costheta) + axis(2)*sintheta) +
+           this->coords[2]*(axis(1)*axis(2)*(1-costheta) - axis(0)*sintheta);
+    zrot = this->coords[2]*(costheta+ pow(axis(2),2)*(1-costheta)) +
+           this->coords[0]*(axis(2)*axis(0)*(1-costheta) - axis(1)*sintheta) +
+           this->coords[1]*(axis(2)*axis(1)*(1-costheta) + axis(0)*sintheta);
+
+    return TypeVector<T>(xrot, yrot, zrot);
 }
 #endif // TypeVector_H
