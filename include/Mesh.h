@@ -8,16 +8,16 @@
 #include <string>
 #include <stdio.h>
 #include <cstdlib>
+#include <algorithm>
 
-#include "Node.h"
-#include "Element.h"
+#include "Cell.h"
+#include "Face.h"
 #include "Shape.h"
-#include "Element.h"
+#include "paraviewExp.h"
 #include "MeshInfomation.h"
 #include "../define/define.h"
 #include "../define/paraviewDefine.h"
 #include "../define/meshDefine.h"
-#include "paraviewExp.h"
 #include "../common/utilities.h"
 
 
@@ -37,61 +37,87 @@ class Mesh
         void writeTEACHMesh();
     protected:
     private:
-        typedef vector<Node> containerNodes;
-        typedef vector<Element> containerElements;
-        typedef vector<unsigned> containerIDs;
+        typedef vector<Cell> containerCells;
+        typedef vector<Face> containerFaces;
         MeshInfomation meshInfo;
-        unsigned numberOfNodes;
-        unsigned numberOfElems;
+        unsigned numberOfPoints;
+        unsigned numberOfCells;
         unsigned numberOfFaces;
+        unsigned numberOfInternalFaces;
         unsigned numberOfBoundaries;
-        containerNodes nodes;
-        containerElements elements;
-        containerElements faces;
-        vector<containerElements> boundaries;
-        vector<containerIDs> neighbor;
+        containerPoints points;
+        containerCells cells;
+        containerFaces faces;
+        containerIDs boundaries;
+        containerIDs neighbor;
+        containerIDs owner;
 
         // internal function
-        void setNumberOfBoundaries();
 
-        void sphericGeneration();
-
-
-        void generateCubicMesh();
-        void generateSphereMesh();
+        void addPoint(double , double , double);
+        void addPoint(TypeVector<double>);
+        void addFace(containerPoints&);
+        void addFace(unsigned, unsigned, unsigned, unsigned);
+        void addCell(containerPoints&);
+        void addCell(unsigned, unsigned, unsigned, unsigned,
+                            unsigned, unsigned, unsigned, unsigned);
+        void addOwner(unsigned);
+        void addNeighbor(unsigned);
 
         // cubic mesh definition
-        void cubicGeneration();
-        void cubicNode();
-        void trapezeNode();
-        void cubicFace();
-        void cubicInternalElement();
+        void cubicGeneratior();
+        void cubicPoints();
+        void trapezePoints();
+        void cubicInternalFacesandCells();
         void cubicBoundariesLeftRight();
         void cubicBoundariesTopBot();
         void cubicBoundariesFrontRear();
-        void cubicFindNeighbor();
 
         // cylinder mesh definition
-        void cylinderGeneration();
-        void cylinderNode();
-        void cylinderElem();
-        void baseNode();
-        void baseElem();
-        void extrudeNode();
-        void extrudeElem();
-        void outerCircleNode();
-        void innerRectangularNode();
+        void cylinderGeneratior();
+        void cylinderPoints();
+        void basePoints();
+        void extrudePoints();
+        void cylinderInternalFacesandCells();
+        void baseFacesandCells();
+        void extrudeFaces();
+        void extrudeCells();
         void cylinderBoundariesBot();
         void cylinderBoundariesTop();
         void cylinderBoundariesAround();
+        void findPointsconnected2D(unsigned&, unsigned&, unsigned&);
+
+        // spheric mesh definition
+
+        void sphericGenerator();
+        void sphericPoints();
+        void sphericCells();
+        void cubicPartPoints();
+        void topPartPoints();
+        void leftRightBotPartsPoints();
+        void frontRearPartsPoints();
+        void sphericFaces();
+        void firstPartFaces();
+        void otherPartFaces();
+        void cubicFaces();
+        void leftRightBotTopPartsCells();
+        void frontPartCells();
+        void rearPartCells();
+        void cubicPartCells();
+        void sphericFrontConnectivity();
+        void sphericRearConnectivity();
+        void findPointsconnected3D(unsigned&, unsigned&, unsigned&, unsigned&);
+        TypeVector<double> cubic2Spheric(double, double, double);
 
 
-        //export Mesh
-        void writeTEACHPoint();
-        void writeTEACHFaceOfCell();
-        void writeTEACHCell();
-        void writeTEACHBoundary();
+//        export Mesh
+        void writeMeshInfomation();
+        void writeTEACHPoints();
+        void writeTEACHCells();
+        void writeTEACHFaces();
         void writeTEACHNeighbor();
+        void writeTEACHOwner();
+        void writeTEACHBoundaries();
 
 };
 

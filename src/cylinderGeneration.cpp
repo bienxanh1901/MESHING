@@ -1,451 +1,351 @@
 #include "../include/Mesh.h"
 
-void Mesh::cylinderGeneration(){
+void Mesh::cylinderGeneratior() {
 
-    cylinderNode();
-    cylinderElem();
-    cylinderBoundariesBot();
-    cylinderBoundariesTop();
-    cylinderBoundariesAround();
-
-}
-
-void Mesh::cylinderNode(){
-
-    baseNode();
-    extrudeNode();
+    this->cylinderPoints();
+    this->cylinderInternalFacesandCells();
+    this->numberOfBoundaries = 3;
+    this->cylinderBoundariesBot();
+    this->cylinderBoundariesTop();
+    this->cylinderBoundariesAround();
 
 }
 
-void Mesh::baseNode(){
+void Mesh::cylinderPoints() {
 
-    outerCircleNode();
-    innerRectangularNode();
+    this->basePoints();
+    this->extrudePoints();
 
 }
 
-void Mesh::outerCircleNode(){
+void Mesh::basePoints(){
 
-    double angleSize = 2.0*PI/NODE(0);
-    double radiusX = DIM(1)/2.0;
-    double halfRadius = 0.5*radiusX;
-    double p2 = halfRadius/sqrt(2.0);
-    double cornerX = halfRadius - p2*(1.0 - tan(PI/6.0))/sqrt(2.0);
+    double angleSize = 2.0*PI/(double)NODE(0);
+    double RX = DIM(1), RY = DIM(3);
+    double halfR = 0.5*RX;
+    double p2 = halfR/sqrt(2.0);
+    double cornerX = halfR - p2*(1.0 - tan(PI/6.0))/sqrt(2.0);
+    halfR = 0.5*RY;
+    p2 = halfR/sqrt(2.0);
+    double cornerY = halfR - p2*(1.0 - tan(PI/6.0))/sqrt(2.0);
 
-    double radiusY = DIM(3)/2.0;
-    halfRadius = 0.5*radiusY;
-    p2 = halfRadius/sqrt(2.0);
-    double cornerY = halfRadius - p2*(1.0 - tan(PI/6.0))/sqrt(2.0);
-    unsigned sideNodes = NODE(0)/8;
+    unsigned sidePoints = NODE(0)/8;
     double costheta, sintheta;
-    double coordX, coordY;
+    double x, y;
     double sizeX, sizeY;
 
+    //points of outer circular
     for(double theta = -PI/4; theta < 7*PI/4; theta+= angleSize){
-
         costheta = cos(theta);
         sintheta = sin(theta);
 
         if(fabs(costheta) >= 1.0/sqrt(2.0)){
-
-            sizeX = (radiusX - cornerX/fabs(costheta))/sideNodes;
-            sizeY = (radiusY - cornerY/fabs(costheta))/sideNodes;
-
-        }else{
-
-            sizeX = (radiusX - cornerX/fabs(sintheta))/sideNodes;
-            sizeY = (radiusY - cornerY/fabs(sintheta))/sideNodes;
-
+            sizeX = (RX - cornerX/fabs(costheta))/sidePoints;
+            sizeY = (RY - cornerY/fabs(costheta))/sidePoints;
+        }else {
+            sizeX = (RX - cornerX/fabs(sintheta))/sidePoints;
+            sizeY = (RY - cornerY/fabs(sintheta))/sidePoints;
         }
 
-        for(unsigned i = 0; i < sideNodes; i++){
+        for(unsigned i = 0; i < sidePoints; i++){
+            x = (RX - (double)i*sizeX)*sintheta;
+            y = (RY - (double)i*sizeY)*costheta;
+            this->addPoint(x, y, 0.0);
+        }
+    }
 
-            coordX = (radiusX - (double)i*sizeX)*sintheta;
-            coordY = (radiusY - (double)i*sizeY)*costheta;
-            this->nodes.push_back(Node(++this->numberOfNodes, coordX, coordY));
+    // points of inner rectangular
+    sizeX = 2.0*cornerX/(double)(NODE(0)/4);
+    sizeY = 2.0*cornerY/(double)(NODE(0)/4);
 
+    for(y = cornerY; y >= -cornerY - EPS; y-= sizeY){
+
+        for(x = -cornerX; x <= cornerX + EPS; x+= sizeX){
+
+            this->addPoint(x, y, 0.0);
         }
     }
 }
 
-void Mesh::innerRectangularNode(){
+void Mesh::extrudePoints() {
 
-    double radius = DIM(1)/2.0;
-    double halfRadius = 0.5*radius;
-    double p2 = halfRadius/sqrt(2.0);
-    double cornerX = halfRadius - p2*(1.0 - tan(PI/6.0))/sqrt(2.0);
-    double sizeX = 2.0*cornerX/(NODE(0)/4);
-    radius = DIM(3)/2.0;
-    halfRadius = 0.5*radius;
-    p2 = halfRadius/sqrt(2.0);
-    double cornerY = halfRadius - p2*(1.0 - tan(PI/6.0))/sqrt(2.0);
-    double sizeY = 2.0*cornerY/(NODE(0)/4);
-
-    for(double coordY = cornerY; coordY >= -cornerY; coordY-= sizeY){
-
-        for(double coordX = -cornerX; coordX <= cornerX; coordX+= sizeX){
-
-            this->nodes.push_back(Node(++this->numberOfNodes, coordX, coordY, 0.0));
-
-        }
-    }
-}
-
-void Mesh::extrudeNode(){
-
-    unsigned sideNodes = NODE(0)/8;
-    unsigned edgeNodes = NODE(0)/4 + 1;
-    unsigned baseNodes = NODE(0)*sideNodes + pow(edgeNodes,2);
+    unsigned sidePoints = NODE(0)/8;
+    unsigned edgePoints = NODE(0)/4 + 1;
+    unsigned base = NODE(0)*sidePoints + pow(edgePoints,2);
     Point point;
 
-    for(double coordZ = SIZE(1); coordZ <= DIM(2); coordZ+= SIZE(1)){
+    for(double z = SIZE(1); z <= DIM(2) + EPS; z+= SIZE(1)){
 
-        for(unsigned i = 0; i < baseNodes; i++){
+        for(unsigned i = 0; i < base; i++){
 
-            point = this->nodes[i] + Point(0.0, 0.0, coordZ);
-            this->nodes.push_back(Node(point, ++this->numberOfNodes));
+            point = this->points[i] + Point(0.0, 0.0, z);
+            this->addPoint(point);
         }
     }
 }
 
-void Mesh::cylinderElem(){
+void Mesh::cylinderInternalFacesandCells() {
 
-    baseElem();
-    extrudeElem();
+    this->baseFacesandCells();
+    this->extrudeFaces();
+    this->extrudeCells();
 
 }
 
-void Mesh::baseElem(){
-    unsigned sideNodes = NODE(0)/8;
-    unsigned edgeNodes = NODE(0)/4 + 1;
-    unsigned outerNodes = NODE(0)*sideNodes;
-    unsigned baseNodes = NODE(0)*sideNodes + pow(edgeNodes,2);
-    unsigned j1, j2, i1, i2, tmp, tmp2, ID;
-    containerNodes node;
-    containerElements::iterator it;
+void Mesh::baseFacesandCells(){
+    unsigned sidePoints = NODE(0)/8;
+    unsigned edgePoints = NODE(0)/4 + 1;
+    unsigned outerPoints = NODE(0)*sidePoints;
+    unsigned base = outerPoints + pow(edgePoints,2);
+    unsigned baseC = outerPoints + pow(edgePoints - 1,2);
+    unsigned j1, j2, i1, i2;
 
-    for(unsigned j = 0; j < NODE(0); j++){
+    // faces and cells of outer circular
+    for(unsigned j = 0; j < NODE(0); j++) {
 
-        j1 = j*sideNodes;
-        j2 = (j+1)*sideNodes;
+        j1 = j*sidePoints;
+        j2 = (j+1)*sidePoints;
         if(j == NODE(0) -1) j2 = 0;
 
-        for(unsigned i = 1; i < sideNodes; i++){
+        for(unsigned i = 1; i < sidePoints; i++) {
+            i1 = i - 1;
 
-            node.push_back(this->nodes[j1 + i - 1]);
-            node.push_back(this->nodes[j1 + i]);
-            node.push_back(this->nodes[j2 + i]);
-            node.push_back(this->nodes[j2 + i - 1]);
-            node.push_back(this->nodes[baseNodes + j1 + i - 1]);
-            node.push_back(this->nodes[baseNodes + j1 + i]);
-            node.push_back(this->nodes[baseNodes + j2 + i]);
-            node.push_back(this->nodes[baseNodes + j2 + i - 1]);
+            this-> addCell(j1 + i1, j1 + i, j2 + i, j2 + i1,
+                           base + j1 + i1, base + j1 + i, base + j2 + i, base + j2 + i1);
+            this->addFace(j1 + i, j2 + i, base + j2 + i, base + j1 + i);
+            this->addOwner(this->numberOfCells);
+            this->addNeighbor(this->numberOfCells + 1);
 
-            this->elements.push_back(Element(node, HEX8, ++this->numberOfElems));
-            node.clear();
-
-            if(j > 0){
-
-                ID = this->numberOfElems - sideNodes;
-                it = this->elements.begin() + this->numberOfElems - 1;
-                it->addNeighbor(ID);
-                it = this->elements.begin() + ID - 1;
-                it->addNeighbor(this->numberOfElems);
-
+            if(j == 0) {
+                this->addFace(i1, i, base + i, base + i1);
+                this->addOwner(this->numberOfCells);
+                this->addNeighbor(outerPoints - sidePoints + this->numberOfCells);
             }
 
-            if(i > 1){
-
-                ID = this->numberOfElems - 1;
-                it = this->elements.begin() + this->numberOfElems - 1;
-                it->addNeighbor(ID);
-                it = this->elements.begin() + ID - 1;
-                it->addNeighbor(this->numberOfElems);
-
+            if(j < NODE(0) -1) {
+                this->addFace(j2 + i1, base + j2 + i1, base + j2 + i, j2 + i);
+                this->addOwner(this->numberOfCells);
+                this->addNeighbor(this->numberOfCells + sidePoints);
             }
 
-            if(j == NODE(0) -1){
-
-                ID = i;
-                it = this->elements.begin() + this->numberOfElems - 1;
-                it->addNeighbor(ID);
-                it = this->elements.begin() + ID - 1;
-                it->addNeighbor(this->numberOfElems);
-
+            if(NODE(1) > 1) {
+                this->addFace(base + j1 + i1, base + j1 + i, base + j2 + i, base + j2 + i1);
+                this->addOwner(this->numberOfCells);
+                this->addNeighbor(baseC + this->numberOfCells);
             }
-
         }
 
-        j1 = (j + 1)*sideNodes - 1;
-        j2 = (j + 2)*sideNodes - 1;
-        if(j == NODE(0) - 1) j2 = sideNodes - 1;
-        tmp = j/(edgeNodes -1);
-        tmp2 = j%(edgeNodes - 1);
-        switch(tmp){
+        j1 = (j + 1)*sidePoints - 1;
+        j2 = (j + 2)*sidePoints - 1;
+        if(j == NODE(0) - 1) j2 = sidePoints - 1;
 
-            case 0: i1 = outerNodes + j; i2 = i1 + 1; break;
-            case 1: i1 = outerNodes + edgeNodes + tmp2*edgeNodes - 1; i2 = i1 + edgeNodes; break;
-            case 2: i1 = outerNodes + edgeNodes*edgeNodes - tmp2 - 1; i2 = i1 - 1; break;
-            case 3: i1 = outerNodes + (edgeNodes - tmp2 - 1)*edgeNodes; i2 = i1 - edgeNodes; break;
+        this->findPointsconnected2D(j, i1, i2);
+
+        this-> addCell(j1, i1, i2, j2,
+                           base + j1, base + i1, base + i2, base + j2);
+        this->addFace(i1, i2, base + i2, base + i1);
+        this->addOwner(this->numberOfCells);
+        this->addNeighbor(i1 + 1);
+
+        if(j == 0) {
+            this->addFace(j1, i1, base + i1, base + j1);
+            this->addOwner(this->numberOfCells);
+            this->addNeighbor(outerPoints);
         }
 
-        node.push_back(this->nodes[j1]);
-        node.push_back(this->nodes[i1]);
-        node.push_back(this->nodes[i2]);
-        node.push_back(this->nodes[j2]);
-        node.push_back(this->nodes[baseNodes + j1]);
-        node.push_back(this->nodes[baseNodes + i1]);
-        node.push_back(this->nodes[baseNodes + i2]);
-        node.push_back(this->nodes[baseNodes + j2]);
-
-        this->elements.push_back(Element(node, HEX8, ++this->numberOfElems));
-        node.clear();
-
-        ID = this->numberOfElems - 1;
-        it = this->elements.begin() + this->numberOfElems - 1;
-        it->addNeighbor(ID);
-        it = this->elements.begin() + ID - 1;
-        it->addNeighbor(this->numberOfElems);
-
-        if(j > 0){
-
-            ID = this->numberOfElems - sideNodes;
-            it = this->elements.begin() + this->numberOfElems - 1;
-            it->addNeighbor(ID);
-            it = this->elements.begin() + ID - 1;
-            it->addNeighbor(this->numberOfElems);
-
+        if(j < NODE(0) -1) {
+            this->addFace(j2, base + j2, base + i2, i2);
+            this->addOwner(this->numberOfCells);
+            this->addNeighbor(this->numberOfCells + 1);
         }
 
-        if(j == NODE(0) -1){
-
-            ID = sideNodes;
-            it = this->elements.begin() + this->numberOfElems - 1;
-            it->addNeighbor(ID);
-            it = this->elements.begin() + ID - 1;
-            it->addNeighbor(this->numberOfElems);
-
+        if(NODE(1) > 1) {
+            this->addFace(base + j1, base + i1, base + i2, base + j2);
+            this->addOwner(this->numberOfCells);
+            this->addNeighbor(baseC + this->numberOfCells);
         }
     }
 
-    for(unsigned j = 1; j < edgeNodes; j++){
+    // faces ande cells of inner rectangular
+    for(unsigned j = 1; j < edgePoints; j++) {
+        j1 = outerPoints + (j-1)*edgePoints;
+        j2 = outerPoints + j*edgePoints;
 
-        j1 = outerNodes + (j-1)*edgeNodes;
-        j2 = outerNodes + j*edgeNodes;
+        for(unsigned i = 1; i < edgePoints; i++){
+            i1 = i - 1;
 
-        for(unsigned i = 1; i < edgeNodes; i++){
+            this-> addCell(j1 + i1, j1 + i, j2 + i, j2 + i1,
+                           base + j1 + i1, base + j1 + i, base + j2 + i, base + j2 + i1);
 
-            node.push_back(this->nodes[j1 + i - 1]);
-            node.push_back(this->nodes[j1 + i]);
-            node.push_back(this->nodes[j2 + i]);
-            node.push_back(this->nodes[j2 + i - 1]);
-            node.push_back(this->nodes[baseNodes + j1 + i - 1]);
-            node.push_back(this->nodes[baseNodes + j1 + i]);
-            node.push_back(this->nodes[baseNodes + j2 + i]);
-            node.push_back(this->nodes[baseNodes + j2 + i - 1]);
-
-            this->elements.push_back(Element(node, HEX8, ++this->numberOfElems));
-            node.clear();
-
-            if(i == 1){
-
-                ID = outerNodes - (j - 1)*sideNodes;
-                it = this->elements.begin() + this->numberOfElems - 1;
-                it->addNeighbor(ID);
-                it = this->elements.begin() + ID - 1;
-                it->addNeighbor(this->numberOfElems);
-
-            }else{
-
-                ID = this->numberOfElems - 1;
-                it = elements.begin() + this->numberOfElems - 1;
-                it->addNeighbor(ID);
-                it = this->elements.begin() + ID - 1;
-                it->addNeighbor(this->numberOfElems);
-
-                if(i == edgeNodes - 1){
-
-                    ID = (i + j)*sideNodes;
-                    it = this->elements.begin() + this->numberOfElems - 1;
-                    it->addNeighbor(ID);
-                    it = this->elements.begin() + ID - 1;
-                    it->addNeighbor(this->numberOfElems);
-
-                }
+            if(i < edgePoints - 1) {
+                this->addFace(j1 + i, base + j1 + i, base + j2 + i, j2 + i);
+                this->addOwner(this->numberOfCells);
+                this->addNeighbor(this->numberOfCells + 1);
             }
 
-            if(j == 1){
+            if(j < edgePoints - 1) {
+                this->addFace(j2 + i1, j2 + i, base + j2 + i, base + j2 + i1);
+                this->addOwner(this->numberOfCells);
+                this->addNeighbor(this->numberOfCells + edgePoints - 1);
+            }
 
-                ID = i*sideNodes;
-                it = this->elements.begin() + this->numberOfElems - 1;
-                it->addNeighbor(ID);
-                it = this->elements.begin() + ID - 1;
-                it->addNeighbor(this->numberOfElems);
-
-            }else{
-
-                ID = this->numberOfElems - edgeNodes + 1;
-                it = this->elements.begin() + this->numberOfElems - 1;
-                it->addNeighbor(ID);
-                it = this->elements.begin() + ID - 1;
-                it->addNeighbor(this->numberOfElems);
-
-                if(j == edgeNodes - 1){
-
-                    ID = (3*j - i + 1)*sideNodes;
-                    it = this->elements.begin() + this->numberOfElems - 1;
-                    it->addNeighbor(ID);
-                    it = this->elements.begin() + ID - 1;
-                    it->addNeighbor(this->numberOfElems);
-                }
+            if(NODE(1) > 1) {
+                this->addFace(base + j1 + i1, base + j2 + i1, base + j2 + i, base + j1 + i);
+                this->addOwner(this->numberOfCells);
+                this->addNeighbor(baseC + this->numberOfCells);
             }
         }
     }
 }
 
-void Mesh::extrudeElem(){
-    unsigned sideNodes = NODE(0)/8;
-    unsigned edgeNodes = NODE(0)/4 + 1;
-    unsigned baseNodes = NODE(0)*sideNodes + pow(edgeNodes,2);
-    unsigned baseElems = NODE(0)*sideNodes + pow(edgeNodes - 1,2);
+void Mesh::extrudeFaces() {
+    unsigned sidePoints = NODE(0)/8;
+    unsigned edgePoints = NODE(0)/4 + 1;
+    unsigned base = NODE(0)*sidePoints + pow(edgePoints,2);
+    unsigned baseF = this->numberOfFaces;
     unsigned ID;
-    Node nodetmp;
-    containerNodes node;
-    containerIDs elemNeighbor;
+    containerPoints pointsList, pointFaces;
 
-    for(unsigned k = 1; k < NODE(1); k++){
-        for(unsigned j = 0; j< baseElems; j++){
+    for(unsigned k = 1; k < NODE(1); k++) {
 
-            for(unsigned i = 1; i <= 8; i++){
-                nodetmp = this->elements[j].getNode(i);
-                ID = nodetmp.getID() + k*baseNodes - 1;
-                node.push_back(this->nodes[ID]);
+        for(unsigned j = 0; j< baseF; j++) {
+
+            pointFaces = this->faces[j].getPointsList();
+
+            for(containerPoints::iterator it = pointFaces.begin(); it != pointFaces.end(); it++) {
+                ID = it->getID() + k*base - 1;
+                pointsList.push_back(this->points[ID]);
             }
-            this->elements.push_back(Element(node, HEX8, ++this->numberOfElems));
-            node.clear();
+
+            this->addFace(pointsList);
         }
     }
 
-    for(unsigned k = 1; k < NODE(1); k++){
-        for(unsigned j = 0; j< baseElems; j++){
+    this->numberOfInternalFaces = this->numberOfFaces;
+}
 
-            elemNeighbor = elements[j].getNeighbor();
-//            for(containerIDs::iterator it = elemNeighbor.begin(); it != elemNeighbor.end(); it++){
-//                ID = *it + k*baseElems;
-//                elements[j + baseElems].addNeighbor(ID);
-//                elements[ID - 1].addNeighbor(numberOfElems);
-//            }
-//
-//            if(k == 1){
-//                ID = j + 1;
-//                elements[j + baseElems].addNeighbor(ID);
-//                elements[ID - 1].addNeighbor(numberOfElems);
-//            }
+void Mesh::extrudeCells() {
+    unsigned sidePoints = NODE(0)/8;
+    unsigned edgePoints = NODE(0)/4 + 1;
+    unsigned outerPoints = NODE(0)*sidePoints;
+    unsigned base = NODE(0)*sidePoints + pow(edgePoints,2);
+    unsigned baseC = outerPoints + pow(edgePoints - 1,2);
+    unsigned baseN = this->neighbor.size();
+    unsigned ID;
+    containerPoints pointsList, pointCells;
+
+    for(unsigned k = 1; k < NODE(1); k++) {
+        for(unsigned j = 0; j< baseC; j++) {
+            pointCells = this->cells[j].getPointsList();
+            for(containerPoints::iterator it = pointCells.begin(); it != pointCells.end(); it++){
+                ID = it->getID() + k*base - 1;
+                pointsList.push_back(this->points[ID]);
+            }
+            this->addCell(pointsList);
+            this->addOwner(this->numberOfCells);
+        }
+    }
+
+    //set neighbor
+    containerIDs::iterator it;
+    for(unsigned k = 1; k < NODE(1); k++) {
+        for(unsigned j = 0; j < baseN; j++) {
+                ID = this->neighbor[j] + k*baseN;
+                if(ID <= this->numberOfCells) this->addNeighbor(ID);
         }
     }
 }
 
 void Mesh::cylinderBoundariesBot(){
-    unsigned sideNodes = NODE(0)/8;
-    unsigned edgeNodes = NODE(0)/4 + 1;
-    unsigned outerNodes = NODE(0)*sideNodes;
-    unsigned j1, j2, i1, i2, tmp, tmp2;
-    containerNodes node;
-    containerElements face;
+    unsigned sidePoints = NODE(0)/8;
+    unsigned edgePoints = NODE(0)/4 + 1;
+    unsigned outerPoints = NODE(0)*sidePoints;
+    unsigned baseC = outerPoints + pow(edgePoints - 1,2);
+    unsigned j1, j2, i1, i2;
 
     for(unsigned j = 0; j < NODE(0); j++){
-        j1 = j*sideNodes;
-        j2 = (j+1)*sideNodes;
+        j1 = j*sidePoints;
+        j2 = (j+1)*sidePoints;
         if(j == NODE(0) -1) j2 = 0;
-        for(unsigned i = 1; i < sideNodes; i++){
-            node.push_back(this->nodes[j1 + i - 1]);
-            node.push_back(this->nodes[j1 + i]);
-            node.push_back(this->nodes[j2 + i]);
-            node.push_back(this->nodes[j2 + i - 1]);
-            face.push_back(Element(node, QUAD4, 0));
-            node.clear();
+        for(unsigned i = 1; i < sidePoints; i++){
+            i1 = i - 1;
+
+            this->addFace(j1 + i1, j2 + i1, j2 + i, j1 + i);
+            this->addOwner(j1 + i);
         }
-        j1 = (j + 1)*sideNodes - 1;
-        j2 = (j + 2)*sideNodes - 1;
-        if(j == NODE(0) - 1) j2 = sideNodes - 1;
-        tmp = j/(edgeNodes -1);
-        tmp2 = j%(edgeNodes - 1);
-        switch(tmp){
-            case 0: i1 = outerNodes + j; i2 = i1 + 1; break;
-            case 1: i1 = outerNodes + edgeNodes + tmp2*edgeNodes - 1; i2 = i1 + edgeNodes; break;
-            case 2: i1 = outerNodes + edgeNodes*edgeNodes - tmp2 - 1; i2 = i1 - 1; break;
-            case 3: i1 = outerNodes + (edgeNodes - tmp2 - 1)*edgeNodes; i2 = i1 - edgeNodes; break;
-        }
-        node.push_back(this->nodes[j1]);
-        node.push_back(this->nodes[i1]);
-        node.push_back(this->nodes[i2]);
-        node.push_back(this->nodes[j2]);
-        face.push_back(Element(node, QUAD4, 0));
-        node.clear();
+
+        j1 = (j + 1)*sidePoints - 1;
+        j2 = (j + 2)*sidePoints - 1;
+        if(j == NODE(0) - 1) j2 = sidePoints - 1;
+
+        this->findPointsconnected2D(j, i1, i2);
+
+        this->addFace(j1, j2, i2, i1);
+        this->addOwner(j1 + 1);
     }
 
-    for(unsigned j = 1; j < edgeNodes; j++){
-        j1 = outerNodes + (j-1)*edgeNodes;
-        j2 = outerNodes + j*edgeNodes;
-        for(unsigned i = 1; i < edgeNodes; i++){
-            node.push_back(this->nodes[j1 + i - 1]);
-            node.push_back(this->nodes[j1 + i]);
-            node.push_back(this->nodes[j2 + i]);
-            node.push_back(this->nodes[j2 + i - 1]);
-            face.push_back(Element(node, QUAD4, 0));
-            node.clear();
+    for(unsigned j = 1; j < edgePoints; j++){
+        j1 = outerPoints + (j-1)*edgePoints;
+        j2 = outerPoints + j*edgePoints;
+        for(unsigned i = 1; i < edgePoints; i++){
+            i1 = i - 1;
+
+            this->addFace(j1 + i1, j1 + i, j2 + i, j2 + i1);
+            this->addOwner(j1 + i);
         }
     }
-    this->boundaries.push_back(face);
-    face.clear();
+    this->boundaries.push_back(baseC);
 }
 
 void Mesh::cylinderBoundariesTop(){
-    unsigned sideNodes = NODE(0)/8;
-    unsigned edgeNodes = NODE(0)/4 + 1;
-    unsigned baseNodes = NODE(0)*sideNodes + pow(edgeNodes,2);
-    unsigned ID;
-    containerNodes node;
-    containerElements face1, face2;
-    face1 = this->boundaries[0];
-    for(containerElements::iterator j = face1.begin(); j != face1.end(); j++){
-        for(unsigned i = 1; i <= 4; i++){
-            ID = (j->getNode(i)).getID() + NODE(1)*baseNodes - 1;
-            node.push_back(nodes[ID]);
+    unsigned sidePoints = NODE(0)/8;
+    unsigned edgePoints = NODE(0)/4 + 1;
+    unsigned outerPoints = NODE(0)*sidePoints;
+    unsigned base = outerPoints + pow(edgePoints,2);
+    unsigned baseC = outerPoints + pow(edgePoints - 1,2);
+    unsigned ID, j1, cnt;
+    containerPoints pointsList, pointFaces;
+
+    cnt = NODE(1)*baseC;
+
+    for(unsigned j = this->numberOfInternalFaces; j < this->numberOfInternalFaces + baseC; j++){
+        j1 = NODE(1)*base - 1;
+        pointFaces = this->faces[j].getPointsList();
+        for(containerPoints::iterator it = pointFaces.begin(); it != pointFaces.end(); it++){
+            ID = it->getID() + j1;
+            pointsList.push_back(this->points[ID]);
         }
-        face2.push_back(Element(node, QUAD4, 0));
-        node.clear();
+        reverse(pointsList.begin(), pointsList.end());
+
+        this->addFace(pointsList);
+        this->addOwner(++cnt);
     }
-    this->boundaries.push_back(face2);
-    face1.clear();
-    face2.clear();
+    this->boundaries.push_back(baseC);
 }
 
 void Mesh::cylinderBoundariesAround()
 {
-    unsigned sideNodes = NODE(0)/8;
-    unsigned edgeNodes = NODE(0)/4 + 1;
-    unsigned baseNodes = NODE(0)*sideNodes + pow(edgeNodes,2);
-    unsigned j1, j2, k1, k2;
-    containerNodes node;
-    containerElements face;
+    unsigned sidePoints = NODE(0)/8;
+    unsigned edgePoints = NODE(0)/4 + 1;
+    unsigned outerPoints = NODE(0)*sidePoints;
+    unsigned base = NODE(0)*sidePoints + pow(edgePoints,2);
+    unsigned baseC = outerPoints + pow(edgePoints - 1,2);
+    unsigned j1, j2, k1, k2, k3;
+    containerPoints pointsList;
     for(unsigned k = 1; k <= NODE(1); k++){
-        k1 = (k-1)*baseNodes;
-        k2 = k*baseNodes;
+        k1 = (k - 1)*base;
+        k2 = k*base;
+        k3 = (k - 1)*baseC;
         for(unsigned j = 1; j <= NODE(0); j++){
-            j1 = (j-1)*sideNodes;
-            j2 = j*sideNodes;
+            j1 = (j - 1)*sidePoints;
+            j2 = j*sidePoints;
             if(j == NODE(0))j2 = 0;
-            node.push_back(this->nodes[k1 + j1]);
-            node.push_back(this->nodes[k2 + j1]);
-            node.push_back(this->nodes[k2 + j2 ]);
-            node.push_back(this->nodes[k1 + j2]);
-            face.push_back(Element(node, QUAD4, 0));
-            node.clear();
+
+            this->addFace(k1 + j1, k2 + j1, k2 + j2, k1 + j2);
+            this->addOwner(k3 + j1 + 1);
         }
     }
-    this->boundaries.push_back(face);
-    face.clear();
+    this->boundaries.push_back(NODE(0)*NODE(1));
 }
 
 

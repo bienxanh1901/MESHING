@@ -1,5 +1,13 @@
 #ifndef DEFINE_H_INCLUDED
 #define DEFINE_H_INCLUDED
+
+#include "../include/Point.h"
+#include <vector>
+
+using namespace std;
+
+typedef vector<unsigned> containerIDs;
+typedef vector<Point> containerPoints;
 /*=============================================================================
 Macros
 =============================================================================*/
@@ -13,7 +21,7 @@ Macros
 
 // math define
 #define PI 3.14159265358979
-
+#define EPS 0.00000001
 #endif // DEFINE_H_INCLUDED
 
 

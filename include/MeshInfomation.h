@@ -10,8 +10,7 @@
 
 using namespace std;
 
-class MeshInfomation
-{
+class MeshInfomation {
     public:
         MeshInfomation();
         virtual ~MeshInfomation();
@@ -23,7 +22,11 @@ class MeshInfomation
         Shape meshShape;
         double meshSize[3];
         unsigned meshNode[3];
+        ostream& print(ostream&);
     protected:
+        friend ostream& operator<<(ostream& out, MeshInfomation info){
+            return info.print(out);
+        }
     private:
 
 };

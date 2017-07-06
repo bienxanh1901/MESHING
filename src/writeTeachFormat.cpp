@@ -1,146 +1,106 @@
 #include "../include/Mesh.h"
 
-void Mesh::writeTEACHMesh()
-{
-    writeTEACHPoint();
-//    writeTEACHElement();
-    writeTEACHCell();
-    writeTEACHFaceOfCell();
-    writeTEACHBoundary();
+void Mesh::writeTEACHMesh() {
+    writeMeshInfomation();
+    writeTEACHPoints();
+    writeTEACHCells();
+    writeTEACHFaces();
     writeTEACHNeighbor();
+    writeTEACHOwner();
+    writeTEACHBoundaries();
+
 }
-
-void Mesh::writeTEACHPoint()
-{
+void Mesh::writeMeshInfomation() {
     ofstream _out;
+    _out.open("meshInfo.teach", std::ofstream::out);
 
+    if(_out.is_open()) {
+        _out << meshInfo;
+        _out.close();
+    }
+}
+void Mesh::writeTEACHPoints() {
 
-    _out.open("Node.teach", std::ofstream::out);
-    if(_out.is_open())
-    {
-        //Points
-        _out << "Point data" << TAB << this->numberOfNodes << ENTER;
-        for(containerNodes::iterator i = this->nodes.begin(); i != this->nodes.end(); i++)
-        {
-            _out << *(i) << ENTER;
+    ofstream _out;
+    _out.open("points.teach", std::ofstream::out);
+
+    if(_out.is_open()) {
+        _out << "Points data" << "\t" << this->numberOfPoints << "\n";
+        for(containerPoints::iterator i = this->points.begin(); i != this->points.end(); i++) {
+            _out << *(i) << "\n";
         }
         _out.close();
     }
 }
 
-//void Mesh::writeTEACHElement()
-//{
-//    ofstream _out;
-//
-//    Point centroid;
-//    typeVector<double> normal;
-//    _out.open("Face.teach", std::ofstream::out);
-//    if(_out.is_open())
-//    {
-//        //Elements
-//        _out << "Face data" << TAB << numberOfFaces << ENTER;
-//        for(containerElements::iterator i = faces.begin(); i!=faces.end(); i++)
-//        {
-//            centroid = i->getCentroid();
-//            normal = i->getNormalVector();
-//            _out << *(i) << TAB;
-//            _out << centroid << TAB;
-//            _out << (i->getArea()) << TAB;
-//            _out << normal << ENTER;
-//        }
-//         _out.close();
-//    }
-//}
-
-
-void Mesh::writeTEACHCell()
-{
+void Mesh::writeTEACHCells() {
     ofstream _out;
-    _out.open("Element.teach", std::ofstream::out);
-    if(_out.is_open())
-    {
-        Point centroid;
-        //Cells
-        _out << "Cell data" << TAB << this->numberOfElems << ENTER;
-        for(containerElements::iterator i = this->elements.begin(); i != this->elements.end(); i++)
-        {
-            centroid = i->getCentroid();
-            _out << *(i) << TAB;
-            _out << centroid << TAB;
-            _out << (i->getVolume()) << ENTER;
+    _out.open("cells.teach", std::ofstream::out);
+
+    if(_out.is_open()) {
+        _out << "Cells data" << "\t" << this->numberOfCells << "\n";
+        for(containerCells::iterator it = this->cells.begin(); it != this->cells.end(); it++) {
+            _out << *(it) << "\t";
+            it->printCellProperties(_out) << "\n";
         }
         _out.close();
     }
 }
 
-void Mesh::writeTEACHFaceOfCell()
-{
+void Mesh::writeTEACHFaces() {
     ofstream _out;
-
-    Point centroid;
-    typeVector<double> normal;
-    _out.open("FaceOfCell.teach", std::ofstream::out);
-    if(_out.is_open())
-    {
+    _out.open("faces.teach", std::ofstream::out);
+    if(_out.is_open()) {
         //Elements
-        _out << "Face data" << ENTER;
-        for(containerElements::iterator i = this->elements.begin(); i != this->elements.end(); i++)
-        {
-            i->printFace(_out);
-
+        _out << "Faces data" << "\t" << this->numberOfFaces << "\n";
+        for(containerFaces::iterator it = this->faces.begin(); it != this->faces.end(); it++) {
+            _out << *(it) << "\t";
+            it->printFaceProperties(_out) << "\n";
         }
          _out.close();
     }
 }
 
-void Mesh::writeTEACHBoundary()
-{
+void Mesh::writeTEACHBoundaries() {
     ofstream _out;
-    _out.open("boundary.teach", std::ofstream::out);
-    if(_out.is_open())
-    {
-        Point centroid;
-        typeVector<double> normal;
-        //boundary
-        _out << "Boundary data" << TAB << this->numberOfBoundaries << ENTER;
-        for(vector<containerElements>::iterator i = this->boundaries.begin(); i != this->boundaries.end(); i++)
-        {
-            _out << i->size() << TAB;
-        }
-        _out << ENTER;
+    _out.open("boundaries.teach", std::ofstream::out);
 
-        for(vector<containerElements>::iterator i = this->boundaries.begin(); i != this->boundaries.end(); i++)
-        {
-            for(containerElements::iterator j = i->begin(); j!=i->end(); j++)
-            {
-                centroid = j->getCentroid();
-                normal = j->getNormalVector();
-                _out << *j << TAB << j->getArea() << TAB << centroid << TAB << normal;
-                _out << ENTER;
-            }
-
+    unsigned start = numberOfInternalFaces + 1;
+    unsigned i = 0;
+    if(_out.is_open()){
+        _out << "Boundaries data" << "\t" << this->numberOfBoundaries << "\n";
+        for(containerIDs::iterator it = this->boundaries.begin(); it != this->boundaries.end(); it++) {
+            _out << "Boundary_" << ++i << ":\n";
+            _out << "start face:\t" << start << "\n";
+            _out << "number of faces:\t" << *it << "\n";
+            start+= *it;
         }
         _out.close();
     }
 }
 
-void Mesh::writeTEACHNeighbor()
-{
+void Mesh::writeTEACHNeighbor() {
     ofstream _out;
     _out.open("neighbor.teach", std::ofstream::out);
-    if(_out.is_open())
-    {
-        for(vector<containerIDs>::iterator i = this->neighbor.begin(); i != this->neighbor.end(); i++)
-        {
-            _out << i->size() << ENTER;
-            for(containerIDs::iterator j = i->begin(); j!=i->end(); j++)
-            {
-                _out << *j << TAB;
-            }
-            _out << ENTER;
-        }
 
+    if(_out.is_open()) {
+        _out << "Neighbour data" << "\t" << this->numberOfInternalFaces << "\n";
+        for(containerIDs::iterator it = this->neighbor.begin(); it != this->neighbor.end(); it++) {
+                _out << *it << "\n";
+        }
         _out.close();
     }
 }
 
+void Mesh::writeTEACHOwner() {
+    ofstream _out;
+    _out.open("owner.teach", std::ofstream::out);
+
+    if(_out.is_open()) {
+        _out << "Owner data" << "\t" << this->numberOfFaces << "\n";
+        for(containerIDs::iterator it = this->owner.begin(); it != this->owner.end(); it++) {
+                _out << *it << "\n";
+        }
+        _out.close();
+    }
+}

@@ -7,8 +7,7 @@
 
 using namespace std;
 
-class Shape
-{
+class Shape {
     public:
         Shape();
         Shape(ShapeType, double*);
@@ -16,12 +15,15 @@ class Shape
         Shape(const Shape&);
         Shape& operator=(const Shape&);
         ShapeType getShape();
+        unsigned getNumberOfDimension();
         double getDimension(unsigned);
     protected:
     private:
         ShapeType typeOfShape;
-        double Dimension[3];
+        unsigned numberOfDimension;
+        double dimension[5];
 
+        void setNumberOfDimension();
 };
 
 #endif // SHAPE_H

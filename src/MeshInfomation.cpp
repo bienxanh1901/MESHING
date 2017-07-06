@@ -1,20 +1,15 @@
 #include "../include/MeshInfomation.h"
 
-MeshInfomation::MeshInfomation()
-{
-    for(int i=0; i<3; i++)
-    {
+MeshInfomation::MeshInfomation() {
+    for(int i=0; i<3; i++) {
         *(meshSize+i) = 0.0;
         *(meshNode+i) = 0;
     }
 }
 
-MeshInfomation::~MeshInfomation()
-{
-}
+MeshInfomation::~MeshInfomation() {}
 
-MeshInfomation::MeshInfomation(Shape& shape, double* ptrsize):meshShape(shape)
-{
+MeshInfomation::MeshInfomation(Shape& shape, double* ptrsize) : meshShape(shape) {
     ShapeType type = shape.getShape();
 
     //dim1
@@ -31,72 +26,75 @@ MeshInfomation::MeshInfomation(Shape& shape, double* ptrsize):meshShape(shape)
     calculateNodenumbers();
 }
 
-MeshInfomation::MeshInfomation(const MeshInfomation& other)
-{
+MeshInfomation::MeshInfomation(const MeshInfomation& other) {
     meshShape = other.meshShape;
-    for(int i=0; i<3; i++)
-    {
+    for(int i=0; i<3; i++) {
         *(meshSize+i) = *(other.meshSize+i);
         *(meshNode+i) = *(other.meshNode+i);
     }
 }
 
-MeshInfomation& MeshInfomation::operator=(const MeshInfomation& rhs)
-{
+MeshInfomation& MeshInfomation::operator=(const MeshInfomation& rhs) {
     if (this == &rhs) return *this;
 
     meshShape = rhs.meshShape;
-    for(int i=0; i<3; i++)
-    {
+    for(int i=0; i<3; i++) {
         *(meshSize+i) = *(rhs.meshSize+i);
         *(meshNode+i) = *(rhs.meshNode+i);
     }
     return *this;
 }
 
-void MeshInfomation::calculateNodenumbers()
-{
-    double dim = meshShape.getDimension(1);
+void MeshInfomation::calculateNodenumbers() {
     ShapeType shape = meshShape.getShape();
-    if(shape==CYLINDER || shape==OVAL || shape==SPHERIC) dim = dim*PI;
-    //dim1
+    double dim = this->meshShape.getDimension(1);
+
+    //dim 1
+    if(shape==CYLINDER || shape==OVAL || shape==SPHERIC) dim = 2.0*dim*PI;
     meshNode[0] = (unsigned)ROUNDED( dim / meshSize[0], 0.0);
 
     // In case CYLINDER or SPHERIC or OVAL, the node must greater than 8
     // and be the multiples of 8
-    if(shape==CYLINDER || shape==OVAL || shape==SPHERIC)
-    {
+    if(shape==CYLINDER || shape==OVAL || shape==SPHERIC) {
         if(meshNode[0] < 8) meshNode[0] = 8;
         meshNode[0] =(meshNode[0]/8 +1 )*8;
-        meshSize[0] = (double)(dim/meshNode[0]);
     }
 
+    meshSize[0] = dim/(double)meshNode[0];
 
     //dim2
-    if(shape != SPHERIC)
-    {
-        dim = meshShape.getDimension(2);
+    if(shape != SPHERIC) {
+        dim = this->meshShape.getDimension(2);
         meshNode[1] = (unsigned)ROUNDED( dim / meshSize[1], 0.0);
-        meshSize[1] = (double)(dim/meshNode[1]);
-    }
-    else
-    {
+        meshSize[1] = dim/(double)meshNode[1];
+    } else {
         meshNode[1] = meshNode[0];
         meshSize[1] = meshSize[0];
     }
 
     //dim3
-    if(shape != SPHERIC && shape != CYLINDER && shape != OVAL)
-    {
-        dim = meshShape.getDimension(3);
+    if(shape != SPHERIC && shape != CYLINDER && shape != OVAL) {
+        dim = this->meshShape.getDimension(3);
         meshNode[2] = (unsigned)ROUNDED( dim / meshSize[2], 0.0);
-        meshSize[2] = (double)(dim/meshNode[2]);
-    }
-    else
-    {
+        meshSize[2] = dim/(double)meshNode[2];
+    } else {
         meshNode[2] = meshNode[0];
         meshSize[2] = meshSize[0];
     }
+}
 
+ostream& MeshInfomation::print(ostream& out) {
+    out << "Shape: " << this->meshShape.getShape() << endl;
 
+    for(unsigned i = 1; i <= this->meshShape.getNumberOfDimension(); i++) {
+        out << "Dim_" << i << ":\t" << this->meshShape.getDimension(i) << "(m)" << endl;
+    }
+    out << endl;
+
+    for(unsigned i = 0; i < 3; i++) {
+        out << "points_number_" << i + 1 << ":\t" << this->meshNode[i]  << endl;
+        out << "size_" << i + 1 << ":\t" << this->meshSize[i]  << endl;
+    }
+
+    return out;
 }
