@@ -311,14 +311,19 @@ void Mesh::findPointsconnected2D(unsigned& position, unsigned& p1, unsigned& p2)
     }
 }
 
-void Mesh::findPointsconnected3D(unsigned& position, unsigned& position2, unsigned& p1, unsigned& p2) {
+void Mesh::findPointsconnected3D(unsigned& position, unsigned& position2, unsigned& p1, unsigned& p2, unsigned& p3) {
     unsigned sidePoints = NODE(0)/8;
     unsigned edgePoints = NODE(0)/4 + 1;
+    unsigned edgeCells = NODE(0)/4;
     unsigned layer = sidePoints*edgePoints;
     unsigned layerC= edgePoints*edgePoints;
     unsigned base = NODE(0)*layer;
     unsigned outerPoints= base + 2*(edgePoints - 2)*(edgePoints - 2)*sidePoints;
     unsigned innerPoints= edgePoints*layerC;
+    unsigned frontC = (edgeCells - 2)*(edgeCells - 2)*sidePoints + 4*(edgeCells - 1)*sidePoints;
+    unsigned baseC  = sidePoints*edgeCells*NODE(0);
+    unsigned outerCells = baseC + 2*frontC;
+    unsigned innerCells = edgeCells* edgeCells*edgeCells;
     unsigned tmp, tmp2;
 
     tmp = position/(edgePoints -1);
@@ -327,18 +332,22 @@ void Mesh::findPointsconnected3D(unsigned& position, unsigned& position2, unsign
         case 0:
             p1 = outerPoints + position*edgePoints + position2;
             p2 = p1 + edgePoints;
+            p3 = outerCells + position*edgeCells + position2 + 1;
             break;
         case 1:
-            p1 = outerPoints + position*edgePoints + tmp2*(layerC - edgePoints)  + position2;
+            p1 = outerPoints + (tmp2 + 1)*layerC - edgePoints  + position2;
             p2 = p1 + layerC;
+            p3 = outerCells + (tmp2 + 1)*(edgeCells*edgeCells) - edgeCells + position2 + 1;
             break;
         case 2:
-            p1 = outerPoints + innerPoints - tmp2*edgePoints - edgePoints + position2;
+            p1 = this->numberOfPoints - (tmp2 + 1)*edgePoints + position2;
             p2 = p1 - edgePoints;
+            p3 = outerCells + innerCells - (tmp2 + 1)*edgeCells + position2 + 1;
             break;
         case 3:
-            p1 = outerPoints + (edgePoints - tmp2 - 1)*layerC + position2;
+            p1 = this->numberOfPoints - (tmp2 + 1)*layerC + position2;
             p2 = p1 - layerC;
+            p3 = outerCells + innerCells - (tmp2 + 1)*edgeCells*edgeCells + position2 + 1;
             break;
     }
 }

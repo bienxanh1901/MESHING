@@ -166,7 +166,7 @@ void Mesh::baseFacesandCells(){
         }
     }
 
-    // faces ande cells of inner rectangular
+    // faces and cells of inner rectangular
     for(unsigned j = 1; j < edgePoints; j++) {
         j1 = outerPoints + (j-1)*edgePoints;
         j2 = outerPoints + j*edgePoints;
