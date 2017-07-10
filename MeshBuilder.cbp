@@ -60,7 +60,10 @@
 		<Unit filename="src/hexahedral.cpp" />
 		<Unit filename="src/meshConnectivity.cpp" />
 		<Unit filename="src/quadrilateral.cpp" />
+		<Unit filename="src/sphericBoundaries.cpp" />
+		<Unit filename="src/sphericFacesandCells.cpp" />
 		<Unit filename="src/sphericGeneration.cpp" />
+		<Unit filename="src/sphericPoints.cpp" />
 		<Unit filename="src/tetrahedral.cpp" />
 		<Unit filename="src/triangle.cpp" />
 		<Unit filename="src/typeVector.cpp" />

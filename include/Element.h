@@ -30,6 +30,7 @@ class Element{
         unsigned getNumberOfPoints();
         Point& getPoint(unsigned);
         containerPoints getPointsList();
+        containerIDs getPointsIDList();
         Element* getReference();
     protected:
         Point centroid;

@@ -91,22 +91,23 @@ class Mesh
 
         void sphericGenerator();
         void sphericPoints();
-        void sphericCells();
+        void sphericFacesandCells();
         void cubicPartPoints();
         void topPartPoints();
         void leftRightBotPartsPoints();
         void frontRearPartsPoints();
-        void sphericFaces();
-        void firstPartFaces();
-        void otherPartFaces();
-        void cubicFaces();
         void leftRightBotTopPartsCells();
         void frontPartCells();
         void rearPartCells();
         void cubicPartCells();
+        void sphericBoundaries();
+        void sphericTopBoundary();
+        void sphericBotBoundary();
+        void sphericFrontBoundary();
+        void sphericRearBoundary();
         void sphericFrontConnectivity();
         void sphericRearConnectivity();
-        void findPointsconnected3D(unsigned&, unsigned&, unsigned&, unsigned&);
+        void findPointsconnected3D(unsigned&, unsigned&, unsigned&, unsigned&, unsigned&);
         TypeVector<double> cubic2Spheric(double, double, double);
 
 

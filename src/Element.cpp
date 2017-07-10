@@ -75,6 +75,14 @@ containerPoints Element::getPointsList() {
     return this->points;
 }
 
+containerIDs Element::getPointsIDList() {
+    containerIDs IDList;
+    for(containerPoints::iterator it = this->points.begin(); it != this->points.end(); it++){
+        IDList.push_back(it->getID());
+    }
+    return IDList;
+}
+
 elemType Element::getType() {
     return this->elementType;
 }
