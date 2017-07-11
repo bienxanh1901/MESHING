@@ -65,25 +65,32 @@ class Mesh
         void addNeighbor(unsigned);
 
         // cubic mesh definition
-        void cubicGeneratior();
+        void cubicGenerator();
+
         void cubicPoints();
-        void trapezePoints();
+
         void cubicInternalFacesandCells();
+
+        void cubicBoundaries();
         void cubicBoundariesLeftRight();
         void cubicBoundariesTopBot();
         void cubicBoundariesFrontRear();
 
         // cylinder mesh definition
-        void cylinderGeneratior();
+        void cylinderGenerator();
+
         void cylinderPoints();
         void basePoints();
         void extrudePoints();
+
         void cylinderInternalFacesandCells();
         void baseFacesandCells();
         void extrudeFaces();
         void extrudeCells();
-        void cylinderBoundariesBot();
-        void cylinderBoundariesTop();
+
+        void cylinderBoundaries();
+        void cylinderBoundaryBot();
+        void cylinderBoundaryTop();
         void cylinderBoundariesAround();
         void findPointsconnected2D(unsigned&, unsigned&, unsigned&);
 
@@ -91,20 +98,24 @@ class Mesh
 
         void sphericGenerator();
         void sphericPoints();
-        void sphericFacesandCells();
         void cubicPartPoints();
         void topPartPoints();
         void leftRightBotPartsPoints();
         void frontRearPartsPoints();
+
+        void sphericFacesandCells();
         void leftRightBotTopPartsCells();
         void frontPartCells();
         void rearPartCells();
         void cubicPartCells();
+
         void sphericBoundaries();
         void sphericTopBoundary();
         void sphericBotBoundary();
         void sphericFrontBoundary();
         void sphericRearBoundary();
+
+
         void sphericFrontConnectivity();
         void sphericRearConnectivity();
         void findPointsconnected3D(unsigned&, unsigned&, unsigned&, unsigned&, unsigned&);

@@ -17,7 +17,7 @@ Shape::Shape(ShapeType type, double* dim) : typeOfShape(type) {
     if(type != SPHERIC && type != CYLINDER) *(this->dimension+2) = *(dim+2);
     else *(this->dimension + 2) = *(this->dimension);
     //dim4 & dim5
-    if(type == TRAPEZE) {
+    if(type == TRAPEZIOD) {
         *(this->dimension + 3) = *(dim + 3);
         *(this->dimension + 4) = *(dim + 4);
     }
@@ -59,11 +59,11 @@ void Shape::setNumberOfDimension(){
     {
         case SPHERIC:
         case CYLINDER:
-        case RECTANGULAR:
+        case CUBOID:
         case OVAL:
             numberOfDimension = 3;
             break;
-        case TRAPEZE: numberOfDimension = 5; break;
+        case TRAPEZIOD: numberOfDimension = 5; break;
         default:
             numberOfDimension = 0;
     }

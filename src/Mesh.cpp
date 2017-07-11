@@ -59,13 +59,13 @@ void Mesh::meshGeneration()
     ShapeType shapetype=meshInfo.meshShape.getShape();
     switch(shapetype)
     {
-        case RECTANGULAR:
-        case TRAPEZE:
-            cubicGeneratior();
+        case CUBOID:
+        case TRAPEZIOD:
+            cubicGenerator();
             break;
         case CYLINDER:
         case OVAL:
-            cylinderGeneratior();
+            cylinderGenerator();
             break;
         case SPHERIC:
             sphericGenerator();

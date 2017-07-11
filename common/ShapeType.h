@@ -3,10 +3,10 @@
 
 enum ShapeType
 {
-    RECTANGULAR = 0,
+    CUBOID = 0,
     SPHERIC,
     CYLINDER,
-    TRAPEZE,
+    TRAPEZIOD,
     OVAL,
     INVALID__SHAPE
 };

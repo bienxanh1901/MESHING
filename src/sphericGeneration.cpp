@@ -1,6 +1,7 @@
 #include "../include/Mesh.h"
 
 void Mesh::sphericGenerator() {
+
     this->sphericPoints();
     this->sphericFacesandCells();
     this->sphericBoundaries();
@@ -8,6 +9,7 @@ void Mesh::sphericGenerator() {
 
 
 void Mesh::sphericPoints() {
+
     this->topPartPoints();
     this->leftRightBotPartsPoints();
     this->frontRearPartsPoints();
@@ -16,6 +18,7 @@ void Mesh::sphericPoints() {
 
 
 void Mesh::sphericFacesandCells() {
+
     this->leftRightBotTopPartsCells();
     this->frontPartCells();
     this->rearPartCells();
