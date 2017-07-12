@@ -3,7 +3,7 @@
 
 #include <vector>
 #include "../include/Point.h"
-#include "arrayTemplate.h"
+#include "../include/arrayTemplate.h"
 
 using namespace std;
 

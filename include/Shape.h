@@ -2,6 +2,7 @@
 #define SHAPE_H
 
 #include <iostream>
+#include <vector>
 #include <assert.h>
 #include "../define/define.h"
 #include "../common/ShapeType.h"
@@ -20,9 +21,10 @@ class Shape {
         Shape& operator=(const Shape&);
         ShapeType getShape();
         unsigned getNumberOfDims();
-        arrDouble getSizesOfLayer(unsigned);
-        arrDouble getDimsOfLayer(unsigned);
-        arrUnsgn getCellNumbersOfLayer(unsigned);
+        unsigned getNumberOfLayers();
+        arrDouble& getSizesOfLayer(unsigned);
+        arrDouble& getDimsOfLayer(unsigned);
+        arrUnsgn& getCellNumbersOfLayer(unsigned);
         void addLayer();
         void deleteLayer(unsigned);
     protected:

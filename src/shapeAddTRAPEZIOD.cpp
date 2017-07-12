@@ -13,13 +13,13 @@ void Shape::addTRAPEZIOID() {
     if(this->numberOfLayers == 1) {
 
         cout << "input dimension of bottom base of layer 1 (length, width, height):\n";
-        cin >> length << width << height;
+        cin >> length >> width >> height;
 
         cout << "input mesh sizes of bottom base of layer 1 (sizeX, sizeY, sizeZ):\n";
-        cin >> sizeX << sizeY << sizeZ;
+        cin >> sizeX >> sizeY >> sizeZ;
 
         cout << "input dimension of top base of layer 1 (length, width):\n";
-        cin >> length2 << width2;
+        cin >> length2 >> width2;
 
         dimOfLayer.insert(0, length);
         dimOfLayer.insert(1, width);
@@ -53,7 +53,7 @@ void Shape::addTRAPEZIOID() {
         cin >> sizeZ;
 
         cout << "input dimension of top base of layer " << this->numberOfLayers << "(length, width):\n";
-        cin >> length2 << width2;
+        cin >> length2 >> width2;
 
         dimOfLayer.insert(0, dim2[3]);
         dimOfLayer.insert(1, dim2[4]);

@@ -58,14 +58,33 @@ unsigned Shape::getNumberOfDims() {
 
 }
 
-arrDouble Shape::getDimOfLayers(unsigned layer) {
+unsigned Shape::getNumberOfLayers() {
 
-    assert(layer <= this->numberOfLayers)
+    return this->numberOfLayers;
+
+}
+
+
+arrDouble& Shape::getSizesOfLayer(unsigned layer) {
+
+    assert(layer <= this->numberOfLayers);
+    return this->cellSizes[layer - 1];
+}
+
+arrDouble& Shape::getDimsOfLayer(unsigned layer) {
+
+    assert(layer <= this->numberOfLayers);
     return this->dim[layer - 1];
 }
 
+arrUnsgn& Shape::getCellNumbersOfLayer(unsigned layer) {
+
+    assert(layer <= this->numberOfLayers);
+    return this->cellNumbers[layer - 1];
+}
+
 void Shape::setNumberOfDims(){
-    switch(this->)
+    switch(this->type)
     {
         case SPHERIC:
             this->numberOfDims = 1;
@@ -75,13 +94,13 @@ void Shape::setNumberOfDims(){
             break;
         case CUBOID:
         case OVAL:
-            this->numberOfDimss = 3;
+            this->numberOfDims = 3;
             break;
         case TRAPEZIOD:
-            this->numberOfDimss = 5;
+            this->numberOfDims = 5;
             break;
         default:
-            this->numberOfDimss = 0;
+            this->numberOfDims = 0;
     }
 }
 

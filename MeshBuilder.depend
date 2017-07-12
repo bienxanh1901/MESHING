@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1498493366 source:d:\study\cpp\meshbuilder\main.cpp
+1499880486 source:d:\study\cpp\meshbuilder\main.cpp
 	<iostream>
 	"./include/Shape.h"
 	"./include/MeshInfomation.h"
@@ -8,7 +8,7 @@
 
 1498493366 ShapeType.h"
 
-1498486433 d:\study\cpp\meshbuilder\include\typevector.h
+1499782935 d:\study\cpp\meshbuilder\include\typevector.h
 	<iostream>
 	<math.h>
 	<fstream>
@@ -20,12 +20,12 @@
 	<fstream>
 	"Point.h"
 
-1498489083 d:\study\cpp\meshbuilder\include\point.h
-	"TypeVector.h"
+1499782935 d:\study\cpp\meshbuilder\include\point.h
+	"typeVector.h"
 
 1498489083 r.h"
 
-1498491017 d:\study\cpp\meshbuilder\include\element.h
+1499782935 d:\study\cpp\meshbuilder\include\element.h
 	<iostream>
 	<vector>
 	"Point.h"
@@ -34,28 +34,32 @@
 
 1498479596 /define.h"
 
-1498479596 d:\study\cpp\meshbuilder\common\element_type.h
+1499782935 d:\study\cpp\meshbuilder\common\element_type.h
 
-1498493424 d:\study\cpp\meshbuilder\define\define.h
-	"../include/Point.h"
+1499869357 d:\study\cpp\meshbuilder\define\define.h
 	<vector>
+	"../include/Point.h"
+	"../include/arrayTemplate.h"
 
-1498479596 d:\study\cpp\meshbuilder\include\shape.h
+1499882556 d:\study\cpp\meshbuilder\include\shape.h
 	<iostream>
+	<vector>
+	<assert.h>
+	"../define/define.h"
 	"../common/ShapeType.h"
 
 1498479596 /ShapeType.h"
 
-1498479596 d:\study\cpp\meshbuilder\common\shapetype.h
+1499782935 d:\study\cpp\meshbuilder\common\shapetype.h
 
-1498479596 d:\study\cpp\meshbuilder\include\meshinfomation.h
+1499870045 d:\study\cpp\meshbuilder\include\meshinfomation.h
 	<iostream>
 	<math.h>
 	"Shape.h"
 	"../common/ShapeType.h"
 	"../define/define.h"
 
-1498501113 d:\study\cpp\meshbuilder\include\mesh.h
+1499878136 d:\study\cpp\meshbuilder\include\mesh.h
 	<iostream>
 	<vector>
 	<math.h>
@@ -63,6 +67,7 @@
 	<string>
 	<stdio.h>
 	<cstdlib>
+	<algorithm>
 	"Cell.h"
 	"Face.h"
 	"Shape.h"
@@ -75,32 +80,32 @@
 
 1498501113 /utilities.h"
 
-1498479596 d:\study\cpp\meshbuilder\define\paraviewdefine.h
+1499782935 d:\study\cpp\meshbuilder\define\paraviewdefine.h
 	<cstdlib>
 	<string>
 
-1498479596 d:\study\cpp\meshbuilder\define\meshdefine.h
+1499871692 d:\study\cpp\meshbuilder\define\meshdefine.h
 	"../include/MeshInfomation.h"
 	"../include/Mesh.h"
 
 1498479597 e/Mesh.h"
 
-1498479596 d:\study\cpp\meshbuilder\include\paraviewexp.h
+1499782935 d:\study\cpp\meshbuilder\include\paraviewexp.h
 	<iostream>
 	<string>
 	<sstream>
 	"../define/paraviewDefine.h"
 	"../define/define.h"
 
-1498479596 d:\study\cpp\meshbuilder\common\utilities.h
+1499782935 d:\study\cpp\meshbuilder\common\utilities.h
 
-1498479597 source:d:\study\cpp\meshbuilder\src\cubicgeneration.cpp
+1499878080 source:d:\study\cpp\meshbuilder\src\cubicgeneration.cpp
 	"../include/Mesh.h"
 
-1498479597 source:d:\study\cpp\meshbuilder\src\cylindergeneration.cpp
+1499868946 source:d:\study\cpp\meshbuilder\src\cylindergeneration.cpp
 	"../include/Mesh.h"
 
-1498491212 source:d:\study\cpp\meshbuilder\src\element.cpp
+1499782935 source:d:\study\cpp\meshbuilder\src\element.cpp
 	"../include/Element.h"
 
 1498490439 e/Element.h"
@@ -108,15 +113,15 @@
 1498490439 source:d:\study\cpp\meshbuilder\src\geometrypropeties.cpp
 	"../include/Element.h"
 
-1498492556 source:d:\study\cpp\meshbuilder\src\hexahedral.cpp
+1499782936 source:d:\study\cpp\meshbuilder\src\hexahedral.cpp
 	"../include/Cell.h"
 
 1498492573 e/Cell.h"
 
-1498494293 source:d:\study\cpp\meshbuilder\src\mesh.cpp
+1499882788 source:d:\study\cpp\meshbuilder\src\mesh.cpp
 	"../include/Mesh.h"
 
-1498479597 source:d:\study\cpp\meshbuilder\src\meshinfomation.cpp
+1499870138 source:d:\study\cpp\meshbuilder\src\meshinfomation.cpp
 	"../include/MeshInfomation.h"
 
 1498479597 e/MeshInfomation.h"
@@ -126,17 +131,17 @@
 
 1498479597 e/Node.h"
 
-1498486712 source:d:\study\cpp\meshbuilder\src\point.cpp
+1499782936 source:d:\study\cpp\meshbuilder\src\point.cpp
 	"../include/Point.h"
 
 1498486712 e/Point.h"
 
-1498490668 source:d:\study\cpp\meshbuilder\src\quadrilateral.cpp
+1499782936 source:d:\study\cpp\meshbuilder\src\quadrilateral.cpp
 	"../include/Face.h"
 
 1498490674 e/Face.h"
 
-1498479597 source:d:\study\cpp\meshbuilder\src\shape.cpp
+1499882546 source:d:\study\cpp\meshbuilder\src\shape.cpp
 	"../include/Shape.h"
 
 1498479597 e/Shape.h"
@@ -144,32 +149,32 @@
 1498479597 source:d:\study\cpp\meshbuilder\src\sphericgeneration.cpp
 	"../include/Mesh.h"
 
-1498492573 source:d:\study\cpp\meshbuilder\src\tetrahedral.cpp
+1499782936 source:d:\study\cpp\meshbuilder\src\tetrahedral.cpp
 	"../include/Cell.h"
 
-1498490674 source:d:\study\cpp\meshbuilder\src\triangle.cpp
+1499782936 source:d:\study\cpp\meshbuilder\src\triangle.cpp
 	"../include/Face.h"
 
-1498486289 source:d:\study\cpp\meshbuilder\src\typevector.cpp
+1499782936 source:d:\study\cpp\meshbuilder\src\typevector.cpp
 
-1498479597 source:d:\study\cpp\meshbuilder\src\writeparaviewformat.cpp
+1499868946 source:d:\study\cpp\meshbuilder\src\writeparaviewformat.cpp
 	"../include/Mesh.h"
 
-1498479597 source:d:\study\cpp\meshbuilder\src\writeteachformat.cpp
+1499882770 source:d:\study\cpp\meshbuilder\src\writeteachformat.cpp
 	"../include/Mesh.h"
 
-1498491069 source:d:\study\cpp\meshbuilder\src\face.cpp
-	"Face.h"
+1499782935 source:d:\study\cpp\meshbuilder\src\face.cpp
+	"../include/Face.h"
 
-1498492383 d:\study\cpp\meshbuilder\include\face.h
-	<Element.h>
+1499782935 d:\study\cpp\meshbuilder\include\face.h
+	"Element.h"
 
 1498492383 >
 
-1498492670 source:d:\study\cpp\meshbuilder\src\cell.cpp
-	"Cell.h"
+1499782935 source:d:\study\cpp\meshbuilder\src\cell.cpp
+	"../include/Cell.h"
 
-1498492635 d:\study\cpp\meshbuilder\include\cell.h
+1499782935 d:\study\cpp\meshbuilder\include\cell.h
 	<vector>
 	"Element.h"
 	"Face.h"
@@ -338,4 +343,39 @@
 
 1499760718 source:/home/haipt/Codeblocks/MeshBuilder2/src/cylinderPoints.cpp
 	"../include/Mesh.h"
+
+1499882196 d:\study\cpp\meshbuilder\include\arraytemplate.h
+	<iostream>
+	<fstream>
+	<assert.h>
+
+1499880322 source:d:\study\cpp\meshbuilder\src\cubicboundaries.cpp
+	"../include/Mesh.h"
+
+1499880143 source:d:\study\cpp\meshbuilder\src\cubicfacesandcells.cpp
+	"../include/Mesh.h"
+
+1499881197 source:d:\study\cpp\meshbuilder\src\cubicpoints.cpp
+	"../include/Mesh.h"
+
+1499881695 source:d:\study\cpp\meshbuilder\src\shapeaddcuboid.cpp
+	"../include/Shape.h"
+
+1499881703 source:d:\study\cpp\meshbuilder\src\shapeaddcylinder.cpp
+	"../include/Shape.h"
+
+1499881710 source:d:\study\cpp\meshbuilder\src\shapeaddlayer.cpp
+	"../include/Shape.h"
+
+1499881749 source:d:\study\cpp\meshbuilder\src\shapeaddoval.cpp
+	"../include/Shape.h"
+
+1499868946 source:d:\study\cpp\meshbuilder\src\shapeaddspheric.cpp
+	"../include/Shape.h"
+
+1499881766 source:d:\study\cpp\meshbuilder\src\shapeaddtrapeziod.cpp
+	"../include/Shape.h"
+
+1499882729 source:d:\study\cpp\meshbuilder\src\shapedeletelayer.cpp
+	"../include/Shape.h"
 

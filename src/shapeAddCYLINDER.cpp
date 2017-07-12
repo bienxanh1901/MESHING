@@ -12,10 +12,10 @@ void Shape::addCYLINDER() {
     if(this->numberOfLayers == 1) {
 
         cout << "input dimension of layer 1 (radius height):\n";
-        cin >> radius << height;
+        cin >> radius >> height;
 
         cout << "input mesh sizes of layer 1 (sizeR, sizeZ):\n";
-        cin >> sizeR << sizeZ;
+        cin >> sizeR >> sizeZ;
 
         dimOfLayer.insert(0, radius);
         dimOfLayer.insert(1, height);

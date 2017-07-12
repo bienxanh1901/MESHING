@@ -65,7 +65,7 @@ void Mesh::writeTEACHBoundaries() {
     ofstream _out;
     _out.open("boundaries.teach", std::ofstream::out);
 
-    unsigned start = numberOfInternalFaces + 1;
+    unsigned start = this->meshInfo.numberOfInternalFaces + 1;
     unsigned i = 0;
     if(_out.is_open()){
         _out << "Boundaries data" << "\t" << this->meshInfo.numberOfBoundaries << "\n";

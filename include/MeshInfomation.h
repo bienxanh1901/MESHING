@@ -13,8 +13,15 @@ using namespace std;
 class MeshInfomation {
     public:
         MeshInfomation();
+        MeshInfomation(const MeshInfomation&);
+
         virtual ~MeshInfomation();
+
+        MeshInfomation& operator=(const MeshInfomation&);
+        bool operator==(const MeshInfomation&);
         ostream& print(ostream&);
+        void clear();
+
         unsigned numberOfPoints;
         unsigned numberOfCells;
         unsigned numberOfFaces;

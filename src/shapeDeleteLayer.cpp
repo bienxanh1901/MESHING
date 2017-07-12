@@ -23,6 +23,7 @@ void Shape::deleteLayer(unsigned layer) {
                 this->deleteTRAPEZIOID(layer);
                 break;
             default:
+                break;
         }
     }
 }
@@ -34,18 +35,17 @@ void Shape::deleteCUBOID(unsigned layer) {
     this->dim.erase(it);
     it = (this->cellSizes.begin() + layer - 1);
     this->cellSizes.erase(it);
-    it = (this->cellNumbers.begin() + layer - 1);
-    this->cellNumbers.erase(it);
+    vector<arrUnsgn>::iterator it2 = (this->cellNumbers.begin() + layer - 1);
+    this->cellNumbers.erase(it2);
 }
 
 
-void Shape::deleteTRAPEZIOID() {
+void Shape::deleteTRAPEZIOID(unsigned layer) {
 
     if(layer == 1) {
-
-        this->dim.pop_front();
-        this->cellSizes.pop_front();
-        this->cellNumbers.pop_front();
+        this->dim.erase(this->dim.begin());
+        this->cellSizes.erase(this->cellSizes.begin());
+        this->cellNumbers.erase(this->cellNumbers.begin());
     }
     if(layer == this->numberOfLayers) {
 
@@ -62,40 +62,40 @@ void Shape::deleteTRAPEZIOID() {
     it = (this->cellSizes.begin() + layer - 1);
     this->cellSizes.erase(it);
 
-    it = (this->cellNumbers.begin() + layer - 1);
-    this->cellNumbers.erase(it);
+    vector<arrUnsgn>::iterator it2 = (this->cellNumbers.begin() + layer - 1);
+    this->cellNumbers.erase(it2);
 
 }
 
 
-void Shape::deleteCYLINDER() {
+void Shape::deleteCYLINDER(unsigned layer) {
 
     vector<arrDouble>::iterator it = (this->dim.begin() + layer - 1);
     this->dim.erase(it);
     it = (this->cellSizes.begin() + layer - 1);
     this->cellSizes.erase(it);
-    it = (this->cellNumbers.begin() + layer - 1);
-    this->cellNumbers.erase(it);
+    vector<arrUnsgn>::iterator it2 = (this->cellNumbers.begin() + layer - 1);
+    this->cellNumbers.erase(it2);
 }
 
 
-void Shape::addOVAL() {
+void Shape::deleteOVAL(unsigned layer) {
 
     vector<arrDouble>::iterator it = (this->dim.begin() + layer - 1);
     this->dim.erase(it);
     it = (this->cellSizes.begin() + layer - 1);
     this->cellSizes.erase(it);
-    it = (this->cellNumbers.begin() + layer - 1);
-    this->cellNumbers.erase(it);
+    vector<arrUnsgn>::iterator it2 = (this->cellNumbers.begin() + layer - 1);
+    this->cellNumbers.erase(it2);
 }
 
 
-void Shape::addSPHERIC() {
+void Shape::deleteSPHERIC(unsigned layer) {
 
     vector<arrDouble>::iterator it = (this->dim.begin() + layer - 1);
     this->dim.erase(it);
     it = (this->cellSizes.begin() + layer - 1);
     this->cellSizes.erase(it);
-    it = (this->cellNumbers.begin() + layer - 1);
-    this->cellNumbers.erase(it);
+    vector<arrUnsgn>::iterator it2 = (this->cellNumbers.begin() + layer - 1);
+    this->cellNumbers.erase(it2);
 }

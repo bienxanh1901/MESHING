@@ -4,7 +4,7 @@ void Shape::addOVAL() {
 
     double radius, radius2, height;
     double sizeR, sizeZ;
-    unsigned cellR cellZ;
+    unsigned cellR, cellZ;
     arrDouble dimOfLayer(this->numberOfDims);
     arrDouble sizesOfLayer(2);
     arrUnsgn  cellsOfLayer(2);
@@ -12,10 +12,10 @@ void Shape::addOVAL() {
     if(this->numberOfLayers == 1) {
 
         cout << "input dimension of layer 1 (major-radius minor-radius height): ";
-        cin >> radius << radius2 << height;
+        cin >> radius >> radius2 >> height;
 
         cout << "input mesh sizes of layer 1 (major-sizeR, sizeZ):\n";
-        cin >> sizeR << sizeZ;
+        cin >> sizeR >> sizeZ;
 
         dimOfLayer.insert(0, radius);
         dimOfLayer.insert(1, radius2);

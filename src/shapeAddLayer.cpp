@@ -21,6 +21,7 @@ void Shape::addLayer() {
             this->addTRAPEZIOID();
             break;
         default:
+            break;
     }
 }
 

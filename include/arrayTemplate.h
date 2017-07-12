@@ -62,7 +62,7 @@ Array<T>::Array(const Array<T> & arr) {
         this->size = arr.size;
         this->allocate();
         for(unsigned i = 0; i < this->size; i++) {
-            *(this->array + i) = *(arr + i);
+            *(this->array + i) = *(arr.array + i);
         }
     }
 
@@ -119,7 +119,7 @@ Array<T>& Array<T>::operator=(const Array<T> & arr) {
         if(this->array != NULL) this->free();
         this->allocate();
         for(unsigned i = 0; i < this->size; i++) {
-            *(this->array + i) = *(arr + i);
+            *(this->array + i) = *(arr.array + i);
         }
     }
     return *this;
@@ -129,8 +129,8 @@ Array<T>& Array<T>::operator=(const Array<T> & arr) {
 template<class T>
 T& Array<T>::operator[] (unsigned position) {
 
-    assert(this->size != 0);
-    if(position < this->size) return *(this->array + position);
+    assert(this->size != 0 && position < this->size);
+    return *(this->array + position);
 }
 
 //
@@ -140,7 +140,7 @@ bool Array<T>::operator==(const Array<T>& arr) {
     if(this->size != arr.size) return false;
     else {
         for(unsigned i = 0; i < this->size; i++) {
-            if(*(this->array + i) != *(arr + i)) return false;
+            if(*(this->array + i) != *(arr.array + i)) return false;
         }
     }
     return true;
@@ -154,7 +154,7 @@ bool Array<T>::operator!=(const Array<T>& arr) {
     else {
 
         for(unsigned i = 0; i < this->size; i++) {
-            if(*(this->array + i) != *(arr + i)) return true;
+            if(*(this->array + i) != *(arr.array + i)) return true;
         }
     }
     return false;

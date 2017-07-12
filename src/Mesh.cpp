@@ -1,13 +1,9 @@
 #include "../include/Mesh.h"
 
-Mesh::Mesh() {
-    this->meshInfo.numberOfPoints = 0;
-    this->meshInfo.numberOfCells = 0;
-    this->meshInfo.numberOfFaces = 0;
-    this->meshInfo.numberOfBoundaries = 0;
-}
+Mesh::Mesh() {}
 
 Mesh::~Mesh() {
+
     this->points.clear();
     this->cells.clear();
     this->faces.clear();
@@ -16,48 +12,39 @@ Mesh::~Mesh() {
     this->boundaries.clear();
 }
 
-Mesh::Mesh(const Mesh& other) : meshInfo(other.meshInfo) {
-    this->meshInfo.numberOfPoints = other.numberOfPoints;
-    this->meshInfo.numberOfCells = other.numberOfCells;
-    this->meshInfo.numberOfFaces = other.numberOfFaces;
-    this->meshInfo.numberOfBoundaries = other.numberOfBoundaries;
-    this->points = other.points;
-    this->cells = other.cells;
-    this->faces = other.faces;
-    this->neighbor = other.neighbor;
-    this->owner = other.owner;
-    this->boundaries = other.boundaries;
+Mesh::Mesh(const Mesh& mesh) {
+    this->shape = mesh.shape;
+    this->meshInfo = mesh.meshInfo;
+    this->points = mesh.points;
+    this->cells = mesh.cells;
+    this->faces = mesh.faces;
+    this->neighbor = mesh.neighbor;
+    this->owner = mesh.owner;
+    this->boundaries = mesh.boundaries;
 }
 
-Mesh::Mesh(MeshInfomation& info) : meshInfo(info) {
-    this->meshInfo.numberOfPoints = 0;
-    this->meshInfo.numberOfCells = 0;
-    this->meshInfo.numberOfFaces = 0;
-    this->meshInfo.numberOfBoundaries = 0;
-    meshGeneration();
+Mesh::Mesh(Shape& meshShape) : shape(meshShape) {
+
 }
 
 
-Mesh& Mesh::operator=(const Mesh& other) {
-    if (this == &other) return *this;
-    this->meshInfo = other.meshInfo;
-    this->meshInfo.numberOfPoints = other.numberOfPoints;
-    this->meshInfo.numberOfCells = other.numberOfCells;
-    this->meshInfo.numberOfFaces = other.numberOfFaces;
-    this->meshInfo.numberOfBoundaries = other.numberOfBoundaries;
-    this->points = other.points;
-    this->cells = other.cells;
-    this->faces = other.faces;
-    this->neighbor = other.neighbor;
-    this->owner = other.owner;
-    this->boundaries = other.boundaries;
+Mesh& Mesh::operator=(const Mesh& mesh) {
+
+    if (this == &mesh) return *this;
+    this->shape = mesh.shape;
+    this->meshInfo = mesh.meshInfo;
+    this->points = mesh.points;
+    this->cells = mesh.cells;
+    this->faces = mesh.faces;
+    this->neighbor = mesh.neighbor;
+    this->owner = mesh.owner;
+    this->boundaries = mesh.boundaries;
     return *this;
 }
 
 void Mesh::meshGeneration()
 {
-    ShapeType shapetype=meshInfo.meshShape.getShape();
-    switch(shapetype)
+    switch(shape.getShape())
     {
         case CUBOID:
         case TRAPEZIOD:
@@ -65,10 +52,10 @@ void Mesh::meshGeneration()
             break;
         case CYLINDER:
         case OVAL:
-            cylinderGenerator();
+//            cylinderGenerator();
             break;
         case SPHERIC:
-            sphericGenerator();
+//            sphericGenerator();
             break;
         //default:
 

@@ -12,10 +12,10 @@ void Shape::addCUBOID() {
     if(this->numberOfLayers == 1) {
 
         cout << "input dimension of layer 1 (length, width, height):\n";
-        cin >> length << width << height;
+        cin >> length >> width >> height;
 
         cout << "input mesh sizes of layer 1 (sizeX, sizeY, sizeZ):\n";
-        cin >> sizeX << sizeY << sizeZ;
+        cin >> sizeX >> sizeY >> sizeZ;
 
         dimOfLayer.insert(0, length);
         dimOfLayer.insert(1, width);

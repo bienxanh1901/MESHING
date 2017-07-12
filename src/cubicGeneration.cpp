@@ -10,8 +10,11 @@ void Mesh::cubicGenerator() {
 void Mesh::cubicBoundaries() {
 
     this->meshInfo.numberOfBoundaries = 6;
-    this->cubicBoundariesLeftRight();
-    this->cubicBoundariesFrontRear();
-    this->cubicBoundariesTopBot();
+    this->cubicBoundaryLeft();
+    this->cubicBoundaryRight();
+    this->cubicBoundaryFront();
+    this->cubicBoundaryRear();
+    this->cubicBoundaryBot();
+    this->cubicBoundaryTop();
 }
 

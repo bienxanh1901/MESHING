@@ -28,7 +28,7 @@ class Mesh
 {
     public:
         Mesh();
-        Mesh(MeshInfomation&);
+        Mesh(Shape&);
         virtual ~Mesh();
         Mesh(const Mesh& other);
         Mesh& operator=(const Mesh& other);
@@ -39,6 +39,7 @@ class Mesh
     private:
         typedef vector<Cell> containerCells;
         typedef vector<Face> containerFaces;
+        Shape shape;
         MeshInfomation meshInfo;
 
         containerPoints points;
@@ -68,9 +69,12 @@ class Mesh
         void cubicInternalFacesandCells();
 
         void cubicBoundaries();
-        void cubicBoundariesLeftRight();
-        void cubicBoundariesTopBot();
-        void cubicBoundariesFrontRear();
+        void cubicBoundaryLeft();
+        void cubicBoundaryRight();
+        void cubicBoundaryTop();
+        void cubicBoundaryBot();
+        void cubicBoundaryFront();
+        void cubicBoundaryRear();
 
         // cylinder mesh definition
         void cylinderGenerator();
