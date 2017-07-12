@@ -27,7 +27,7 @@ void Mesh::sphericTopBoundary() {
     }
 
     this->sphericFrontBoundary();
-    this->boundaries.push_back(this->numberOfFaces - this->numberOfInternalFaces);
+    this->boundaries.push_back(this->meshInfo.numberOfFaces - this->meshInfo.numberOfInternalFaces);
 
 }
 
@@ -58,7 +58,7 @@ void Mesh::sphericBotBoundary() {
     }
 
     this->sphericRearBoundary();
-    this->boundaries.push_back((this->numberOfFaces - this->numberOfInternalFaces)/2);
+    this->boundaries.push_back((this->meshInfo.numberOfFaces - this->meshInfo.numberOfInternalFaces)/2);
 
 }
 

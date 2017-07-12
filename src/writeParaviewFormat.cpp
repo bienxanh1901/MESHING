@@ -8,7 +8,7 @@ void Mesh::writeVTUformat() {
 
         _out << vtkFunc::VTK_TAG(VTU_TYPE,LITTLE_END) << "\n";
         _out << vtkFunc::HEADER(1) << vtkFunc::TAG(VTU_TYPE) << "\n";
-        _out << vtkFunc::HEADER(2) << vtkFunc::PIECE_TAG(this->numberOfPoints , this->numberOfCells ) << "\n";
+        _out << vtkFunc::HEADER(2) << vtkFunc::PIECE_TAG(this->meshInfo.numberOfPoints , this->meshInfo.numberOfCells ) << "\n";
 
         //Points
         _out << vtkFunc::HEADER(3) << vtkFunc::TAG(POINT) << "\n";
@@ -34,7 +34,7 @@ void Mesh::writeVTUformat() {
         //Ofset
         _out << vtkFunc::HEADER(4) << vtkFunc::ARRAY_TAG(INT32, OFSET, 0, ASCII);
 
-        for(unsigned i = 1; i<= this->numberOfCells; i++) {
+        for(unsigned i = 1; i<= this->meshInfo.numberOfCells; i++) {
             _out << i*8 << " ";
         }
 
@@ -43,7 +43,7 @@ void Mesh::writeVTUformat() {
         //cell type
         _out << vtkFunc::HEADER(4) << vtkFunc::ARRAY_TAG(UINT8, CELLTYPE, 0, ASCII);
 
-        for(unsigned i = 1; i<= this->numberOfCells; i++) {
+        for(unsigned i = 1; i<= this->meshInfo.numberOfCells; i++) {
             _out << 12 << " ";
         }
 

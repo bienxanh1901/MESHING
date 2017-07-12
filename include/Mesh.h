@@ -40,11 +40,7 @@ class Mesh
         typedef vector<Cell> containerCells;
         typedef vector<Face> containerFaces;
         MeshInfomation meshInfo;
-        unsigned numberOfPoints;
-        unsigned numberOfCells;
-        unsigned numberOfFaces;
-        unsigned numberOfInternalFaces;
-        unsigned numberOfBoundaries;
+
         containerPoints points;
         containerCells cells;
         containerFaces faces;

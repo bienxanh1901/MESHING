@@ -1,13 +1,17 @@
 #ifndef DEFINE_H_INCLUDED
 #define DEFINE_H_INCLUDED
 
-#include "../include/Point.h"
 #include <vector>
+#include "../include/Point.h"
+#include "arrayTemplate.h"
 
 using namespace std;
 
 typedef vector<unsigned> containerIDs;
 typedef vector<Point> containerPoints;
+typedef Array<double> arrDouble;
+typedef Array<unsigned> arrUnsgn;
+
 /*=============================================================================
 Macros
 =============================================================================*/

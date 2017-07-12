@@ -28,7 +28,7 @@ void Mesh::cylinderBoundaryTop(){
 
     containerIDs pointCells;
 
-    for(unsigned i = this->numberOfCells - baseC; i < this->numberOfCells; i++) {
+    for(unsigned i = this->meshInfo.numberOfCells - baseC; i < this->meshInfo.numberOfCells; i++) {
 
         pointCells = this->cells[i].getPointsIDList();
         this->addFace( pointCells[4] - 1, pointCells[5] - 1, pointCells[6] - 1, pointCells[7] - 1);

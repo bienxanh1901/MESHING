@@ -4,7 +4,7 @@
 #include "../include/MeshInfomation.h"
 #include "../include/Mesh.h"
 
-#define DIM(i) meshInfo.meshShape.getDimension(i)
+#define DIM(i) meshInfo.meshShape.getDim(i)
 #define NODE(i) meshInfo.meshNode[i]
 #define SIZE(i) meshInfo.meshSize[i]
 #endif // MESHDEFINE_H_INCLUDED

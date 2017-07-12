@@ -1,70 +1,87 @@
 #include "../include/Shape.h"
 
 Shape::Shape() {
-    typeOfShape = INVALID__SHAPE;
+
+    this->type = INVALID__SHAPE;
+    this->numberOfDims = 0;
+    this->numberOfLayers = 0;
+
 }
 
-Shape::Shape(ShapeType type, double* dim) : typeOfShape(type) {
+Shape::Shape(ShapeType typeS) : type(typeS) {
 
-    this->setNumberOfDimension();
+    this->numberOfLayers = 0;
+    this->setNumberOfDims();
 
-    //dim1
-    *(this->dimension) = *dim;
-    //dim2
-    if(type != SPHERIC) *(this->dimension+1) = *(dim+1);
-    else *(this->dimension+1) = *(this->dimension);
-    //dim3
-    if(type != SPHERIC && type != CYLINDER) *(this->dimension+2) = *(dim+2);
-    else *(this->dimension + 2) = *(this->dimension);
-    //dim4 & dim5
-    if(type == TRAPEZIOD) {
-        *(this->dimension + 3) = *(dim + 3);
-        *(this->dimension + 4) = *(dim + 4);
-    }
 }
 
-Shape::~Shape() {}
 
-Shape::Shape(const Shape& other) {
-    this->typeOfShape = other.typeOfShape;
-    this->numberOfDimension = other.numberOfDimension;
+Shape::~Shape() {
 
-    for(unsigned i = 0; i < numberOfDimension; i++)
-        *(this->dimension+i) = *(other.dimension+i);
+    this->dim.clear();
+    this->cellNumbers.clear();
+    this->cellSizes.clear();
 }
 
-Shape& Shape::operator=(const Shape& other) {
-    if (this == &other) return *this;
+Shape::Shape(const Shape& shape) {
 
-    this->typeOfShape = other.typeOfShape;
-    this->numberOfDimension = other.numberOfDimension;
+    this->type = shape.type;
+    this->numberOfDims = shape.numberOfDims;
+    this->numberOfLayers = shape.numberOfLayers;
+    this->dim = shape.dim;
+    this->cellNumbers = shape.cellNumbers;
+    this->cellSizes = shape.cellSizes;
+}
 
-    for(unsigned i = 0; i < numberOfDimension; i++)
-        *(this->dimension+i) = *(other.dimension+i);
+Shape& Shape::operator=(const Shape& shape) {
+    if (this == &shape) return *this;
+
+    this->type = shape.type;
+    this->numberOfDims = shape.numberOfDims;
+    this->numberOfLayers = shape.numberOfLayers;
+    this->dim = shape.dim;
+    this->cellNumbers = shape.cellNumbers;
+    this->cellSizes = shape.cellSizes;
 
     return *this;
 }
 
-ShapeType Shape::getShape(){ return this->typeOfShape;}
+ShapeType Shape::getShape() {
 
-unsigned Shape::getNumberOfDimension(){ return this->numberOfDimension;}
+    return this->type;
 
-double Shape::getDimension(unsigned dim) {
-    if(dim <= this->numberOfDimension) return this->dimension[dim-1];
-    return -1;
 }
 
-void Shape::setNumberOfDimension(){
-    switch(typeOfShape)
+unsigned Shape::getNumberOfDims() {
+
+    return this->numberOfDims;
+
+}
+
+arrDouble Shape::getDimOfLayers(unsigned layer) {
+
+    assert(layer <= this->numberOfLayers)
+    return this->dim[layer - 1];
+}
+
+void Shape::setNumberOfDims(){
+    switch(this->)
     {
         case SPHERIC:
+            this->numberOfDims = 1;
+            break;
         case CYLINDER:
+            this->numberOfDims = 2;
+            break;
         case CUBOID:
         case OVAL:
-            numberOfDimension = 3;
+            this->numberOfDimss = 3;
             break;
-        case TRAPEZIOD: numberOfDimension = 5; break;
+        case TRAPEZIOD:
+            this->numberOfDimss = 5;
+            break;
         default:
-            numberOfDimension = 0;
+            this->numberOfDimss = 0;
     }
 }
+

@@ -39,30 +39,30 @@ void Mesh::leftRightBotTopPartsCells() {
                               i1 + j1 + k, i2 + j1 + k, i2 + j2 + k, i1 + j2 + k);
                 if(i == 0) {
                     this->addFace(i1 + j1 + k1, i1 + j2 + k1, i1 + j2 + k, i1 + j1 + k);
-                    this->addOwner(this->numberOfCells);
+                    this->addOwner(this->meshInfo.numberOfCells);
                     this->addNeighbor(baseC - layerC + j1 + k);
                 }
 
                 if(i < NODE(0) - 1) {
                     this->addFace(i2 + j1 + k1, i2 + j1 + k, i2 + j2 + k, i2 + j2 + k1);
-                    this->addOwner(this->numberOfCells);
-                    this->addNeighbor(this->numberOfCells + layerC);
+                    this->addOwner(this->meshInfo.numberOfCells);
+                    this->addNeighbor(this->meshInfo.numberOfCells + layerC);
                 }
 
                 if(j == 0) {
                     this->addFace(i1 + j1 + k1, i1 + j1 + k, i2 + j1 + k, i2 + j1 + k1);
-                    this->addOwner(this->numberOfCells);
+                    this->addOwner(this->meshInfo.numberOfCells);
                     this->addNeighbor(i3 + k);
                 }
 
                 this->addFace(i1 + j2 + k1, i2 + j2 + k1, i2 + j2 + k, i1 + j2 + k);
-                this->addOwner(this->numberOfCells);
+                this->addOwner(this->meshInfo.numberOfCells);
                 if(j == edgePoints - 2) this->addNeighbor(i4 + k);
-                else this->addNeighbor(this->numberOfCells + sidePoints);
+                else this->addNeighbor(this->meshInfo.numberOfCells + sidePoints);
 
                 this->addFace(i1 + j1 + k, i1 + j2 + k, i2 + j2 + k, i2 + j1 + k);
-                this->addOwner(this->numberOfCells);
-                this->addNeighbor(this->numberOfCells + 1);
+                this->addOwner(this->meshInfo.numberOfCells);
+                this->addNeighbor(this->meshInfo.numberOfCells + 1);
             }
 
             //connection with cubic
@@ -75,29 +75,29 @@ void Mesh::leftRightBotTopPartsCells() {
                           k1, k2, k2 + 1, k1 + 1);
             if(i == 0) {
                 this->addFace(i1 + j1, i1 + j2, k1 + 1, k1);
-                this->addOwner(this->numberOfCells);
+                this->addOwner(this->meshInfo.numberOfCells);
                 this->addNeighbor(baseC - layerC + j1 + 1);
             }
 
             if(i < NODE(0) - 1) {
                 this->addFace(i2 + j1, k2, k2 + 1, i2 + j2);
-                this->addOwner(this->numberOfCells);
-                this->addNeighbor(this->numberOfCells + layerC);
+                this->addOwner(this->meshInfo.numberOfCells);
+                this->addNeighbor(this->meshInfo.numberOfCells + layerC);
             }
 
             if(j == 0) {
                 this->addFace(i1 + j1, k1, k2, i2 + j1);
-                this->addOwner(this->numberOfCells);
+                this->addOwner(this->meshInfo.numberOfCells);
                 this->addNeighbor(i3 + sidePoints);
             }
 
             this->addFace(i1 + j2, i2 + j2, k2 + 1, k1 + 1);
-            this->addOwner(this->numberOfCells);
+            this->addOwner(this->meshInfo.numberOfCells);
             if(j == edgePoints - 2) this->addNeighbor(i4 + sidePoints);
-            else this->addNeighbor(this->numberOfCells + sidePoints);
+            else this->addNeighbor(this->meshInfo.numberOfCells + sidePoints);
 
             this->addFace(k1, k1 + 1, k2 + 1, k2);
-            this->addOwner(this->numberOfCells);
+            this->addOwner(this->meshInfo.numberOfCells);
             this->addNeighbor(k3);
         }
     }
@@ -135,18 +135,18 @@ void Mesh::frontPartCells() {
 
                 if(i < edgePoints - 3) {
                     this->addFace(i2 + j1 + k1, i2 + j1 + k, i2 + j2 + k, i2 + j2 + k1);
-                    this->addOwner(this->numberOfCells);
-                    this->addNeighbor(this->numberOfCells + (edgePoints - 3)*sidePoints);
+                    this->addOwner(this->meshInfo.numberOfCells);
+                    this->addNeighbor(this->meshInfo.numberOfCells + (edgePoints - 3)*sidePoints);
                 }
 
                 if(j < edgePoints - 3) {
                     this->addFace(i1 + j2 + k1, i2 + j2 + k1, i2 + j2 + k, i1 + j2 + k);
-                    this->addOwner(this->numberOfCells);
-                    this->addNeighbor(this->numberOfCells + sidePoints);
+                    this->addOwner(this->meshInfo.numberOfCells);
+                    this->addNeighbor(this->meshInfo.numberOfCells + sidePoints);
                 }
 
                 this->addFace(i1 + j1 + k, i1 + j2 + k, i2 + j2 + k, i2 + j1 + k);
-                this->addOwner(this->numberOfCells);
+                this->addOwner(this->meshInfo.numberOfCells);
                 this->addNeighbor(numberOfCells + 1);
             }
 
@@ -162,18 +162,18 @@ void Mesh::frontPartCells() {
 
             if(i < edgePoints - 3) {
                 this->addFace(i2 + j1, k2, k2 + edgePoints, i2 + j2);
-                this->addOwner(this->numberOfCells);
-                this->addNeighbor(this->numberOfCells + (edgePoints - 3)*sidePoints);
+                this->addOwner(this->meshInfo.numberOfCells);
+                this->addNeighbor(this->meshInfo.numberOfCells + (edgePoints - 3)*sidePoints);
             }
 
             if(j < edgePoints - 3) {
                 this->addFace(i1 + j2, i2 + j2, k2 + edgePoints, k1 + edgePoints);
-                this->addOwner(this->numberOfCells);
-                this->addNeighbor(this->numberOfCells + sidePoints);
+                this->addOwner(this->meshInfo.numberOfCells);
+                this->addNeighbor(this->meshInfo.numberOfCells + sidePoints);
             }
 
             this->addFace(k1, k2, k2 + edgePoints, k1 + edgePoints);
-            this->addOwner(this->numberOfCells);
+            this->addOwner(this->meshInfo.numberOfCells);
             this->addNeighbor(k3);
         }
     }
@@ -211,18 +211,18 @@ void Mesh::rearPartCells() {
 
                 if(i < edgePoints - 3) {
                     this->addFace(i2 + j1 + k1, i2 + j1 + k, i2 + j2 + k, i2 + j2 + k1);
-                    this->addOwner(this->numberOfCells);
-                    this->addNeighbor(this->numberOfCells + (edgePoints - 3)*sidePoints);
+                    this->addOwner(this->meshInfo.numberOfCells);
+                    this->addNeighbor(this->meshInfo.numberOfCells + (edgePoints - 3)*sidePoints);
                 }
 
                 if(j < edgePoints - 3) {
                     this->addFace(i1 + j2 + k1, i2 + j2 + k1, i2 + j2 + k, i1 + j2 + k);
-                    this->addOwner(this->numberOfCells);
-                    this->addNeighbor(this->numberOfCells + sidePoints);
+                    this->addOwner(this->meshInfo.numberOfCells);
+                    this->addNeighbor(this->meshInfo.numberOfCells + sidePoints);
                 }
 
                 this->addFace(i1 + j1 + k, i1 + j2 + k, i2 + j2 + k, i2 + j1 + k);
-                this->addOwner(this->numberOfCells);
+                this->addOwner(this->meshInfo.numberOfCells);
                 this->addNeighbor(numberOfCells + 1);
             }
 
@@ -238,18 +238,18 @@ void Mesh::rearPartCells() {
 
             if(i < edgePoints - 3) {
                 this->addFace(i2 + j1, k1 + edgePoints, k1 + edgePoints, i2 + j2);
-                this->addOwner(this->numberOfCells);
-                this->addNeighbor(this->numberOfCells + (edgePoints - 3)*sidePoints);
+                this->addOwner(this->meshInfo.numberOfCells);
+                this->addNeighbor(this->meshInfo.numberOfCells + (edgePoints - 3)*sidePoints);
             }
 
             if(j < edgePoints - 3) {
                 this->addFace(i1 + j2, i2 + j2, k2 + edgePoints, k2);
-                this->addOwner(this->numberOfCells);
-                this->addNeighbor(this->numberOfCells + sidePoints);
+                this->addOwner(this->meshInfo.numberOfCells);
+                this->addNeighbor(this->meshInfo.numberOfCells + sidePoints);
             }
 
             this->addFace(k1, k2, k2 + edgePoints, k1 + edgePoints);
-            this->addOwner(this->numberOfCells);
+            this->addOwner(this->meshInfo.numberOfCells);
             this->addNeighbor(k3);
         }
     }
@@ -281,20 +281,20 @@ void Mesh::cubicPartCells() {
 
                 if(i < edgeCells) {
                     this->addFace(k1 + j1 + i2, k2 + j1 + i2, k2 + j + i2, k1 + j + i2);
-                    this->addOwner(this->numberOfCells);
-                    this->addNeighbor(this->numberOfCells + edgeCells);
+                    this->addOwner(this->meshInfo.numberOfCells);
+                    this->addNeighbor(this->meshInfo.numberOfCells + edgeCells);
                 }
 
                 if(j < edgeCells) {
                     this->addFace(k1 + j + i1, k1 + j + i2, k2 + j + i2, k2 + j + i1);
-                    this->addOwner(this->numberOfCells);
-                    this->addNeighbor(this->numberOfCells + 1);
+                    this->addOwner(this->meshInfo.numberOfCells);
+                    this->addNeighbor(this->meshInfo.numberOfCells + 1);
                 }
 
                 if(k < edgeCells) {
                     this->addFace(k2 + j1 + i1, k2 + j + i1, k2 + j + i2, k2 + j1 + i2);
-                    this->addOwner(this->numberOfCells);
-                    this->addNeighbor(this->numberOfCells + layerCells);
+                    this->addOwner(this->meshInfo.numberOfCells);
+                    this->addNeighbor(this->meshInfo.numberOfCells + layerCells);
                 }
             }
         }

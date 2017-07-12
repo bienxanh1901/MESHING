@@ -25,7 +25,7 @@ void Mesh::writeTEACHPoints() {
     _out.open("points.teach", std::ofstream::out);
 
     if(_out.is_open()) {
-        _out << "Points data" << "\t" << this->numberOfPoints << "\n";
+        _out << "Points data" << "\t" << this->meshInfo.numberOfPoints << "\n";
         for(containerPoints::iterator i = this->points.begin(); i != this->points.end(); i++) {
             _out << *(i) << "\n";
         }
@@ -38,7 +38,7 @@ void Mesh::writeTEACHCells() {
     _out.open("cells.teach", std::ofstream::out);
 
     if(_out.is_open()) {
-        _out << "Cells data" << "\t" << this->numberOfCells << "\n";
+        _out << "Cells data" << "\t" << this->meshInfo.numberOfCells << "\n";
         for(containerCells::iterator it = this->cells.begin(); it != this->cells.end(); it++) {
             _out << *(it) << "\t";
             it->printCellProperties(_out) << "\n";
@@ -52,7 +52,7 @@ void Mesh::writeTEACHFaces() {
     _out.open("faces.teach", std::ofstream::out);
     if(_out.is_open()) {
         //Elements
-        _out << "Faces data" << "\t" << this->numberOfFaces << "\n";
+        _out << "Faces data" << "\t" << this->meshInfo.numberOfFaces << "\n";
         for(containerFaces::iterator it = this->faces.begin(); it != this->faces.end(); it++) {
             _out << *(it) << "\t";
             it->printFaceProperties(_out) << "\n";
@@ -68,7 +68,7 @@ void Mesh::writeTEACHBoundaries() {
     unsigned start = numberOfInternalFaces + 1;
     unsigned i = 0;
     if(_out.is_open()){
-        _out << "Boundaries data" << "\t" << this->numberOfBoundaries << "\n";
+        _out << "Boundaries data" << "\t" << this->meshInfo.numberOfBoundaries << "\n";
         for(containerIDs::iterator it = this->boundaries.begin(); it != this->boundaries.end(); it++) {
             _out << "Boundary_" << ++i << ":\n";
             _out << "start face:\t" << start << "\n";
@@ -84,7 +84,7 @@ void Mesh::writeTEACHNeighbor() {
     _out.open("neighbor.teach", std::ofstream::out);
 
     if(_out.is_open()) {
-        _out << "Neighbour data" << "\t" << this->numberOfInternalFaces << "\n";
+        _out << "Neighbour data" << "\t" << this->meshInfo.numberOfInternalFaces << "\n";
         for(containerIDs::iterator it = this->neighbor.begin(); it != this->neighbor.end(); it++) {
                 _out << *it << "\n";
         }
@@ -97,7 +97,7 @@ void Mesh::writeTEACHOwner() {
     _out.open("owner.teach", std::ofstream::out);
 
     if(_out.is_open()) {
-        _out << "Owner data" << "\t" << this->numberOfFaces << "\n";
+        _out << "Owner data" << "\t" << this->meshInfo.numberOfFaces << "\n";
         for(containerIDs::iterator it = this->owner.begin(); it != this->owner.end(); it++) {
                 _out << *it << "\n";
         }

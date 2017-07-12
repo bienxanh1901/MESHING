@@ -23,12 +23,12 @@ void Mesh::sphericFacesandCells() {
     this->frontPartCells();
     this->rearPartCells();
     this->cubicPartCells();
-    this->numberOfInternalFaces = this->numberOfFaces;
+    this->meshInfo.numberOfInternalFaces = this->meshInfo.numberOfFaces;
 }
 
 void Mesh::sphericBoundaries() {
 
-    this->numberOfBoundaries = 2;
+    this->meshInfo.numberOfBoundaries = 2;
     this->sphericTopBoundary();
     this->sphericBotBoundary();
 }

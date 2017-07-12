@@ -28,7 +28,7 @@ void Mesh::cylinderInternalFacesandCells() {
 
 void Mesh::cylinderBoundaries() {
 
-    this->numberOfBoundaries = 4;
+    this->meshInfo.numberOfBoundaries = 4;
     this->cylinderBoundaryBot();
     this->cylinderBoundaryTop();
     this->cylinderBoundariesAround();

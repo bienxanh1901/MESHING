@@ -26,24 +26,24 @@ void Mesh::cubicInternalFacesandCells() {
 
                 if(i < NODE(0)) {
                     this->addFace(k1 + j1 + i, k1 + j2 + i, k2 + j2 + i, k2 + j1 + i);
-                    this->addOwner(this->numberOfCells);
-                    this->addNeighbor(this->numberOfCells + 1);
+                    this->addOwner(this->meshInfo.numberOfCells);
+                    this->addNeighbor(this->meshInfo.numberOfCells + 1);
                 }
 
                 if(j < NODE(1)) {
                     this->addFace(k1 + j2 + i1, k2 + j2 + i1, k2 + j2 + i, k1 + j2 + i);
-                    this->addOwner(this->numberOfCells);
-                    this->addNeighbor(this->numberOfCells + lengthCells);
+                    this->addOwner(this->meshInfo.numberOfCells);
+                    this->addNeighbor(this->meshInfo.numberOfCells + lengthCells);
                 }
 
                 if(k < NODE(2)) {
                     this->addFace(k1 + j1 + i1, k1 + j1 + i, k1 + j2 + i, k1 + j2 + i1);
-                    this->addOwner(this->numberOfCells);
-                    this->addNeighbor(this->numberOfCells + layerCells);
+                    this->addOwner(this->meshInfo.numberOfCells);
+                    this->addNeighbor(this->meshInfo.numberOfCells + layerCells);
                 }
             }
         }
     }
 
-    this->numberOfInternalFaces = this->numberOfFaces;
+    this->meshInfo.numberOfInternalFaces = this->meshInfo.numberOfFaces;
 }

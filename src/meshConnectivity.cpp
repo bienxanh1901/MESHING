@@ -611,12 +611,12 @@ void Mesh::findPointsconnected3D(unsigned& position, unsigned& position2, unsign
             p3 = outerCells + (tmp2 + 1)*(edgeCells*edgeCells) - edgeCells + position2 + 1;
             break;
         case 2:
-            p1 = this->numberOfPoints - (tmp2 + 1)*edgePoints + position2;
+            p1 = this->meshInfo.numberOfPoints - (tmp2 + 1)*edgePoints + position2;
             p2 = p1 - edgePoints;
             p3 = outerCells + innerCells - (tmp2 + 1)*edgeCells + position2 + 1;
             break;
         case 3:
-            p1 = this->numberOfPoints - (tmp2 + 1)*layerC + position2;
+            p1 = this->meshInfo.numberOfPoints - (tmp2 + 1)*layerC + position2;
             p2 = p1 - layerC;
             p3 = outerCells + innerCells - (tmp2 + 1)*edgeCells*edgeCells + position2 + 1;
             break;

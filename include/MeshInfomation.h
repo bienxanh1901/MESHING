@@ -14,15 +14,13 @@ class MeshInfomation {
     public:
         MeshInfomation();
         virtual ~MeshInfomation();
-        MeshInfomation(Shape&, double*);
-        MeshInfomation(const MeshInfomation& other);
-        MeshInfomation& operator=(const MeshInfomation& other);
-        void calculateNodenumbers();
-
-        Shape meshShape;
-        double meshSize[3];
-        unsigned meshNode[3];
         ostream& print(ostream&);
+        unsigned numberOfPoints;
+        unsigned numberOfCells;
+        unsigned numberOfFaces;
+        unsigned numberOfInternalFaces;
+        unsigned numberOfBoundaries;
+        containerIDs numberOfCellsOfLayer;
     protected:
         friend ostream& operator<<(ostream& out, MeshInfomation info){
             return info.print(out);

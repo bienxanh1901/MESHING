@@ -31,14 +31,14 @@ int main()
 
 //    Shape shape(CUBOID,dim);
 //    Shape shape(TRAPEZIOD,dim);
-    Shape shape(CYLINDER,dim);
+//    Shape shape(CYLINDER,dim);
 //      Shape shape(OVAL,dim);
 //      Shape shape(SPHERIC,dim);
 
-    MeshInfomation infomesh(shape, meshsize);
-    Mesh mesh(infomesh);
-    mesh.writeVTUformat();
-    mesh.writeTEACHMesh();
+//    MeshInfomation infomesh(shape, meshsize);
+//    Mesh mesh(infomesh);
+//    mesh.writeVTUformat();
+//    mesh.writeTEACHMesh();
     cout << "bye bye World!" << "\n";
     return 0;
 }

@@ -9,7 +9,7 @@ void Mesh::cubicGenerator() {
 
 void Mesh::cubicBoundaries() {
 
-    this->numberOfBoundaries = 6;
+    this->meshInfo.numberOfBoundaries = 6;
     this->cubicBoundariesLeftRight();
     this->cubicBoundariesFrontRear();
     this->cubicBoundariesTopBot();

@@ -1,10 +1,10 @@
 #include "../include/Mesh.h"
 
 Mesh::Mesh() {
-    this->numberOfPoints = 0;
-    this->numberOfCells = 0;
-    this->numberOfFaces = 0;
-    this->numberOfBoundaries = 0;
+    this->meshInfo.numberOfPoints = 0;
+    this->meshInfo.numberOfCells = 0;
+    this->meshInfo.numberOfFaces = 0;
+    this->meshInfo.numberOfBoundaries = 0;
 }
 
 Mesh::~Mesh() {
@@ -17,10 +17,10 @@ Mesh::~Mesh() {
 }
 
 Mesh::Mesh(const Mesh& other) : meshInfo(other.meshInfo) {
-    this->numberOfPoints = other.numberOfPoints;
-    this->numberOfCells = other.numberOfCells;
-    this->numberOfFaces = other.numberOfFaces;
-    this->numberOfBoundaries = other.numberOfBoundaries;
+    this->meshInfo.numberOfPoints = other.numberOfPoints;
+    this->meshInfo.numberOfCells = other.numberOfCells;
+    this->meshInfo.numberOfFaces = other.numberOfFaces;
+    this->meshInfo.numberOfBoundaries = other.numberOfBoundaries;
     this->points = other.points;
     this->cells = other.cells;
     this->faces = other.faces;
@@ -30,10 +30,10 @@ Mesh::Mesh(const Mesh& other) : meshInfo(other.meshInfo) {
 }
 
 Mesh::Mesh(MeshInfomation& info) : meshInfo(info) {
-    this->numberOfPoints = 0;
-    this->numberOfCells = 0;
-    this->numberOfFaces = 0;
-    this->numberOfBoundaries = 0;
+    this->meshInfo.numberOfPoints = 0;
+    this->meshInfo.numberOfCells = 0;
+    this->meshInfo.numberOfFaces = 0;
+    this->meshInfo.numberOfBoundaries = 0;
     meshGeneration();
 }
 
@@ -41,10 +41,10 @@ Mesh::Mesh(MeshInfomation& info) : meshInfo(info) {
 Mesh& Mesh::operator=(const Mesh& other) {
     if (this == &other) return *this;
     this->meshInfo = other.meshInfo;
-    this->numberOfPoints = other.numberOfPoints;
-    this->numberOfCells = other.numberOfCells;
-    this->numberOfFaces = other.numberOfFaces;
-    this->numberOfBoundaries = other.numberOfBoundaries;
+    this->meshInfo.numberOfPoints = other.numberOfPoints;
+    this->meshInfo.numberOfCells = other.numberOfCells;
+    this->meshInfo.numberOfFaces = other.numberOfFaces;
+    this->meshInfo.numberOfBoundaries = other.numberOfBoundaries;
     this->points = other.points;
     this->cells = other.cells;
     this->faces = other.faces;
@@ -76,15 +76,15 @@ void Mesh::meshGeneration()
 }
 
 void Mesh::addPoint(double x, double y, double z) {
-    this->points.push_back(Point(x, y, z, ++this->numberOfPoints));
+    this->points.push_back(Point(x, y, z, ++this->meshInfo.numberOfPoints));
 }
 
 void Mesh::addPoint(TypeVector<double> p) {
-    this->points.push_back(Point(p, ++this->numberOfPoints));
+    this->points.push_back(Point(p, ++this->meshInfo.numberOfPoints));
 }
 
 void Mesh::addFace(containerPoints& p) {
-    this->faces.push_back(Face(p, QUAD4, ++this->numberOfFaces));
+    this->faces.push_back(Face(p, QUAD4, ++this->meshInfo.numberOfFaces));
     p.clear();
 }
 
@@ -94,13 +94,13 @@ void Mesh::addFace(unsigned p1, unsigned p2, unsigned p3, unsigned p4) {
     pointsList.push_back(this->points[p2]);
     pointsList.push_back(this->points[p3]);
     pointsList.push_back(this->points[p4]);
-    this->faces.push_back(Face(pointsList, QUAD4, ++this->numberOfFaces));
+    this->faces.push_back(Face(pointsList, QUAD4, ++this->meshInfo.numberOfFaces));
     pointsList.clear();
 }
 
 void Mesh::addCell(containerPoints& p) {
 
-    this->cells.push_back(Cell(p, HEX8, ++this->numberOfCells));
+    this->cells.push_back(Cell(p, HEX8, ++this->meshInfo.numberOfCells));
     p.clear();
 }
 
@@ -115,7 +115,7 @@ void Mesh::addCell(unsigned p1, unsigned p2, unsigned p3, unsigned p4,
     pointsList.push_back(this->points[p6]);
     pointsList.push_back(this->points[p7]);
     pointsList.push_back(this->points[p8]);
-    this->cells.push_back(Cell(pointsList, HEX8, ++this->numberOfCells));
+    this->cells.push_back(Cell(pointsList, HEX8, ++this->meshInfo.numberOfCells));
     pointsList.clear();
 }
 
