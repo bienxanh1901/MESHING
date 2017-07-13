@@ -32,6 +32,8 @@ class Mesh
         virtual ~Mesh();
         Mesh(const Mesh& other);
         Mesh& operator=(const Mesh& other);
+        void reMesh();
+        void clear();
         void meshGeneration();
         void writeVTUformat();
         void writeTEACHMesh();
@@ -52,7 +54,7 @@ class Mesh
         // internal function
 
         void addPoint(double , double , double);
-        void addPoint(TypeVector<double>);
+        void addPoint(TypeVector<double> &);
         void addFace(containerPoints&);
         void addFace(unsigned, unsigned, unsigned, unsigned);
         void addCell(containerPoints&);

@@ -18,9 +18,7 @@ Shape::Shape(ShapeType typeS) : type(typeS) {
 
 Shape::~Shape() {
 
-    this->dim.clear();
-    this->cellNumbers.clear();
-    this->cellSizes.clear();
+    this->clear();
 }
 
 Shape::Shape(const Shape& shape) {
@@ -64,6 +62,16 @@ unsigned Shape::getNumberOfLayers() {
 
 }
 
+void Shape::clear() {
+
+    this->type = INVALID__SHAPE;
+    this->numberOfDims = 0;
+    this->numberOfLayers = 0;
+    this->dim.clear();
+    this->cellNumbers.clear();
+    this->cellSizes.clear();
+
+}
 
 arrDouble& Shape::getSizesOfLayer(unsigned layer) {
 

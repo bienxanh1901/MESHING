@@ -13,6 +13,7 @@ class Array {
         Array(unsigned = 0);
         Array(unsigned, T*);
         Array(const Array<T> &);
+        Array(Array<T>*);
         virtual ~Array();
 
         void reSize(unsigned);
@@ -67,6 +68,22 @@ Array<T>::Array(const Array<T> & arr) {
     }
 
 }
+
+
+//
+template<class T>
+Array<T>::Array(Array<T>* arr) {
+
+    if(arr->size != 0) {
+        this->size = arr->size;
+        this->allocate();
+        for(unsigned i = 0; i < this->size; i++) {
+            *(this->array + i) = *(arr->array + i);
+        }
+    }
+
+}
+
 
 //
 template<class T>

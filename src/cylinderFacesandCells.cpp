@@ -1,107 +1,110 @@
 #include "../include/Mesh.h"
 
 void Mesh::baseFacesandCells(){
-    unsigned sidePoints = NODE(0)/8;
-    unsigned edgePoints = NODE(0)/4 + 1;
-    unsigned outerPoints = NODE(0)*sidePoints;
+    arrUnsgn cellNums(this->shape.getCellNumbersOfLayer(1));
+    unsigned sidePoints = cellNums[0]/8;
+    unsigned edgePoints = cellNums[0]/4 + 1;
+    unsigned outerPoints = cellNums[0]*sidePoints;
     unsigned base = outerPoints + pow(edgePoints,2);
-    unsigned baseC = outerPoints + pow(edgePoints - 1,2);
+    unsigned basePoints = outerPoints + pow(edgePoints,2);
+    unsigned baseCells = outerPoints + pow(edgePoints - 1,2);
     unsigned j1, j2, i1, i2;
 
     // faces and cells of outer circular
-    for(unsigned j = 0; j < NODE(0); j++) {
+    for(unsigned j = 0; j < cellNums[0]; j++) {
 
         j1 = j*sidePoints;
-        j2 = (j+1)*sidePoints;
-        if(j == NODE(0) -1) j2 = 0;
+        j2 = j1 + sidePoints;
+        if(j == cellNums[0] -1) j2 = 0;
 
         for(unsigned i = 1; i < sidePoints; i++) {
             i1 = i - 1;
 
             this-> addCell(j1 + i1, j1 + i, j2 + i, j2 + i1,
-                           base + j1 + i1, base + j1 + i, base + j2 + i, base + j2 + i1);
-            this->addFace(j1 + i, j2 + i, base + j2 + i, base + j1 + i);
+                           basePoints + j1 + i1, basePoints + j1 + i, basePoints + j2 + i, basePoints + j2 + i1);
+
+            this->addFace(j1 + i, j2 + i, basePoints + j2 + i, basePoints + j1 + i);
             this->addOwner(this->meshInfo.numberOfCells);
             this->addNeighbor(this->meshInfo.numberOfCells + 1);
 
             if(j == 0) {
-                this->addFace(i1, i, base + i, base + i1);
+                this->addFace(i1, i, basePoints + i, basePoints + i1);
                 this->addOwner(this->meshInfo.numberOfCells);
                 this->addNeighbor(outerPoints - sidePoints + this->meshInfo.numberOfCells);
             }
 
-            if(j < NODE(0) -1) {
-                this->addFace(j2 + i1, base + j2 + i1, base + j2 + i, j2 + i);
+            if(j < cellNums[0] -1) {
+                this->addFace(j2 + i1, basePoints + j2 + i1, basePoints + j2 + i, j2 + i);
                 this->addOwner(this->meshInfo.numberOfCells);
                 this->addNeighbor(this->meshInfo.numberOfCells + sidePoints);
             }
 
-            if(NODE(1) > 1) {
-                this->addFace(base + j1 + i1, base + j1 + i, base + j2 + i, base + j2 + i1);
+            if(cellNums[1] > 1) {
+                this->addFace(basePoints + j1 + i1, basePoints + j1 + i, basePoints + j2 + i, basePoints + j2 + i1);
                 this->addOwner(this->meshInfo.numberOfCells);
-                this->addNeighbor(baseC + this->meshInfo.numberOfCells);
+                this->addNeighbor(baseCells + this->meshInfo.numberOfCells);
             }
         }
 
         j1 = (j + 1)*sidePoints - 1;
-        j2 = (j + 2)*sidePoints - 1;
-        if(j == NODE(0) - 1) j2 = sidePoints - 1;
+        j2 = j1 + sidePoints;
+        if(j == cellNums[0] - 1) j2 = sidePoints - 1;
 
         this->findPointsconnected2D(j, i1, i2);
 
         this-> addCell(j1, i1, i2, j2,
-                           base + j1, base + i1, base + i2, base + j2);
+                       basePoints + j1, basePoints + i1, basePoints + i2, basePoints + j2);
 
-        this->addFace(i1, i2, base + i2, base + i1);
+        this->addFace(i1, i2, basePoints + i2, basePoints + i1);
         this->addOwner(this->meshInfo.numberOfCells);
         this->addNeighbor(i1 + 1);
 
         if(j == 0) {
-            this->addFace(j1, i1, base + i1, base + j1);
+            this->addFace(j1, i1, basePoints + i1, basePoints + j1);
             this->addOwner(this->meshInfo.numberOfCells);
             this->addNeighbor(outerPoints);
         }
 
-        if(j < NODE(0) -1) {
-            this->addFace(j2, base + j2, base + i2, i2);
+        if(j < cellNums[0] -1) {
+            this->addFace(j2, basePoints + j2, basePoints + i2, i2);
             this->addOwner(this->meshInfo.numberOfCells);
             this->addNeighbor(this->meshInfo.numberOfCells + 1);
         }
 
-        if(NODE(1) > 1) {
-            this->addFace(base + j1, base + i1, base + i2, base + j2);
+        if(cellNums[1] > 1) {
+            this->addFace(basePoints + j1, basePoints + i1, basePoints + i2, basePoints + j2);
             this->addOwner(this->meshInfo.numberOfCells);
-            this->addNeighbor(baseC + this->meshInfo.numberOfCells);
+            this->addNeighbor(baseCells + this->meshInfo.numberOfCells);
         }
     }
 
     // faces and cells of inner rectangular
     for(unsigned j = 1; j < edgePoints; j++) {
         j1 = outerPoints + (j-1)*edgePoints;
-        j2 = outerPoints + j*edgePoints;
+        j2 = j1 + edgePoints;
 
         for(unsigned i = 1; i < edgePoints; i++){
             i1 = i - 1;
 
             this-> addCell(j1 + i1, j2 + i1, j2 + i, j1 + i,
-                           base + j1 + i1, base + j2 + i1, base + j2 + i, base + j1 + i);
+                           basePoints + j1 + i1, basePoints + j2 + i1, basePoints + j2 + i, basePoints + j1 + i);
 
             if(i < edgePoints - 1) {
-                this->addFace(j1 + i, base + j1 + i, base + j2 + i, j2 + i);
+                this->addFace(j1 + i, basePoints + j1 + i, basePoints + j2 + i, j2 + i);
                 this->addOwner(this->meshInfo.numberOfCells);
                 this->addNeighbor(this->meshInfo.numberOfCells + 1);
             }
 
             if(j < edgePoints - 1) {
-                this->addFace(j2 + i1, j2 + i, base + j2 + i, base + j2 + i1);
+                this->addFace(j2 + i1, j2 + i, basePoints + j2 + i, basePoints + j2 + i1);
                 this->addOwner(this->meshInfo.numberOfCells);
                 this->addNeighbor(this->meshInfo.numberOfCells + edgePoints - 1);
             }
 
-            if(NODE(1) > 1) {
-                this->addFace(base + j1 + i1, base + j2 + i1, base + j2 + i, base + j1 + i);
+            if(cellNums[1] > 1) {
+                this->addFace(basePoints + j1 + i1, basePoints + j2 + i1, basePoints + j2 + i, basePoints + j1 + i);
                 this->addOwner(this->meshInfo.numberOfCells);
-                this->addNeighbor(baseC + this->meshInfo.numberOfCells);
+                this->addNeighbor(baseCells + this->meshInfo.numberOfCells);
             }
         }
     }

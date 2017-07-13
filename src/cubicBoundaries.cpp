@@ -2,7 +2,7 @@
 
 void Mesh::cubicBoundaryLeft(){
 
-    arrUnsgn cellNums = this->shape.getCellNumbersOfLayer(1);
+    arrUnsgn cellNums(this->shape.getCellNumbersOfLayer(1));
     unsigned lengthPoints = cellNums[0] + 1;
     unsigned widthPoints = cellNums[1] + 1;
     unsigned basePoints = lengthPoints*widthPoints;
@@ -43,7 +43,7 @@ void Mesh::cubicBoundaryLeft(){
 
 void Mesh::cubicBoundaryRight(){
 
-    arrUnsgn cellNums = this->shape.getCellNumbersOfLayer(1);
+    arrUnsgn cellNums(this->shape.getCellNumbersOfLayer(1));
     unsigned lengthPoints = cellNums[0] + 1;
     unsigned widthPoints = cellNums[1] + 1;
     unsigned basePoints = lengthPoints*widthPoints;
@@ -70,9 +70,9 @@ void Mesh::cubicBoundaryRight(){
             for(unsigned j = 1; j <= cellNums[1]; j++){
                 j1 = j*lengthPoints - 1;
                 j2 = j1 + lengthPoints;
-                j3 = j*cellNums[1] - 1;
+                j3 = j*cellNums[1];
 
-                this->addFace(k1 + j1, k2 + j1, k2 + j2, k1 + j2);
+                this->addFace(k1 + j1, k1 + j2, k2 + j2, k2 + j1);
                 this->addOwner(k3 + j3);
             }
         }
@@ -84,7 +84,7 @@ void Mesh::cubicBoundaryRight(){
 
 void Mesh::cubicBoundaryFront(){
 
-    arrUnsgn cellNums = this->shape.getCellNumbersOfLayer(1);
+    arrUnsgn cellNums(this->shape.getCellNumbersOfLayer(1));
     unsigned lengthPoints = cellNums[0] + 1;
     unsigned widthPoints = cellNums[1] + 1;
     unsigned basePoints = lengthPoints*widthPoints;
@@ -124,7 +124,7 @@ void Mesh::cubicBoundaryFront(){
 
 void Mesh::cubicBoundaryRear() {
 
-    arrUnsgn cellNums = this->shape.getCellNumbersOfLayer(1);
+    arrUnsgn cellNums(this->shape.getCellNumbersOfLayer(1));
     unsigned lengthPoints = cellNums[0] + 1;
     unsigned widthPoints = cellNums[1] + 1;
     unsigned basePoints = lengthPoints*widthPoints;
@@ -151,7 +151,7 @@ void Mesh::cubicBoundaryRear() {
             for(unsigned i = 1; i <= cellNums[0]; i++){
                 i1 = i - 1;
 
-                this->addFace(k1 + i1, k1 + i, k2 + i, k2 + i1);
+                this->addFace(k1 + i1, k2 + i1, k2 + i, k1 + i);
                 this->addOwner(k3 + i);
             }
         }
@@ -162,7 +162,7 @@ void Mesh::cubicBoundaryRear() {
 
 void Mesh::cubicBoundaryBot(){
 
-    arrUnsgn cellNums = this->shape.getCellNumbersOfLayer(1);
+    arrUnsgn cellNums(this->shape.getCellNumbersOfLayer(1));
     unsigned lengthPoints = cellNums[0] + 1;
     unsigned baseCells = cellNums[0]*cellNums[1];
     unsigned i1, j1, j2, j3;
@@ -184,7 +184,7 @@ void Mesh::cubicBoundaryBot(){
 
 void Mesh::cubicBoundaryTop(){
 
-    arrUnsgn cellNums = this->shape.getCellNumbersOfLayer(1);
+    arrUnsgn cellNums(this->shape.getCellNumbersOfLayer(1));
     unsigned lengthPoints = cellNums[0] + 1;
     unsigned widthPoints = cellNums[1] + 1;
     unsigned basePoints = lengthPoints*widthPoints;
@@ -208,7 +208,7 @@ void Mesh::cubicBoundaryTop(){
         for(unsigned i = 1; i <= cellNums[0]; i++){
             i1 = i - 1;
 
-            this->addFace(j1 + i1, j2 + i1, j2 + i, j1 + i);
+            this->addFace(j1 + i1, j1 + i, j2 + i, j2 + i1);
             this->addOwner(j3 + i);
         }
     }

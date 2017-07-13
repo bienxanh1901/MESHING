@@ -60,7 +60,12 @@
 		<Unit filename="src/cubicFacesandCells.cpp" />
 		<Unit filename="src/cubicGeneration.cpp" />
 		<Unit filename="src/cubicPoints.cpp" />
+		<Unit filename="src/cylinderBoundaries.cpp" />
+		<Unit filename="src/cylinderFacesandCells.cpp" />
+		<Unit filename="src/cylinderGeneration.cpp" />
+		<Unit filename="src/cylinderPoints.cpp" />
 		<Unit filename="src/hexahedral.cpp" />
+		<Unit filename="src/meshTools.cpp" />
 		<Unit filename="src/quadrilateral.cpp" />
 		<Unit filename="src/shapeAddCUBOID.cpp" />
 		<Unit filename="src/shapeAddCYLINDER.cpp" />

@@ -14,7 +14,7 @@ class Cell : public Element {
         virtual ~Cell();
         Cell(const Cell& p) : Element(p) { this->volume = p.volume;}
         Cell(Point*, elemType, unsigned , unsigned );
-        Cell(const vector<Point>&, elemType, unsigned );
+        Cell(const containerPoints&, elemType, unsigned );
         Cell& operator=(const Cell&);
 
         double getVolume() { return this->volume;}

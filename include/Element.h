@@ -14,7 +14,7 @@ class Element{
         Element();
         Element(const Element& );
         Element(Point*, elemType, unsigned , unsigned );
-        Element(const vector<Point>&, elemType, unsigned );
+        Element(const containerPoints&, elemType, unsigned );
         virtual ~Element();
         Element& operator=(const Element&);
 

@@ -27,6 +27,7 @@ class Shape {
         arrUnsgn& getCellNumbersOfLayer(unsigned);
         void addLayer();
         void deleteLayer(unsigned);
+        void clear();
     protected:
     private:
         ShapeType type;

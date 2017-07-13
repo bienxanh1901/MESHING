@@ -18,8 +18,8 @@ void Shape::addOVAL() {
         cin >> sizeR >> sizeZ;
 
         dimOfLayer.insert(0, radius);
-        dimOfLayer.insert(1, radius2);
-        dimOfLayer.insert(2, height);
+        dimOfLayer.insert(1, height);
+        dimOfLayer.insert(2, radius2);
 
         cellR = (unsigned)ROUNDED(2.0*PI*radius/sizeR, 0.0);
         cellR = (cellR/16 + 1)*16;
@@ -46,8 +46,8 @@ void Shape::addOVAL() {
         cin >> sizeZ;
 
         dimOfLayer.insert(0, dim2[0]);
-        dimOfLayer.insert(1, dim2[1]);
-        dimOfLayer.insert(2, height);
+        dimOfLayer.insert(1, height);
+        dimOfLayer.insert(2, dim2[1]);
 
         cellZ = (unsigned)ROUNDED(height/sizeZ, 0.0);
         sizeZ = height/(double)cellZ;

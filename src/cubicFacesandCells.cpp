@@ -14,7 +14,7 @@ void Mesh::cubicInternalFacesandCells() {
     for(unsigned layer = 1; layer <= this->shape.getNumberOfLayers(); layer ++) {
 
         if(layer > 1) {
-            startPoints = basePoints*(cellNums[2] + 1);
+            startPoints+= basePoints*cellNums[2];
             cellNums = this->shape.getCellNumbersOfLayer(layer);
         }
 

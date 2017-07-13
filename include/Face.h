@@ -17,7 +17,7 @@ class Face : public Element {
 
         Face(Point*, elemType, unsigned , unsigned );
 
-        Face(const vector<Point>&, elemType, unsigned = 0 );
+        Face(const containerPoints&, elemType, unsigned = 0 );
 
         Face& operator=(const Face&);
 
