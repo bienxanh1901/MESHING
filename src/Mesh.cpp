@@ -64,10 +64,10 @@ void Mesh::meshGeneration()
             break;
         case CYLINDER:
         case OVAL:
-//            cylinderGenerator();
+            cylinderGenerator();
             break;
         case SPHERIC:
-//            sphericGenerator();
+            sphericGenerator();
             break;
         //default:
 

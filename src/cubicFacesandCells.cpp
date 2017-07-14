@@ -49,7 +49,7 @@ void Mesh::cubicInternalFacesandCells() {
                         this->addNeighbor(this->meshInfo.numberOfCells + cellNums[0]);
                     }
 
-                    if(k < cellNums[2]) {
+                    if(k < cellNums[2] && layer < this->shape.getNumberOfLayers()) {
 
                         this->addFace(k1 + j1 + i1, k1 + j1 + i, k1 + j2 + i, k1 + j2 + i1);
                         this->addOwner(this->meshInfo.numberOfCells);

@@ -54,7 +54,7 @@ class Mesh
         // internal function
 
         void addPoint(double , double , double);
-        void addPoint(TypeVector<double> &);
+        void addPoint(TypeVector<double>);
         void addFace(containerPoints&);
         void addFace(unsigned, unsigned, unsigned, unsigned);
         void addCell(containerPoints&);
@@ -86,15 +86,14 @@ class Mesh
         void extrudePoints();
 
         void cylinderInternalFacesandCells();
-        void baseFacesandCells();
-        void extrudeFaces();
-        void extrudeCells();
+        void cylinderOuterPart(unsigned, unsigned, unsigned);
+        void cylinderInnerPart(unsigned, unsigned, unsigned);
 
         void cylinderBoundaries();
         void cylinderBoundaryBot();
         void cylinderBoundaryTop();
         void cylinderBoundariesAround();
-        void findPointsconnected2D(unsigned&, unsigned&, unsigned&);
+        void meshConnected2D(unsigned&, unsigned&, unsigned&, unsigned&);
 
         // spheric mesh definition
 

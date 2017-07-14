@@ -5,7 +5,7 @@ void Mesh::addPoint(double x, double y, double z) {
     this->points.push_back(Point(x, y, z, ++this->meshInfo.numberOfPoints));
 }
 
-void Mesh::addPoint(TypeVector<double>& p) {
+void Mesh::addPoint(TypeVector<double> p) {
 
     this->points.push_back(Point(p, ++this->meshInfo.numberOfPoints));
 }

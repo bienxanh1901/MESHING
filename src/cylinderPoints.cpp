@@ -5,18 +5,14 @@ void Mesh::basePoints(){
     arrDouble dim(this->shape.getDimsOfLayer(1));
     arrDouble sizem(this->shape.getSizesOfLayer(1));
     arrUnsgn cellNums(this->shape.getCellNumbersOfLayer(1));
-    unsigned sidePoints = cellNums[0]/8;
+    double sideP = (double)(cellNums[0]/8);
     double majorR = dim[0];
-    double halfR = 0.5*majorR;
-    double p2 = halfR/sqrt(2.0);
-    double cornerX = halfR - p2*(1.0 - tan(PI/6.0))/sqrt(2.0);
+    double cornerX = majorR*tan(PI/6.0)/2.0;
     double minorR, cornerY;
 
     if(this->shape.getShape() == OVAL) {
         minorR = dim[2];
-        halfR = 0.5*minorR;
-        p2 = halfR/sqrt(2.0);
-        cornerY = halfR - p2*(1.0 - tan(PI/6.0))/sqrt(2.0);
+        cornerY = minorR*tan(PI/6.0)/2.0;
     } else {
         minorR = majorR;
         cornerY = cornerX;
@@ -29,16 +25,16 @@ void Mesh::basePoints(){
         double sizeX, sizeY;
 
         if(fabs(costheta) >= 1.0/sqrt(2.0)){
-            sizeX = (majorR - cornerX/fabs(costheta))/(double)sidePoints;
-            sizeY = (minorR - cornerY/fabs(costheta))/(double)sidePoints;
+            sizeX = (majorR - cornerX/fabs(costheta))/sideP;
+            sizeY = (minorR - cornerY/fabs(costheta))/sideP;
         }else {
-            sizeX = (majorR - cornerX/fabs(sintheta))/sidePoints;
-            sizeY = (minorR - cornerY/fabs(sintheta))/sidePoints;
+            sizeX = (majorR - cornerX/fabs(sintheta))/sideP;
+            sizeY = (minorR - cornerY/fabs(sintheta))/sideP;
         }
 
-        for(unsigned i = 0; i < sidePoints; i++){
+        for(double i = 0.0; i < sideP; i+=1.0){
 
-            this->addPoint((majorR - (double)i*sizeX)*sintheta, (minorR - (double)i*sizeY)*costheta, 0.0);
+            this->addPoint((majorR - i*sizeX)*sintheta, (minorR - i*sizeY)*costheta, 0.0);
         }
     }
 
@@ -59,14 +55,12 @@ void Mesh::basePoints(){
 void Mesh::extrudePoints() {
 
     arrUnsgn cellNums(this->shape.getCellNumbersOfLayer(1));
-    unsigned sidePoints = cellNums[0]/8;
-    unsigned edgePoints = cellNums[0]/4 + 1;
-    unsigned basePoints = cellNums[0]*sidePoints + pow(edgePoints,2);
+    unsigned basePoints = cellNums[0]*cellNums[0]/8 + pow(cellNums[0]/4 + 1,2);
+    double startZ = 0.0;
     Point point;
 
     for(unsigned layer = 1; layer <= this->shape.getNumberOfLayers(); layer++) {
 
-        if(layer > 1) cellNums = arrUnsgn(this->shape.getCellNumbersOfLayer(layer));
         arrDouble dim(this->shape.getDimsOfLayer(layer));
         arrDouble sizem(this->shape.getSizesOfLayer(layer));
 
@@ -74,11 +68,11 @@ void Mesh::extrudePoints() {
 
             for(unsigned i = 0; i < basePoints; i++){
 
-                point = this->points[i] + Point(0.0, 0.0, z);
+                point = this->points[i] + Point(0.0, 0.0, startZ + z);
                 this->addPoint(point);
             }
         }
+        startZ+= dim[1];
 
     }
-
 }

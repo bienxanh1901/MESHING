@@ -1,64 +1,75 @@
 #include "../include/Mesh.h"
 
 void Mesh::leftRightBotTopPartsCells() {
-    unsigned sidePoints = NODE(0)/8;
-    unsigned edgeCells = NODE(0)/4;
-    unsigned edgePoints = edgeCells + 1;
-    unsigned layer = sidePoints*edgePoints;
-    unsigned layerC = sidePoints*edgeCells;
-    unsigned frontC = (edgeCells - 2)*(edgeCells - 2)*sidePoints + 4*(edgeCells - 1)*sidePoints;
-    unsigned baseC  = layerC*NODE(0);
+
+    arrUnsgn cellNums(this->shape.getCellNumbersOfLayer(1));
+    unsigned sideP = cellNums[0]/8;
+    unsigned edgeC = cellNums[0]/4;
+    unsigned edgeP = edgeC + 1;
+    unsigned layerP = sideP*edgeP;
+    unsigned layerC = sideP*edgeC;
+    unsigned frontC = (edgeC - 2)*(edgeC - 2)*sideP + 4*(edgeC - 1)*sideP;
+    unsigned baseC  = layerC*cellNums[0];
     unsigned baseC2  = baseC + frontC ;
-    unsigned i1, i2, i3, i4, j1, j2, k1, k2, k3;
 
-    i3 = baseC;
-    i4 = baseC2 + 4*(edgeCells - 1)*sidePoints;
-    for(unsigned i = 0; i < NODE(0); i++) {
+    unsigned i3 = baseC;
+    unsigned i4 = baseC2 + 4*(edgeC - 1)*sideP;
 
-        i1 = i*layer;
-        i2 = i1 + layer;
-        if(i == NODE(0) - 1) i2 = 0;
+    for(unsigned i = 0; i < cellNums[0]; i++) {
+
+        unsigned i1 = i*layerP;
+        unsigned i2 = i1 + layerP;
+        if(i == cellNums[0] - 1) i2 = 0;
 
         // for cells connection with front
-        if(i%edgeCells != 0) i3+= sidePoints;
-        if(i == NODE(0) - 1) i3 = baseC;
+        if(i%edgeC != 0) i3+= sideP;
+        if(i == cellNums[0] - 1) i3 = baseC;
 
         // for cells connection with rear
-        if(i == 1) i4 += 4*(edgeCells - 1)*sidePoints;
-        if(i%edgeCells != 0) i4-= sidePoints;
+        if(i == 1) i4 += 4*(edgeC - 1)*sideP;
+        if(i%edgeC != 0) i4-= sideP;
         if(i == 0) i4 = baseC2;
 
-        for(unsigned j = 0; j < edgePoints - 1; j++) {
-            j1 = j*sidePoints;
-            j2 = j1 + sidePoints;
+        for(unsigned j = 0; j < edgeP - 1; j++) {
 
+            unsigned j1 = j*sideP;
+            unsigned j2 = j1 + sideP;
 
-            for(unsigned k = 1; k < sidePoints; k++) {
-                k1 = k - 1;
+            for(unsigned k = 1; k < sideP; k++) {
+
+                unsigned k1 = k - 1;
+
                 this->addCell(i1 + j1 + k1, i2 + j1 + k1, i2 + j2 + k1, i1 + j2 + k1,
                               i1 + j1 + k, i2 + j1 + k, i2 + j2 + k, i1 + j2 + k);
+
                 if(i == 0) {
+
                     this->addFace(i1 + j1 + k1, i1 + j2 + k1, i1 + j2 + k, i1 + j1 + k);
                     this->addOwner(this->meshInfo.numberOfCells);
                     this->addNeighbor(baseC - layerC + j1 + k);
+
                 }
 
-                if(i < NODE(0) - 1) {
+                if(i < cellNums[0] - 1) {
+
                     this->addFace(i2 + j1 + k1, i2 + j1 + k, i2 + j2 + k, i2 + j2 + k1);
                     this->addOwner(this->meshInfo.numberOfCells);
                     this->addNeighbor(this->meshInfo.numberOfCells + layerC);
+
                 }
 
                 if(j == 0) {
+
                     this->addFace(i1 + j1 + k1, i1 + j1 + k, i2 + j1 + k, i2 + j1 + k1);
                     this->addOwner(this->meshInfo.numberOfCells);
                     this->addNeighbor(i3 + k);
+
                 }
 
                 this->addFace(i1 + j2 + k1, i2 + j2 + k1, i2 + j2 + k, i1 + j2 + k);
                 this->addOwner(this->meshInfo.numberOfCells);
-                if(j == edgePoints - 2) this->addNeighbor(i4 + k);
-                else this->addNeighbor(this->meshInfo.numberOfCells + sidePoints);
+                if(j == edgeP - 2) this->addNeighbor(i4 + k);
+                else this->addNeighbor(this->meshInfo.numberOfCells + sideP);
 
                 this->addFace(i1 + j1 + k, i1 + j2 + k, i2 + j2 + k, i2 + j1 + k);
                 this->addOwner(this->meshInfo.numberOfCells);
@@ -66,35 +77,43 @@ void Mesh::leftRightBotTopPartsCells() {
             }
 
             //connection with cubic
-            j1 = (j + 1)*sidePoints - 1;
-            j2 = j1 + sidePoints;
+            j1 = (j + 1)*sideP - 1;
+            j2 = j1 + sideP;
 
+            unsigned k1, k2, k3;
             this->findPointsconnected3D(i, j, k1, k2, k3);
 
             this->addCell(i1 + j1, i2 + j1, i2 + j2, i1 + j2,
                           k1, k2, k2 + 1, k1 + 1);
+
             if(i == 0) {
+
                 this->addFace(i1 + j1, i1 + j2, k1 + 1, k1);
                 this->addOwner(this->meshInfo.numberOfCells);
                 this->addNeighbor(baseC - layerC + j1 + 1);
+
             }
 
-            if(i < NODE(0) - 1) {
+            if(i < cellNums[0] - 1) {
+
                 this->addFace(i2 + j1, k2, k2 + 1, i2 + j2);
                 this->addOwner(this->meshInfo.numberOfCells);
                 this->addNeighbor(this->meshInfo.numberOfCells + layerC);
+
             }
 
             if(j == 0) {
+
                 this->addFace(i1 + j1, k1, k2, i2 + j1);
                 this->addOwner(this->meshInfo.numberOfCells);
-                this->addNeighbor(i3 + sidePoints);
+                this->addNeighbor(i3 + sideP);
+
             }
 
             this->addFace(i1 + j2, i2 + j2, k2 + 1, k1 + 1);
             this->addOwner(this->meshInfo.numberOfCells);
-            if(j == edgePoints - 2) this->addNeighbor(i4 + sidePoints);
-            else this->addNeighbor(this->meshInfo.numberOfCells + sidePoints);
+            if(j == edgeP - 2) this->addNeighbor(i4 + sideP);
+            else this->addNeighbor(this->meshInfo.numberOfCells + sideP);
 
             this->addFace(k1, k1 + 1, k2 + 1, k2);
             this->addOwner(this->meshInfo.numberOfCells);
@@ -103,76 +122,87 @@ void Mesh::leftRightBotTopPartsCells() {
     }
 }
 
+
 void Mesh::frontPartCells() {
-    unsigned sidePoints = NODE(0)/8;
-    unsigned edgeCells = NODE(0)/4;
-    unsigned edgePoints = edgeCells + 1;
-    unsigned layer = sidePoints*edgePoints;
-    unsigned layerC = edgePoints*edgePoints;
-    unsigned layerCells = edgeCells*edgeCells;
-    unsigned base = NODE(0)*layer;
-    unsigned outerPoints= base + 2*(edgePoints - 2)*(edgePoints - 2)*sidePoints;
-    unsigned frontC = (edgeCells - 2)*(edgeCells - 2)*sidePoints + 4*(edgeCells - 1)*sidePoints;
-    unsigned baseC  = sidePoints*edgeCells*NODE(0);
-    unsigned outerCells = baseC + 2*frontC;
-    unsigned i1, i2, j1, j2, k1, k2, k3;
+
+    arrUnsgn cellNums(this->shape.getCellNumbersOfLayer(1));
+    unsigned sideP = cellNums[0]/8;
+    unsigned edgeC = cellNums[0]/4;
+    unsigned edgeP = edgeC + 1;
+    unsigned layerP = edgeP*edgeP;
+    unsigned layerC = sideP*edgeC;
+    unsigned baseP = cellNums[0]*sideP*edgeP;
+    unsigned outerP= baseP + 2*(edgeP - 2)*(edgeP - 2)*sideP;
+    unsigned outerC = layerC*cellNums[0] + 2*((edgeC - 2)*(edgeC - 2)*sideP + 4*(edgeC - 1)*sideP);
 
 
     this->sphericFrontConnectivity();
 
-    for(unsigned i = 1; i < edgePoints - 2; i++) {
-        i1 = base + (i - 1)*(edgePoints - 2)*sidePoints;
-        i2 = i1 + (edgePoints - 2)*sidePoints;
-        for(unsigned j = 1; j < edgePoints - 2; j++) {
-            j1 = (j - 1)*sidePoints;
-            j2 = j1 + sidePoints;
+    for(unsigned i = 1; i < edgeP - 2; i++) {
 
-            for(unsigned k = 1; k < sidePoints; k++) {
-                k1 = k - 1;
+        unsigned i1 = baseP + (i - 1)*(edgeP - 2)*sideP;
+        unsigned i2 = i1 + (edgeP - 2)*sideP;
+
+        for(unsigned j = 1; j < edgeP - 2; j++) {
+
+            unsigned j1 = (j - 1)*sideP;
+            unsigned j2 = j1 + sideP;
+
+            for(unsigned k = 1; k < sideP; k++) {
+
+                unsigned k1 = k - 1;
 
                 this->addCell(i1 + j1 + k1, i2 + j1 + k1, i2 + j2 + k1, i1 + j2 + k1,
                               i1 + j1 + k, i2 + j1 + k, i2 + j2 + k, i1 + j2 + k);
 
-                if(i < edgePoints - 3) {
+                if(i < edgeP - 3) {
+
                     this->addFace(i2 + j1 + k1, i2 + j1 + k, i2 + j2 + k, i2 + j2 + k1);
                     this->addOwner(this->meshInfo.numberOfCells);
-                    this->addNeighbor(this->meshInfo.numberOfCells + (edgePoints - 3)*sidePoints);
+                    this->addNeighbor(this->meshInfo.numberOfCells + (edgeP - 3)*sideP);
+
                 }
 
-                if(j < edgePoints - 3) {
+                if(j < edgeP - 3) {
+
                     this->addFace(i1 + j2 + k1, i2 + j2 + k1, i2 + j2 + k, i1 + j2 + k);
                     this->addOwner(this->meshInfo.numberOfCells);
-                    this->addNeighbor(this->meshInfo.numberOfCells + sidePoints);
+                    this->addNeighbor(this->meshInfo.numberOfCells + sideP);
+
                 }
 
                 this->addFace(i1 + j1 + k, i1 + j2 + k, i2 + j2 + k, i2 + j1 + k);
                 this->addOwner(this->meshInfo.numberOfCells);
-                this->addNeighbor(numberOfCells + 1);
+                this->addNeighbor(this->meshInfo.numberOfCells + 1);
             }
 
             //connection with cubic
-            j1 = j*sidePoints - 1;
-            j2 = j1 + sidePoints;
-            k1 = outerPoints + j*edgePoints + i*layerC;
-            k2 = k1 + layerC;
-            k3 = outerCells + i*layerCells + j*edgeCells + 1;
+            j1 = j*sideP - 1;
+            j2 = j1 + sideP;
+            unsigned k1 = outerP + j*edgeP + i*layerP;
+            unsigned k2 = k1 + layerP;
+            unsigned k3 = outerC + i*layerC + j*edgeC + 1;
 
             this->addCell(i1 + j1, i2 + j1, i2 + j2, i1 + j2,
-                          k1, k2, k2 + edgePoints, k1 + edgePoints);
+                          k1, k2, k2 + edgeP, k1 + edgeP);
 
-            if(i < edgePoints - 3) {
-                this->addFace(i2 + j1, k2, k2 + edgePoints, i2 + j2);
+            if(i < edgeP - 3) {
+
+                this->addFace(i2 + j1, k2, k2 + edgeP, i2 + j2);
                 this->addOwner(this->meshInfo.numberOfCells);
-                this->addNeighbor(this->meshInfo.numberOfCells + (edgePoints - 3)*sidePoints);
+                this->addNeighbor(this->meshInfo.numberOfCells + (edgeP - 3)*sideP);
+
             }
 
-            if(j < edgePoints - 3) {
-                this->addFace(i1 + j2, i2 + j2, k2 + edgePoints, k1 + edgePoints);
+            if(j < edgeP - 3) {
+
+                this->addFace(i1 + j2, i2 + j2, k2 + edgeP, k1 + edgeP);
                 this->addOwner(this->meshInfo.numberOfCells);
-                this->addNeighbor(this->meshInfo.numberOfCells + sidePoints);
+                this->addNeighbor(this->meshInfo.numberOfCells + sideP);
+
             }
 
-            this->addFace(k1, k2, k2 + edgePoints, k1 + edgePoints);
+            this->addFace(k1, k2, k2 + edgeP, k1 + edgeP);
             this->addOwner(this->meshInfo.numberOfCells);
             this->addNeighbor(k3);
         }
@@ -180,75 +210,81 @@ void Mesh::frontPartCells() {
 }
 
 void Mesh::rearPartCells() {
-    unsigned sidePoints = NODE(0)/8;
-    unsigned edgeCells = NODE(0)/4;
-    unsigned edgePoints = edgeCells + 1;
-    unsigned layer = sidePoints*edgePoints;
-    unsigned layerC = edgePoints*edgePoints;
-    unsigned layerCells = edgeCells*edgeCells;
-    unsigned base = NODE(0)*layer + (edgePoints - 2)*(edgePoints - 2)*sidePoints;
-    unsigned outerPoints= base + (edgePoints - 2)*(edgePoints - 2)*sidePoints;
-    unsigned frontC = (edgeCells - 2)*(edgeCells - 2)*sidePoints + 4*(edgeCells - 1)*sidePoints;
-    unsigned baseC  = sidePoints*edgeCells*NODE(0);
-    unsigned outerCells = baseC + 2*frontC;
-    unsigned i1, i2, j1, j2, k1, k2, k3;
 
+    arrUnsgn cellNums(this->shape.getCellNumbersOfLayer(1));
+    unsigned sideP = cellNums[0]/8;
+    unsigned edgeC = cellNums[0]/4;
+    unsigned edgeP = edgeC + 1;
+    unsigned layerP = edgeP*edgeP;
+    unsigned layerC = sideP*edgeC;
+    unsigned baseP = cellNums[0]*sideP*edgeP + (edgeP - 2)*(edgeP - 2)*sideP;
+    unsigned outerP= baseP + (edgeP - 2)*(edgeP - 2)*sideP;
+    unsigned outerC = layerC*cellNums[0] + 2*((edgeC - 2)*(edgeC - 2)*sideP + 4*(edgeC - 1)*sideP);
 
     this->sphericRearConnectivity();
 
-    for(unsigned i = 1; i < edgePoints - 2; i++) {
-        i1 = base + (i - 1)*(edgePoints - 2)*sidePoints;
-        i2 = i1 + (edgePoints - 2)*sidePoints;
-        for(unsigned j = 1; j < edgePoints - 2; j++) {
-            j1 = (j - 1)*sidePoints;
-            j2 = j1 + sidePoints;
+    for(unsigned i = 1; i < edgeP - 2; i++) {
 
-            for(unsigned k = 1; k < sidePoints; k++) {
-                k1 = k - 1;
+        unsigned i1 = baseP + (i - 1)*(edgeP - 2)*sideP;
+        unsigned i2 = i1 + (edgeP - 2)*sideP;
+
+        for(unsigned j = 1; j < edgeP - 2; j++) {
+
+            unsigned j1 = (j - 1)*sideP;
+            unsigned j2 = j1 + sideP;
+
+            for(unsigned k = 1; k < sideP; k++) {
+
+                unsigned k1 = k - 1;
 
                 this->addCell(i1 + j1 + k1, i2 + j1 + k1, i2 + j2 + k1, i1 + j2 + k1,
                               i1 + j1 + k, i2 + j1 + k, i2 + j2 + k, i1 + j2 + k);
 
-                if(i < edgePoints - 3) {
+                if(i < edgeP - 3) {
+
                     this->addFace(i2 + j1 + k1, i2 + j1 + k, i2 + j2 + k, i2 + j2 + k1);
                     this->addOwner(this->meshInfo.numberOfCells);
-                    this->addNeighbor(this->meshInfo.numberOfCells + (edgePoints - 3)*sidePoints);
+                    this->addNeighbor(this->meshInfo.numberOfCells + (edgeP - 3)*sideP);
                 }
 
-                if(j < edgePoints - 3) {
+                if(j < edgeP - 3) {
                     this->addFace(i1 + j2 + k1, i2 + j2 + k1, i2 + j2 + k, i1 + j2 + k);
                     this->addOwner(this->meshInfo.numberOfCells);
-                    this->addNeighbor(this->meshInfo.numberOfCells + sidePoints);
+                    this->addNeighbor(this->meshInfo.numberOfCells + sideP);
                 }
 
                 this->addFace(i1 + j1 + k, i1 + j2 + k, i2 + j2 + k, i2 + j1 + k);
                 this->addOwner(this->meshInfo.numberOfCells);
-                this->addNeighbor(numberOfCells + 1);
+                this->addNeighbor(this->meshInfo.numberOfCells + 1);
             }
 
             //connection with cubic
-            j1 = j*sidePoints - 1;
-            j2 = j1 + sidePoints;
-            k1 = outerPoints + j*layerC + (i + 1)*edgePoints - 1;
-            k2 = k1 + layerC;
-            k3 = outerCells + j*layerCells + (i + 1)*edgeCells;
+            j1 = j*sideP - 1;
+            j2 = j1 + sideP;
+            unsigned k1 = outerP + j*layerP + (i + 1)*edgeP - 1;
+            unsigned k2 = k1 + layerP;
+            unsigned k3 = outerC + j*layerC + (i + 1)*edgeC;
 
             this->addCell(i1 + j1, i2 + j1, i2 + j2, i1 + j2,
-                          k1, k1 + edgePoints, k2 + edgePoints, k2);
+                          k1, k1 + edgeP, k2 + edgeP, k2);
 
-            if(i < edgePoints - 3) {
-                this->addFace(i2 + j1, k1 + edgePoints, k1 + edgePoints, i2 + j2);
+            if(i < edgeP - 3) {
+
+                this->addFace(i2 + j1, k1 + edgeP, k1 + edgeP, i2 + j2);
                 this->addOwner(this->meshInfo.numberOfCells);
-                this->addNeighbor(this->meshInfo.numberOfCells + (edgePoints - 3)*sidePoints);
+                this->addNeighbor(this->meshInfo.numberOfCells + (edgeP - 3)*sideP);
+
             }
 
-            if(j < edgePoints - 3) {
-                this->addFace(i1 + j2, i2 + j2, k2 + edgePoints, k2);
+            if(j < edgeP - 3) {
+
+                this->addFace(i1 + j2, i2 + j2, k2 + edgeP, k2);
                 this->addOwner(this->meshInfo.numberOfCells);
-                this->addNeighbor(this->meshInfo.numberOfCells + sidePoints);
+                this->addNeighbor(this->meshInfo.numberOfCells + sideP);
+
             }
 
-            this->addFace(k1, k2, k2 + edgePoints, k1 + edgePoints);
+            this->addFace(k1, k2, k2 + edgeP, k1 + edgeP);
             this->addOwner(this->meshInfo.numberOfCells);
             this->addNeighbor(k3);
         }
@@ -256,45 +292,53 @@ void Mesh::rearPartCells() {
 }
 
 void Mesh::cubicPartCells() {
-    unsigned sidePoints = NODE(0)/8;
-    unsigned edgeCells = NODE(0)/4;
-    unsigned edgePoints = edgeCells + 1;
-    unsigned layer = sidePoints*edgePoints;
-    unsigned layerC= edgePoints*edgePoints;
-    unsigned layerCells = edgeCells*edgeCells;
-    unsigned outerPoints= NODE(0)*layer + 2*(edgePoints - 2)*(edgePoints - 2)*sidePoints;
-    unsigned i1, i2, j1, k1, k2;
 
-    containerPoints pointsList;
+    arrUnsgn cellNums(this->shape.getCellNumbersOfLayer(1));
+    unsigned edgeC = cellNums[0]/4;
+    unsigned edgeP = edgeC + 1;
+    unsigned layerP = edgeP*edgeP;
+    unsigned layerC = edgeC*edgeC;
+    unsigned outerP = cellNums[0]*cellNums[0]*edgeP/8 + 2*(edgeP - 2)*(edgeP - 2)*cellNums[0]/8;
 
-    for(unsigned k = 1; k < edgePoints; k++) {
-        k1 = outerPoints + (k - 1)*layerC;
-        k2 = k1 + layerC;
-        for(unsigned i = 1; i < edgePoints; i++) {
-            i1 = (i - 1)*edgePoints;
-            i2 = i1 + edgePoints;
-            for(unsigned j = 1; j < edgePoints; j++) {
-                j1 = j - 1;
+    for(unsigned k = 1; k < edgeP; k++) {
+
+        unsigned k1 = outerP + (k - 1)*layerP;
+        unsigned k2 = k1 + layerP;
+
+        for(unsigned i = 1; i < edgeP; i++) {
+
+            unsigned i1 = (i - 1)*edgeP;
+            unsigned i2 = i1 + edgeP;
+
+            for(unsigned j = 1; j < edgeP; j++) {
+
+                unsigned j1 = j - 1;
 
                 this->addCell(i1 + j1 + k1, i2 + j1 + k1, i2 + j + k1, i1 + j + k1,
                           i1 + j1 + k2, i2 + j1 + k2, i2 + j + k2, i1 + j + k2);
 
-                if(i < edgeCells) {
+                if(i < edgeC) {
+
                     this->addFace(k1 + j1 + i2, k2 + j1 + i2, k2 + j + i2, k1 + j + i2);
                     this->addOwner(this->meshInfo.numberOfCells);
-                    this->addNeighbor(this->meshInfo.numberOfCells + edgeCells);
+                    this->addNeighbor(this->meshInfo.numberOfCells + edgeC);
+
                 }
 
-                if(j < edgeCells) {
+                if(j < edgeC) {
+
                     this->addFace(k1 + j + i1, k1 + j + i2, k2 + j + i2, k2 + j + i1);
                     this->addOwner(this->meshInfo.numberOfCells);
                     this->addNeighbor(this->meshInfo.numberOfCells + 1);
+
                 }
 
-                if(k < edgeCells) {
+                if(k < edgeC) {
+
                     this->addFace(k2 + j1 + i1, k2 + j + i1, k2 + j + i2, k2 + j1 + i2);
                     this->addOwner(this->meshInfo.numberOfCells);
-                    this->addNeighbor(this->meshInfo.numberOfCells + layerCells);
+                    this->addNeighbor(this->meshInfo.numberOfCells + layerC);
+
                 }
             }
         }

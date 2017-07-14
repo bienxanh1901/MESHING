@@ -4,7 +4,7 @@ void Mesh::sphericGenerator() {
 
     this->sphericPoints();
     this->sphericFacesandCells();
-    this->sphericBoundaries();
+//    this->sphericBoundaries();
 }
 
 

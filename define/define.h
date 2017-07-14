@@ -28,4 +28,13 @@ Macros
 #define EPS 0.00000001
 #endif // DEFINE_H_INCLUDED
 
+//loop define (reference by openFoam)
+
+#define forAll(list, i) for(unsigned i = 0; i < (list).size(); i++)
+#define forAllIter(Container,container,iter)                                    \
+     for                                                                        \
+     (                                                                          \
+         Container::iterator iter = (container).begin();                        \
+         iter != (container).end();                                             \
+         ++iter                                                                 \
 
