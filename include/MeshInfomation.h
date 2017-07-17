@@ -27,7 +27,6 @@ class MeshInfomation {
         unsigned numberOfFaces;
         unsigned numberOfInternalFaces;
         unsigned numberOfBoundaries;
-        containerIDs numberOfCellsOfLayer;
     protected:
         friend ostream& operator<<(ostream& out, MeshInfomation info){
             return info.print(out);

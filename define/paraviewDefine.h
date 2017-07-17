@@ -7,11 +7,11 @@ using namespace std;
 // XML paraview file
 #define STR_HELPER(x) #x
 #define STR(x) STR_HELPER(x)
-#define VTK         "VTKFile"
-#define PIECE       "Piece"
-#define POINT       "Points"
+#define VTKSTR         "VTKFile"
+#define PIECESTR       "Piece"
+#define POINTSTR       "Points"
 #define POINTDATA   "PointData"
-#define CELL        "Cells"
+#define CELLSTR        "Cells"
 #define CELLDATA    "CellData"
 #define DATA_ARRAY  "DataArray"
 #define LITTLE_END  "LittleEndian"
@@ -21,9 +21,9 @@ using namespace std;
 #define INT32       "Int32"
 #define UINT8       "UInt8"
 #define ASCII       "ascii"
-#define SCALAR      "scalars"
+#define SCALARSTR      "scalars"
 #define CONNECT     "connectivity"
-#define OFSET       "offsets"
+#define OFSETSTR       "offsets"
 #define CELLTYPE    "types"
 
 // legacy paraview file

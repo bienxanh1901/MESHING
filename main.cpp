@@ -8,10 +8,10 @@ using namespace std;
 int main()
 {
     cout << "Hello world!" << "\n";
-    Shape shape(SPHERIC);
+    Shape shape(CYLINDER);
     shape.addLayer();
-//    shape.addLayer();
-//    shape.addLayer();
+    shape.addLayer();
+    shape.addLayer();
     Mesh mesh(shape);
     mesh.meshGeneration();
     mesh.writeVTUformat();

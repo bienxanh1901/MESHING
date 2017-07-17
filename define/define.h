@@ -36,5 +36,5 @@ Macros
      (                                                                          \
          Container::iterator iter = (container).begin();                        \
          iter != (container).end();                                             \
-         ++iter                                                                 \
+         ++iter)                                                                 \
 

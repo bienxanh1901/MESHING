@@ -50,6 +50,9 @@ class Mesh
         containerIDs boundaries;
         containerIDs neighbor;
         containerIDs owner;
+        containerIDs cellsOfLayer;
+        // test layer
+        containerIDs mark;
 
         // internal function
 
@@ -131,6 +134,7 @@ class Mesh
         void writeTEACHNeighbor();
         void writeTEACHOwner();
         void writeTEACHBoundaries();
+        void writeTEACHCellsOfLayer();
 
 };
 
