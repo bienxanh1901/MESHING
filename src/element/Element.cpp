@@ -29,7 +29,7 @@ Element::Element(Point * pointArr, elemType type, unsigned nPoints, unsigned ele
     }
 }
 
-Element::Element(const containerPoints& cPoints, elemType type, unsigned elemID) {
+Element::Element(const ContainerPoints& cPoints, elemType type, unsigned elemID) {
     this->elementType = type;
     this->ID = elemID;
     this->numberOfPoints = cPoints.size();
@@ -71,13 +71,13 @@ Point& Element::getPoint(unsigned ith) {
     return this->points[ith];
 }
 
-containerPoints Element::getPointsList() {
+ContainerPoints Element::getPointsList() {
     return this->points;
 }
 
-containerIDs Element::getPointsIDList() {
-    containerIDs IDList;
-    for(containerPoints::iterator it = this->points.begin(); it != this->points.end(); it++){
+ContainerIDs Element::getPointsIDList() {
+    ContainerIDs IDList;
+    for(ContainerPoints::iterator it = this->points.begin(); it != this->points.end(); it++){
         IDList.push_back(it->getID());
     }
     return IDList;
@@ -96,7 +96,7 @@ Point Element::getCentroid(){
 }
 
 void Element::calcCenter() {
-    for(containerPoints::iterator it = this->points.begin(); it != this->points.end(); it++) {
+    for(ContainerPoints::iterator it = this->points.begin(); it != this->points.end(); it++) {
         this->center+= *it;
     }
     this->center/=(double)this->numberOfPoints;
@@ -105,9 +105,9 @@ void Element::calcCenter() {
 bool Element::operator ==(Element elem) {
     if(this->elementType != elem.elementType) return false;
     unsigned cnt = 0;
-    containerPoints other = elem.getPointsList();
-    for(containerPoints::iterator it = this->points.begin(); it != this->points.end(); it++) {
-        for(containerPoints::iterator it2 = other.begin(); it2 != other.end(); it2++) {
+    ContainerPoints other = elem.getPointsList();
+    for(ContainerPoints::iterator it = this->points.begin(); it != this->points.end(); it++) {
+        for(ContainerPoints::iterator it2 = other.begin(); it2 != other.end(); it2++) {
             if(*it == *it2) cnt++;
         }
     }
@@ -116,14 +116,14 @@ bool Element::operator ==(Element elem) {
 }
 
 ostream& Element::print(ostream& out) {
-    for(containerPoints::iterator it = this->points.begin(); it != this->points.end(); it++) {
+    for(ContainerPoints::iterator it = this->points.begin(); it != this->points.end(); it++) {
         out << it->getID() << " ";
     }
     return out;
 }
 
 ostream& Element::printPointsIDParaview(ostream& out){
-    for(containerPoints::iterator it = this->points.begin(); it != this->points.end(); it++) {
+    for(ContainerPoints::iterator it = this->points.begin(); it != this->points.end(); it++) {
         out << it->getID() - 1 << " ";
     }
     return out;

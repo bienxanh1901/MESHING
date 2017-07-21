@@ -14,7 +14,7 @@ class Cell : public Element {
         virtual ~Cell();
         Cell(const Cell& p) : Element(p) { this->volume = p.volume;}
         Cell(Point*, elemType, unsigned , unsigned );
-        Cell(const containerPoints&, elemType, unsigned );
+        Cell(const ContainerPoints&, elemType, unsigned );
         Cell& operator=(const Cell&);
 
         double getVolume() { return this->volume;}
@@ -23,13 +23,13 @@ class Cell : public Element {
     protected:
 
     private:
-        typedef vector<Face> containerFaces;
+        typedef vector<Face> ContainerFaces;
         double volume;
         void geometryProperties();
         void hexahedralProperties();
         void tetrahedralProperties();
-        void calcVolumeCentroid(containerFaces& faces);
-        containerPoints findFace(unsigned, unsigned, unsigned, unsigned = 0);
+        void calcVolumeCentroid(ContainerFaces& faces);
+        ContainerPoints findFace(unsigned, unsigned, unsigned, unsigned = 0);
 };
 
 #endif // CELL_H

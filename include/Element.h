@@ -14,7 +14,7 @@ class Element{
         Element();
         Element(const Element& );
         Element(Point*, elemType, unsigned , unsigned );
-        Element(const containerPoints&, elemType, unsigned );
+        Element(const ContainerPoints&, elemType, unsigned );
         virtual ~Element();
         Element& operator=(const Element&);
 
@@ -29,8 +29,8 @@ class Element{
         Point getCentroid();
         unsigned getNumberOfPoints();
         Point& getPoint(unsigned);
-        containerPoints getPointsList();
-        containerIDs getPointsIDList();
+        ContainerPoints getPointsList();
+        ContainerIDs getPointsIDList();
         Element* getReference();
     protected:
         Point centroid;
@@ -38,7 +38,7 @@ class Element{
         unsigned numberOfPoints;
         unsigned ID;
         elemType elementType;
-        containerPoints points;
+        ContainerPoints points;
         void calcCenter();
 
         friend ostream& operator<<(ostream& out,Element& e) {

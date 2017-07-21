@@ -2,8 +2,8 @@
 
 void Cell::hexahedralProperties() {
 
-    containerPoints pointsList;
-    containerFaces faces;
+    ContainerPoints pointsList;
+    ContainerFaces faces;
     pointsList = findFace(0, 3, 7, 4);
     faces.push_back(Face(pointsList, QUAD4));
     pointsList = findFace(1, 2, 6, 5);

@@ -7,10 +7,12 @@
 
 using namespace std;
 
-typedef vector<unsigned> containerIDs;
-typedef vector<Point> containerPoints;
-typedef Array<double> arrDouble;
-typedef Array<unsigned> arrUnsgn;
+typedef vector<unsigned> ContainerIDs;
+typedef vector<Point> ContainerPoints;
+typedef Array<double> ArrDouble;
+typedef Array<unsigned> ArrUnsgn;
+typedef vector<ArrDouble> ContainerArrD;
+typedef vector<ArrUnsgn> ContainerArrU;
 
 /*=============================================================================
 Macros

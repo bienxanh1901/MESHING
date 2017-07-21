@@ -10,7 +10,7 @@ Cell::Cell(Point * pointArr, elemType type, unsigned nPoints, unsigned elemID) :
     this->geometryProperties();
 }
 
-Cell::Cell(const containerPoints& cPoints, elemType type, unsigned elemID) : Element(cPoints, type, elemID) {
+Cell::Cell(const ContainerPoints& cPoints, elemType type, unsigned elemID) : Element(cPoints, type, elemID) {
     this->geometryProperties();
 }
 
@@ -36,11 +36,11 @@ void Cell::geometryProperties() {
     else if (elementType == TET4) tetrahedralProperties();
 }
 
-void Cell::calcVolumeCentroid(containerFaces& faces) {
+void Cell::calcVolumeCentroid(ContainerFaces& faces) {
     TypeVector<double> vec1;
     double sign;
     double intergal;
-    for(containerFaces::iterator it = faces.begin(); it != faces.end(); it++)
+    for(ContainerFaces::iterator it = faces.begin(); it != faces.end(); it++)
     {
         vec1 = this->center - it->getCentroid();
         sign = vec1*it->getNormalVector();
@@ -53,9 +53,9 @@ void Cell::calcVolumeCentroid(containerFaces& faces) {
     this->centroid/=(4.0*this->volume);
 }
 
-containerPoints Cell::findFace(unsigned vertice1, unsigned vertice2, unsigned vertice3, unsigned vertice4)
+ContainerPoints Cell::findFace(unsigned vertice1, unsigned vertice2, unsigned vertice3, unsigned vertice4)
 {
-    containerPoints result;
+    ContainerPoints result;
     result.push_back(this->points[vertice1]);
     result.push_back(this->points[vertice2]);
     result.push_back(this->points[vertice3]);

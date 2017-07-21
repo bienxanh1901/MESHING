@@ -12,7 +12,7 @@ void Mesh::addPoint(TypeVector<double> p) {
 
 }
 
-void Mesh::addFace(containerPoints& p) {
+void Mesh::addFace(ContainerPoints& p) {
 
     this->faces.push_back(Face(p, QUAD4, ++this->meshInfo.numberOfFaces));
     p.clear();
@@ -21,7 +21,7 @@ void Mesh::addFace(containerPoints& p) {
 
 void Mesh::addFace(unsigned p1, unsigned p2, unsigned p3, unsigned p4) {
 
-    containerPoints pointsList;
+    ContainerPoints pointsList;
     pointsList.push_back(this->points[p1]);
     pointsList.push_back(this->points[p2]);
     pointsList.push_back(this->points[p3]);
@@ -31,7 +31,7 @@ void Mesh::addFace(unsigned p1, unsigned p2, unsigned p3, unsigned p4) {
 
 }
 
-void Mesh::addCell(containerPoints& p) {
+void Mesh::addCell(ContainerPoints& p) {
 
     this->cells.push_back(Cell(p, HEX8, ++this->meshInfo.numberOfCells));
     p.clear();
@@ -41,7 +41,7 @@ void Mesh::addCell(containerPoints& p) {
 void Mesh::addCell(unsigned p1, unsigned p2, unsigned p3, unsigned p4,
                    unsigned p5, unsigned p6, unsigned p7, unsigned p8) {
 
-    containerPoints pointsList;
+    ContainerPoints pointsList;
     pointsList.push_back(this->points[p1]);
     pointsList.push_back(this->points[p2]);
     pointsList.push_back(this->points[p3]);

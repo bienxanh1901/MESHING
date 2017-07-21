@@ -36,33 +36,34 @@ class Mesh
         void clear();
         void meshGeneration();
         void writeVTUformat();
+        void writeVTUtest();
         void writeTEACHMesh();
     protected:
     private:
-        typedef vector<Cell> containerCells;
-        typedef vector<Face> containerFaces;
+        typedef vector<Cell> ContainerCells;
+        typedef vector<Face> ContainerFaces;
         Shape shape;
         MeshInfomation meshInfo;
 
-        containerPoints points;
-        containerCells cells;
-        containerFaces faces;
-        containerIDs boundaries;
-        containerIDs neighbor;
-        containerIDs owner;
-        containerIDs cellsOfLayer;
+        ContainerPoints points;
+        ContainerCells cells;
+        ContainerFaces faces;
+        ContainerIDs boundaries;
+        ContainerIDs neighbor;
+        ContainerIDs owner;
+        ContainerIDs cellsOfLayer;
         // test layer
-        containerIDs mark;
+        ContainerIDs mark;
 
         // internal function
 
         void addPoint(double , double , double);
         void addPoint(TypeVector<double>);
-        void addFace(containerPoints&);
+        void addFace(ContainerPoints&);
         void addFace(unsigned, unsigned, unsigned, unsigned);
-        void addCell(containerPoints&);
+        void addCell(ContainerPoints&);
         void addCell(unsigned, unsigned, unsigned, unsigned,
-                            unsigned, unsigned, unsigned, unsigned);
+                     unsigned, unsigned, unsigned, unsigned);
         void addOwner(unsigned);
         void addNeighbor(unsigned);
 
@@ -89,14 +90,14 @@ class Mesh
         void extrudePoints();
 
         void cylinderInternalFacesandCells();
-        void cylinderOuterPart(unsigned, unsigned, unsigned);
+        void cylinderOuterPart(unsigned, unsigned, unsigned, unsigned);
         void cylinderInnerPart(unsigned, unsigned, unsigned);
 
         void cylinderBoundaries();
         void cylinderBoundaryBot();
         void cylinderBoundaryTop();
         void cylinderBoundariesAround();
-        void meshConnected2D(unsigned&, unsigned&, unsigned&, unsigned&);
+        void meshConnected2D(unsigned&, unsigned&, unsigned&, unsigned&, unsigned&);
 
         // spheric mesh definition
 
@@ -127,6 +128,7 @@ class Mesh
 
 
 //        export Mesh
+
         void writeMeshInfomation();
         void writeTEACHPoints();
         void writeTEACHCells();

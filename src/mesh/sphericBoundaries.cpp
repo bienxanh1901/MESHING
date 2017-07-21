@@ -2,7 +2,7 @@
 
 void Mesh::sphericTopBoundary() {
 
-    arrUnsgn cellNums(CELL(1));
+    ArrUnsgn cellNums(CELL(1));
     unsigned sideP = cellNums[0]/8,
              edgeC = cellNums[0]/4,
              layerP = sideP*(edgeC + 1),
@@ -29,7 +29,7 @@ void Mesh::sphericTopBoundary() {
 
 void Mesh::sphericBotBoundary() {
 
-    arrUnsgn cellNums(CELL(1));
+    ArrUnsgn cellNums(CELL(1));
     unsigned sideP = cellNums[0]/8,
              edgeC = cellNums[0]/4,
              layerP = sideP*(edgeC + 1),
@@ -57,12 +57,12 @@ void Mesh::sphericBotBoundary() {
 
 void Mesh::sphericFrontBoundary() {
 
-    arrUnsgn cellNums(CELL(1));
+    ArrUnsgn cellNums(CELL(1));
     unsigned sideP = cellNums[0]/8,
-             frontC = pow(cellNums[0]/4 - 2, 2) + 4*(cellNums[0]/4 - 1)*sideP,
+             frontC = pow(cellNums[0]/4, 2)*sideP,
              baseC  = sideP*cellNums[0]/4*cellNums[0];
 
-    containerIDs pointCells;
+    ContainerIDs pointCells;
 
     for(unsigned i = baseC; i < baseC + frontC; i+= sideP) {
 
@@ -77,12 +77,12 @@ void Mesh::sphericFrontBoundary() {
 
 void Mesh::sphericRearBoundary() {
 
-    arrUnsgn cellNums(CELL(1));
+    ArrUnsgn cellNums(CELL(1));
     unsigned sideP = cellNums[0]/8,
-             frontC = pow(cellNums[0]/4 - 2, 2) + 4*(cellNums[0]/4 - 1)*sideP,
+             frontC = pow(cellNums[0]/4, 2)*sideP,
              baseC  = sideP*cellNums[0]/4*cellNums[0] + frontC;
 
-    containerIDs pointCells;
+    ContainerIDs pointCells;
 
     for(unsigned i = baseC; i < baseC + frontC; i+= sideP) {
 

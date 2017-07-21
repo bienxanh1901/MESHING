@@ -4,10 +4,10 @@
 enum ShapeType
 {
     CUBOID = 0,
-    SPHERIC,
-    CYLINDER,
     TRAPEZIOD,
+    CYLINDER,
     OVAL,
+    SPHERIC,
     INVALID__SHAPE
 };
 

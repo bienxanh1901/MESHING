@@ -7,4 +7,5 @@
 #define DIM(layer) this->shape.getDimsOfLayer(layer)
 #define CELL(layer) this->shape.getCellNumbersOfLayer(layer)
 #define SIZE(layer) this->shape.getSizesOfLayer(layer)
+#define RAT(layer) this->shape.getRatitoOfLayer(layer)
 #endif // MESHDEFINE_H_INCLUDED

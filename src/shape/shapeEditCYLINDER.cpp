@@ -1,68 +1,73 @@
 #include "../../include/Shape.h"
 
-void Shape::editCYLINDER(unsigned layer) {
+void Shape::editCYLINDER(unsigned layer, ArrDouble& sDim, ArrDouble& sSize, ArrDouble& sRatio) {
 
-    double radius, height;
-    double sizeR, sizeZ;
     unsigned cellR, cellZ;
-    arrDouble dimOfLayer(this->numberOfDims);
-    arrDouble sizesOfLayer(this->numberOfDims);
-    arrUnsgn  cellsOfLayer(this->numberOfDims);
+    ArrUnsgn sCell(this->numberOfDims);
 
     if(layer == 1) {
 
-        cout << "input dimension of layer 1 (radius height):\n";
-        cin >> radius >> height;
-
-        cout << "input mesh sizes of layer 1 (sizeR, sizeZ):\n";
-        cin >> sizeR >> sizeZ;
-
-        dimOfLayer.insert(0, radius);
-        dimOfLayer.insert(1, height);
-
-        cellR = (unsigned)ROUNDED(2.0*PI*radius/sizeR, 0.0);
+        cellR = (unsigned)ROUNDED(2.0*PI*sDim[0]/sSize[0], 0.0);
         cellR = (cellR/16 + 1)*16;
 
-        cellZ = (unsigned)ROUNDED(height/sizeZ, 0.0);
-        sizeR = 2.0*PI/cellR;
-        sizeZ = height/(double)cellZ;
+        cellZ = (unsigned)ROUNDED(sDim[1]/sSize[1], 0.0);
 
-        sizesOfLayer.insert(0, sizeR);
-        sizesOfLayer.insert(1, sizeZ);
+        sSize.insert(0, 2.0*PI/(double)cellR) ;
 
-        cellsOfLayer.insert(0, cellR);
-        cellsOfLayer.insert(1, cellZ);
+        if(sRatio[1] == 1.0) {
+
+            sSize.insert(1, sDim[1]/(double)cellZ) ;
+
+        } else {
+
+            sSize.insert(1, sDim[1]/2.0*(1.0 - sRatio[1])/(1.0 - pow(sRatio[1], cellZ/2)));
+
+        }
+
+        sCell.insert(0, cellR);
+        sCell.insert(1, cellZ);
 
         for(unsigned i = 0; i < this->numberOfLayers; i++) {
 
             if(i > 0) {
 
-                dimOfLayer.insert(1, (this->dim[i])[1]);
-                sizesOfLayer.insert(1, (this->cellSizes[i])[1]);
-                dimOfLayer.insert(1, (this->cellNumbers[i])[1]);
+                sDim.insert(1, (this->dim[i])[1]);
+                sSize.insert(1, (this->cellSizes[i])[1]);
+                sCell.insert(1, (this->cellNumbers[i])[1]);
+                sRatio.insert(1, (this->cellNumbers[i])[1]);
 
             }
 
-            this->dim[i] = dimOfLayer;
-            this->cellSizes[i] = sizesOfLayer;
-            this->cellNumbers[i] = cellsOfLayer;
-
+            this->dim[i] = sDim;
+            this->cellSizes[i] = sSize;
+            this->cellNumbers[i] = sCell;
+            this->cellToCellRatio[i] = sRatio;
         }
 
     } else {
 
-        cout << "input height of layer " << layer << ":\n";
-        cin >> height;
+        cellZ = (unsigned)ROUNDED(sDim[1]/sSize[1], 0.0);
 
-        cout << "input mesh size of height of layer " << layer << ":\n";
-        cin >> sizeZ;
+        if(sRatio[1] == 1.0) {
 
-        cellZ = (unsigned)ROUNDED(height/sizeZ, 0.0);
-        sizeZ = height/(double)cellZ;
+            sSize.insert(1, sDim[1]/(double)cellZ) ;
 
-        (this->dim[layer - 1]).insert(1, height);
-        (this->cellSizes[layer - 1]).insert(1, sizeZ);
-        (this->cellNumbers[layer - 1]).insert(1, cellZ);
+        } else {
+
+            sSize.insert(1, sDim[1]/2.0*(1.0 - sRatio[1])/(1.0 - pow(sRatio[1], cellZ/2)));
+
+        }
+
+        sDim.insert(0, (this->dim[0])[0]);
+        sSize.insert(0, (this->cellSizes[0])[0]);
+        sCell.insert(0, (this->cellNumbers[0])[0]);
+        sCell.insert(1, cellZ);
+        sRatio.insert(0, (this->cellNumbers[0])[0]);
+
+        this->dim[layer - 1] = sDim;
+        this->cellSizes[layer - 1] = sSize;
+        this->cellNumbers[layer - 1] = sCell;
+        this->cellToCellRatio[layer - 1] = sRatio;
     }
 
 }

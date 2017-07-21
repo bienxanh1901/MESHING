@@ -2,13 +2,13 @@
 
 void Mesh::leftRightBotTopPartsCells() {
 
-    arrUnsgn cellNums(CELL(1));
+    ArrUnsgn cellNums(CELL(1));
     unsigned sideP = cellNums[0]/8,
              edgeC = cellNums[0]/4,
              edgeP = edgeC + 1,
              layerP = sideP*edgeP,
              layerC = sideP*edgeC,
-             frontC = (edgeC - 2)*(edgeC - 2)*sideP + 4*(edgeC - 1)*sideP,
+             frontC = pow(edgeC, 2)*sideP,
              baseC  = layerC*cellNums[0],
              baseC2  = baseC + frontC ,
              i3 = baseC,
@@ -125,15 +125,16 @@ void Mesh::leftRightBotTopPartsCells() {
 
 void Mesh::frontPartCells() {
 
-    arrUnsgn cellNums(CELL(1));
+    ArrUnsgn cellNums(CELL(1));
     unsigned sideP = cellNums[0]/8,
              edgeC = cellNums[0]/4,
              edgeP = edgeC + 1,
              layerP = edgeP*edgeP,
-             layerC = sideP*edgeC,
+             layerC = edgeC*edgeC,
              baseP = cellNums[0]*sideP*edgeP,
              outerP= baseP + 2*(edgeP - 2)*(edgeP - 2)*sideP,
-             outerC = layerC*cellNums[0] + 2*((edgeC - 2)*(edgeC - 2)*sideP + 4*(edgeC - 1)*sideP);
+             outerC = sideP*edgeC*cellNums[0] + 2*pow(cellNums[0]/4, 2)*sideP;
+
 
 
     this->sphericFrontConnectivity();
@@ -202,7 +203,7 @@ void Mesh::frontPartCells() {
 
             }
 
-            this->addFace(k1, k2, k2 + edgeP, k1 + edgeP);
+            this->addFace(k1, k1 + edgeP, k2 + edgeP, k2);
             this->addOwner(this->meshInfo.numberOfCells);
             this->addNeighbor(k3);
         }
@@ -211,15 +212,15 @@ void Mesh::frontPartCells() {
 
 void Mesh::rearPartCells() {
 
-    arrUnsgn cellNums(CELL(1));
+    ArrUnsgn cellNums(CELL(1));
     unsigned sideP = cellNums[0]/8,
              edgeC = cellNums[0]/4,
              edgeP = edgeC + 1,
              layerP = edgeP*edgeP,
-             layerC = sideP*edgeC,
+             layerC = edgeC*edgeC,
              baseP = cellNums[0]*sideP*edgeP + (edgeP - 2)*(edgeP - 2)*sideP,
              outerP= baseP + (edgeP - 2)*(edgeP - 2)*sideP,
-             outerC = layerC*cellNums[0] + 2*((edgeC - 2)*(edgeC - 2)*sideP + 4*(edgeC - 1)*sideP);
+             outerC = sideP*edgeC*cellNums[0] + 2*pow(cellNums[0]/4, 2)*sideP;
 
     this->sphericRearConnectivity();
 
@@ -293,7 +294,7 @@ void Mesh::rearPartCells() {
 
 void Mesh::cubicPartCells() {
 
-    arrUnsgn cellNums(CELL(1));
+    ArrUnsgn cellNums(CELL(1));
     unsigned edgeC = cellNums[0]/4,
              edgeP = edgeC + 1,
              layerP = edgeP*edgeP,

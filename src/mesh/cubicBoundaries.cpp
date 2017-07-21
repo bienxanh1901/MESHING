@@ -2,7 +2,7 @@
 
 void Mesh::cubicBoundaryLeft(){
 
-    arrUnsgn cellNums(CELL(1));
+    ArrUnsgn cellNums(CELL(1));
     unsigned lengthPoints = cellNums[0] + 1,
              widthPoints = cellNums[1] + 1,
              basePoints = lengthPoints*widthPoints,
@@ -43,7 +43,7 @@ void Mesh::cubicBoundaryLeft(){
 
 void Mesh::cubicBoundaryRight(){
 
-    arrUnsgn cellNums(CELL(1));
+    ArrUnsgn cellNums(CELL(1));
     unsigned lengthPoints = cellNums[0] + 1,
              widthPoints = cellNums[1] + 1,
              basePoints = lengthPoints*widthPoints,
@@ -84,7 +84,7 @@ void Mesh::cubicBoundaryRight(){
 
 void Mesh::cubicBoundaryFront(){
 
-    arrUnsgn cellNums(CELL(1));
+    ArrUnsgn cellNums(CELL(1));
     unsigned lengthPoints = cellNums[0] + 1,
              widthPoints = cellNums[1] + 1,
              basePoints = lengthPoints*widthPoints,
@@ -122,7 +122,7 @@ void Mesh::cubicBoundaryFront(){
 
 void Mesh::cubicBoundaryRear() {
 
-    arrUnsgn cellNums(CELL(1));
+    ArrUnsgn cellNums(CELL(1));
     unsigned lengthPoints = cellNums[0] + 1,
              widthPoints = cellNums[1] + 1,
              basePoints = lengthPoints*widthPoints,
@@ -158,7 +158,7 @@ void Mesh::cubicBoundaryRear() {
 
 void Mesh::cubicBoundaryBot(){
 
-    arrUnsgn cellNums(CELL(1));
+    ArrUnsgn cellNums(CELL(1));
     unsigned lengthPoints = cellNums[0] + 1,
              baseCells = cellNums[0]*cellNums[1];
 
@@ -178,7 +178,7 @@ void Mesh::cubicBoundaryBot(){
 
 void Mesh::cubicBoundaryTop(){
 
-    arrUnsgn cellNums(CELL(1));
+    ArrUnsgn cellNums(CELL(1));
     unsigned lengthPoints = cellNums[0] + 1,
              widthPoints = cellNums[1] + 1,
              basePoints = lengthPoints*widthPoints,

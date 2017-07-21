@@ -2,9 +2,11 @@
 
 void Mesh::basePoints(){
 
-    arrDouble dim(DIM(1));
-    arrDouble sizem(SIZE(1));
-    arrUnsgn cellNums(CELL(1));
+    ArrDouble dim(DIM(1)),
+              sizem(SIZE(1)),
+              ratiom(RAT(1));
+    ArrUnsgn cellNums(CELL(1));
+
 
     double sideP = (double)(cellNums[0]/8),
            majorR = dim[0],
@@ -24,25 +26,47 @@ void Mesh::basePoints(){
     }
 
     //points of outer circular
-    for(double theta = -PI/4; theta < 7*PI/4; theta+= sizem[0]){
+    for(double theta = -PI/4; theta < 7*PI/4 - EPS; theta+= sizem[0]){
 
-        double costheta = cos(theta), sintheta = sin(theta), sizeX, sizeY;
+        double costheta = cos(theta), sintheta = sin(theta),
+               sizeX, sizeY,
+               dimX, dimY;
 
         if(fabs(costheta) >= 1.0/sqrt(2.0)){
 
-            sizeX = (majorR - cornerX/fabs(costheta))/sideP;
-            sizeY = (minorR - cornerY/fabs(costheta))/sideP;
+            dimX = majorR - cornerX/fabs(costheta);
+            dimY = minorR - cornerY/fabs(costheta);
 
         }else {
 
-            sizeX = (majorR - cornerX/fabs(sintheta))/sideP;
-            sizeY = (minorR - cornerY/fabs(sintheta))/sideP;
+            dimX = majorR - cornerX/fabs(sintheta);
+            dimY = minorR - cornerY/fabs(sintheta);
 
         }
 
-        for(double i = 0.0; i < sideP; i+=1.0){
 
-            this->addPoint((majorR - i*sizeX)*sintheta, (minorR - i*sizeY)*costheta, 0.0);
+        if(ratiom[0] == 1.0){
+
+            sizeX = dimX/sideP;
+            sizeY = dimY/sideP;
+
+        }else {
+
+            sizeX = dimX*(1.0 - ratiom[0])/(1.0 - pow(ratiom[0], sideP));
+            sizeY = dimY*(1.0 - ratiom[0])/(1.0 - pow(ratiom[0], sideP));
+
+        }
+
+        for(double x = 0.0, y = 0.0; x < dimX - EPS && y < dimY - EPS; x+= sizeX, y+= sizeY){
+
+            this->addPoint((majorR - x)*sintheta, (minorR - y)*costheta, 0.0);
+
+            if(x > 0.0 && y > 0.0 && ratiom[0] != 1.0) {
+
+                    sizeX*= ratiom[0];
+                    sizeY*= ratiom[0];
+
+            }
         }
     }
 
@@ -63,22 +87,39 @@ void Mesh::basePoints(){
 
 void Mesh::extrudePoints() {
 
-    arrUnsgn cellNums(CELL(1));
+    ArrUnsgn cellNums(CELL(1));
     unsigned basePoints = cellNums[0]*cellNums[0]/8 + pow(cellNums[0]/4 + 1,2);
     double startZ = 0.0;
     Point point;
 
     for(unsigned layer = 1; layer <= this->shape.getNumberOfLayers(); layer++) {
 
-        arrDouble dim(DIM(layer));
-        arrDouble sizem(SIZE(layer));
+        ArrDouble dim(DIM(layer)),
+                  sizem(SIZE(layer)),
+                  ratiom(RAT(layer));
+        double sizeZ = sizem[1];
 
-        for(double z = sizem[1]; z <= dim[1] + EPS; z+= sizem[1]) {
+
+        for(double z = sizem[1]; z <= dim[1] + EPS; z+= sizeZ) {
 
             for(unsigned i = 0; i < basePoints; i++){
 
                 point = this->points[i] + Point(0.0, 0.0, startZ + z);
                 this->addPoint(point);
+            }
+
+            if(z > 0.0 && z < dim[1] - EPS && ratiom[1] != 1.0) {
+
+                if(z < dim[1]/2.0 - EPS) {
+
+                    sizeZ*= ratiom[1];
+
+                } else if(z > dim[1]/2.0 + EPS){
+
+                    sizeZ/=ratiom[1];
+
+                }
+
             }
         }
         startZ+= dim[1];

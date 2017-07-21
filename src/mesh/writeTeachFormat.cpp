@@ -34,7 +34,7 @@ void Mesh::writeTEACHPoints() {
 
         _out << "Points data" << "\t" << this->meshInfo.numberOfPoints << "\n";
 
-        forAllIter(containerPoints, this->points, it) {
+        forAllIter(ContainerPoints, this->points, it) {
 
             _out << *(it) << "\n";
 
@@ -54,7 +54,7 @@ void Mesh::writeTEACHCells() {
 
         _out << "Cells data" << "\t" << this->meshInfo.numberOfCells << "\n";
 
-        forAllIter(containerCells, this->cells, it) {
+        forAllIter(ContainerCells, this->cells, it) {
 
             _out << *(it) << "\t";
             it->printCellProperties(_out) << "\n";
@@ -74,7 +74,7 @@ void Mesh::writeTEACHFaces() {
 
         _out << "Faces data" << "\t" << this->meshInfo.numberOfFaces << "\n";
 
-        forAllIter(containerFaces, this->faces, it) {
+        forAllIter(ContainerFaces, this->faces, it) {
 
             _out << *(it) << "\t";
             it->printFaceProperties(_out) << "\n";
@@ -96,7 +96,7 @@ void Mesh::writeTEACHBoundaries() {
 
         _out << "Boundaries data" << "\t" << this->meshInfo.numberOfBoundaries << "\n";
 
-        forAllIter(containerIDs, this->boundaries, it) {
+        forAllIter(ContainerIDs, this->boundaries, it) {
 
             _out << "Boundary_" << ++i << ":\n";
             _out << "start_face:\t" << start << "\n";
@@ -121,7 +121,7 @@ void Mesh::writeTEACHCellsOfLayer() {
 
         _out << "layers data" << "\t" << this->shape.getNumberOfLayers() << "\n";
 
-        forAllIter(containerIDs, this->cellsOfLayer, it) {
+        forAllIter(ContainerIDs, this->cellsOfLayer, it) {
 
             _out << "layer_" << ++i << ":\n";
             _out << "start_cells:\t" << start << "\n";
@@ -144,7 +144,7 @@ void Mesh::writeTEACHNeighbor() {
 
         _out << "Neighbour data" << "\t" << this->meshInfo.numberOfInternalFaces << "\n";
 
-        forAllIter(containerIDs, this->neighbor, it) {
+        forAllIter(ContainerIDs, this->neighbor, it) {
 
                 _out << *it << "\n";
 
@@ -163,7 +163,7 @@ void Mesh::writeTEACHOwner() {
 
         _out << "Owner data" << "\t" << this->meshInfo.numberOfFaces << "\n";
 
-        forAllIter(containerIDs, this->owner, it) {
+        forAllIter(ContainerIDs, this->owner, it) {
 
                 _out << *it << "\n";
 

@@ -11,7 +11,7 @@ Face::Face(Point * pointArr, elemType type, unsigned nPoints, unsigned elemID) :
     this->geometryProperties();
 }
 
-Face::Face(const containerPoints& cPoints, elemType type, unsigned elemID) : Element(cPoints, type, elemID) {
+Face::Face(const ContainerPoints& cPoints, elemType type, unsigned elemID) : Element(cPoints, type, elemID) {
     this->geometryProperties();
 }
 

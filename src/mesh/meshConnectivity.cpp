@@ -2,7 +2,7 @@
 
 void Mesh::sphericFrontConnectivity() {
 
-    arrUnsgn cellNums(CELL(1));
+    ArrUnsgn cellNums(CELL(1));
     unsigned sideP = cellNums[0]/8,
              edgeC = cellNums[0]/4,
              edgeP = edgeC + 1,
@@ -11,7 +11,7 @@ void Mesh::sphericFrontConnectivity() {
              layerC = edgeC*edgeC,
              baseP = cellNums[0]*layerP,
              outerP = baseP + 2*(edgeP - 2)*(edgeP - 2)*sideP,
-             frontC = (edgeC - 2)*(edgeC - 2)*sideP + 4*(edgeC - 1)*sideP,
+             frontC = pow(edgeC, 2)*sideP,
              baseC  = sideP*edgeC*cellNums[0],
              outerC = baseC + 2*frontC,
              innerC = edgeC*edgeC*edgeC;
@@ -19,7 +19,8 @@ void Mesh::sphericFrontConnectivity() {
     // front - top
     for(unsigned j = 1; j < edgeP; j++) {
 
-        unsigned j1 = (j - 1)*layerP, j2 = j1 + layerP,
+        unsigned j1 = (j - 1)*layerP,
+                 j2 = j1 + layerP,
                  i1, i2, i3;
 
         if(j == 1) {
@@ -50,7 +51,7 @@ void Mesh::sphericFrontConnectivity() {
 
             this->addFace(i1 + k1, i1 + k, i2 + k, i2 + k1);
             this->addOwner(this->meshInfo.numberOfCells);
-            this->addNeighbor(i3);
+            this->addNeighbor(i3 + k1);
 
             if(j < edgeC) {
 
@@ -129,16 +130,16 @@ void Mesh::sphericFrontConnectivity() {
 
             this->addFace(i1 + k1, i1 + k, i2 + k, i2 + k1);
             this->addOwner(this->meshInfo.numberOfCells);
-            this->addNeighbor(i3);
+            this->addNeighbor(i3 + k1);
 
             if(j < base1) {
 
-                this->addFace(j2 + k1, j2 + k, i2 + k, i2 + k1);
+                this->addFace(j2 + k1, i2 + k1, i2 + k, j2 + k);
                 this->addOwner(this->meshInfo.numberOfCells);
                 this->addNeighbor(this->meshInfo.numberOfCells + sideP);
             }
 
-            this->addFace(j1 + k, i1 + k, i2 + k, j2 + k);
+            this->addFace(j1 + k, j2 + k, i2 + k, i1 + k);
             this->addOwner(this->meshInfo.numberOfCells);
             this->addNeighbor(this->meshInfo.numberOfCells + 1);
         }
@@ -205,9 +206,9 @@ void Mesh::sphericFrontConnectivity() {
 
             this->mark.push_back(1);
 
-            this->addFace(i1 + k1, i2 + k1, i2 + k, i1 + k);
+            this->addFace(i1 + k1, i1 + k, i2 + k, i2 + k1);
             this->addOwner(this->meshInfo.numberOfCells);
-            this->addNeighbor(i3);
+            this->addNeighbor(i3 + k1);
 
             if(j < base2) {
 
@@ -230,14 +231,14 @@ void Mesh::sphericFrontConnectivity() {
         i3 = i3 + sideP - 1;
         unsigned k1 = outerP + layerP2*edgeP - ((j + 2)%edgeP)*edgeP,
                  k2 = k1 - layerP2,
-                 k3 = outerC + innerC - ((j + 1)%edgeP)*edgeC + 1;
+                 k3 = outerC + innerC - ((j + 2)%edgeP)*edgeC + 1;
 
         this->addCell(j1, i1, i2, j2,
                       k1, k2, k2 - edgeP, k1 - edgeP);
 
         this->mark.push_back(1);
 
-        this->addFace(i1, i2, k2 - edgeP, k2);
+        this->addFace(i1, k2, k2 - edgeP, i2);
         this->addOwner(this->meshInfo.numberOfCells);
         this->addNeighbor(i3);
 
@@ -274,7 +275,7 @@ void Mesh::sphericFrontConnectivity() {
 
             this->addFace(i1 + k1, i1 + k, i2 + k, i2 + k1);
             this->addOwner(this->meshInfo.numberOfCells);
-            this->addNeighbor(i3);
+            this->addNeighbor(i3 + k1);
 
             if(j < base3) {
 
@@ -307,7 +308,7 @@ void Mesh::sphericFrontConnectivity() {
         this->addOwner(this->meshInfo.numberOfCells);
         this->addNeighbor(i3);
 
-        if(j < base2) {
+        if(j < base3) {
 
             this->addFace(j2, i2, k2 + edgeP, k2);
             this->addOwner(this->meshInfo.numberOfCells);
@@ -323,7 +324,7 @@ void Mesh::sphericFrontConnectivity() {
 
 
 void Mesh::sphericRearConnectivity() {
-    arrUnsgn cellNums(CELL(1));
+    ArrUnsgn cellNums(CELL(1));
     unsigned sideP = cellNums[0]/8,
              edgeC = cellNums[0]/4,
              edgeP = edgeC + 1,
@@ -334,7 +335,7 @@ void Mesh::sphericRearConnectivity() {
              frontP =  (edgeP - 2)*(edgeP - 2)*sideP,
              outerP = baseP + 2*frontP,
              innerP = edgeP*layerP2,
-             frontC = (edgeC - 2)*(edgeC - 2)*sideP + 4*(edgeC - 1)*sideP,
+             frontC = pow(edgeC, 2)*sideP,
              baseC  = sideP*edgeC*cellNums[0],
              baseC2 = baseC + frontC,
              outerC = baseC + 2*frontC,
@@ -376,7 +377,7 @@ void Mesh::sphericRearConnectivity() {
 
             this->addFace(i1 + k1, i1 + k, i2 + k, i2 + k1);
             this->addOwner(this->meshInfo.numberOfCells);
-            this->addNeighbor(i3);
+            this->addNeighbor(i3 + k1);
 
             if(j < edgeC) {
 
@@ -397,6 +398,7 @@ void Mesh::sphericRearConnectivity() {
         i1 = i1 + sideP - 1;
         i2 = i2 + sideP - 1;
         i3 = i3 + sideP - 1;
+
         unsigned k1 = outerP + (j - 1)*layerP2 + edgeP - 1,
                  k2 = k1 + layerP2,
                  k3 = outerC + (j - 1)*layerC + edgeC;
@@ -418,7 +420,7 @@ void Mesh::sphericRearConnectivity() {
 
         }
 
-        this->addFace(k1, k1 + edgeP, k2 + edgeP, k2);
+        this->addFace(k1, k2, k2 + edgeP, k1 + edgeP);
         this->addOwner(this->meshInfo.numberOfCells);
         this->addNeighbor(k3);
     }
@@ -455,7 +457,7 @@ void Mesh::sphericRearConnectivity() {
 
             this->addFace(i1 + k1, i1 + k, i2 + k, i2 + k1);
             this->addOwner(this->meshInfo.numberOfCells);
-            this->addNeighbor(i3);
+            this->addNeighbor(i3 + k1);
 
             if(j < base1) {
 
@@ -534,7 +536,7 @@ void Mesh::sphericRearConnectivity() {
 
             this->addFace(i1 + k1, i1 + k, i2 + k, i2 + k1);
             this->addOwner(this->meshInfo.numberOfCells);
-            this->addNeighbor(i3);
+            this->addNeighbor(i3 + k1);
 
             if(j < base2) {
 
@@ -600,7 +602,7 @@ void Mesh::sphericRearConnectivity() {
 
             this->addFace(i1 + k1, i1 + k, i2 + k, i2 + k1);
             this->addOwner(this->meshInfo.numberOfCells);
-            this->addNeighbor(i3);
+            this->addNeighbor(i3 + k1);
 
             if(j < base3) {
 
@@ -634,7 +636,7 @@ void Mesh::sphericRearConnectivity() {
         this->addOwner(this->meshInfo.numberOfCells);
         this->addNeighbor(i3);
 
-        if(j < base2) {
+        if(j < base3) {
 
             this->addFace(j2, i2, k2 - edgeP, k1 - edgeP);
             this->addOwner(this->meshInfo.numberOfCells);
@@ -649,31 +651,48 @@ void Mesh::sphericRearConnectivity() {
 }
 
 
-void Mesh::meshConnected2D(unsigned& layer,unsigned& position, unsigned& p1, unsigned& p2) {
-    arrUnsgn cellNums(CELL(layer));
-    unsigned edgeP = cellNums[0]/4 + 1,
-            outerP = cellNums[0]*cellNums[0]/8,
-            tmp = position/(edgeP -1),
-            tmp2 = position%(edgeP - 1);
+void Mesh::meshConnected2D(unsigned& layer,unsigned& position, unsigned& p1, unsigned& p2, unsigned& p3) {
+    ArrUnsgn cellNums(CELL(layer));
+    unsigned edgeC = cellNums[0]/4,
+             edgeP = edgeC + 1,
+             outerP = cellNums[0]*cellNums[0]/8,
+             tmp = position/(edgeP -1),
+             tmp2 = position%(edgeP - 1);
 
     switch(tmp){
-        case 0: p1 = outerP + position; p2 = p1 + 1; break;
-        case 1: p1 = outerP + edgeP + tmp2*edgeP - 1; p2 = p1 + edgeP; break;
-        case 2: p1 = outerP + edgeP*edgeP - tmp2 - 1; p2 = p1 - 1; break;
-        case 3: p1 = outerP + (edgeP - tmp2 - 1)*edgeP; p2 = p1 - edgeP; break;
+        case 0:
+            p1 = outerP + position;
+            p2 = p1 + 1;
+            p3 =  outerP + position + 1;
+            break;
+        case 1:
+            p1 = outerP + edgeP + tmp2*edgeP - 1;
+            p2 = p1 + edgeP;
+            p3 = outerP + edgeC + tmp2*edgeC;
+            break;
+        case 2:
+            p1 = outerP + edgeP*edgeP - tmp2 - 1;
+            p2 = p1 - 1;
+            p3 = outerP + edgeC*edgeC - tmp2;
+            break;
+        case 3:
+            p1 = outerP + (edgeP - tmp2 - 1)*edgeP;
+            p2 = p1 - edgeP;
+            p3 = outerP + (edgeC - tmp2 - 1)*edgeC + 1;
+            break;
     }
 }
 
 
 void Mesh::findPointsconnected3D(unsigned& position, unsigned& position2, unsigned& p1, unsigned& p2, unsigned& p3) {
 
-    arrUnsgn cellNums(CELL(1));
+    ArrUnsgn cellNums(CELL(1));
     unsigned sideP = cellNums[0]/8,
              edgeC = cellNums[0]/4,
              edgeP = edgeC + 1,
              layerP = edgeP*edgeP,
              outerP = cellNums[0]*sideP*edgeP + 2*(edgeP - 2)*(edgeP - 2)*sideP,
-             outerC = sideP*edgeC*cellNums[0] + 2*((edgeC - 2)*(edgeC - 2)*sideP + 4*(edgeC - 1)*sideP),
+             outerC = sideP*edgeC*cellNums[0] + 2*pow(edgeC, 2)*sideP,
              innerC = edgeC* edgeC*edgeC,
              tmp = position/(edgeP -1),
              tmp2 = position%(edgeP - 1);

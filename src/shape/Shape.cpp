@@ -29,6 +29,7 @@ Shape::Shape(const Shape& shape) {
     this->dim = shape.dim;
     this->cellNumbers = shape.cellNumbers;
     this->cellSizes = shape.cellSizes;
+    this->cellToCellRatio = shape.cellToCellRatio;
 }
 
 Shape& Shape::operator=(const Shape& shape) {
@@ -40,9 +41,15 @@ Shape& Shape::operator=(const Shape& shape) {
     this->dim = shape.dim;
     this->cellNumbers = shape.cellNumbers;
     this->cellSizes = shape.cellSizes;
+    this->cellToCellRatio = shape.cellToCellRatio;
 
     return *this;
 }
+
+void Shape::setShape(ShapeType s) {
+    *this = Shape(s);
+}
+
 
 ShapeType Shape::getShape() {
 
@@ -70,22 +77,29 @@ void Shape::clear() {
     this->dim.clear();
     this->cellNumbers.clear();
     this->cellSizes.clear();
+    this->cellToCellRatio.clear();
 
 }
 
-arrDouble& Shape::getSizesOfLayer(unsigned layer) {
+ArrDouble& Shape::getSizesOfLayer(unsigned layer) {
 
     assert(layer <= this->numberOfLayers);
     return this->cellSizes[layer - 1];
 }
 
-arrDouble& Shape::getDimsOfLayer(unsigned layer) {
+ArrDouble& Shape::getDimsOfLayer(unsigned layer) {
 
     assert(layer <= this->numberOfLayers);
     return this->dim[layer - 1];
 }
 
-arrUnsgn& Shape::getCellNumbersOfLayer(unsigned layer) {
+ArrDouble& Shape::getRatitoOfLayer(unsigned layer) {
+
+    assert(layer <= this->numberOfLayers);
+    return this->cellToCellRatio[layer - 1];
+}
+
+ArrUnsgn& Shape::getCellNumbersOfLayer(unsigned layer) {
 
     assert(layer <= this->numberOfLayers);
     return this->cellNumbers[layer - 1];

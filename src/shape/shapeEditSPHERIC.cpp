@@ -1,31 +1,20 @@
 #include "../../include/Shape.h"
 
-void Shape::editSPHERIC(unsigned layer) {
+void Shape::editSPHERIC(unsigned layer, ArrDouble& sDim, ArrDouble& sSize, ArrDouble& sRatio) {
 
-    double radius;
-    double sizeR;
     unsigned cellR;
-    arrDouble dimOfLayer(this->numberOfDims);
-    arrDouble sizesOfLayer(this->numberOfDims);
-    arrUnsgn  cellsOfLayer(this->numberOfDims);
+    ArrUnsgn sCell(this->numberOfDims);
 
-    cout << "input radius of layer " << this->numberOfLayers << ":\n";
-    cin >> radius;
-
-    cout << "input mesh size of layer " << this->numberOfLayers << ":\n";
-    cin >> sizeR;
-
-    dimOfLayer.insert(0, radius);
-
-    cellR = (unsigned)ROUNDED(2.0*PI*radius/sizeR, 0.0);
+    cellR = (unsigned)ROUNDED(2.0*PI*sDim[0]/sSize[0], 0.0);
     cellR = (cellR/16 + 1)*16;
-    sizeR = 2.0*PI/cellR;
 
-    sizesOfLayer.insert(0, sizeR);
+    sSize.insert(0, 2.0*PI/(double)cellR) ;
 
-    cellsOfLayer.insert(0, cellR);
+    sCell.insert(0, cellR);
 
-    this->dim[0] = dimOfLayer;
-    this->cellSizes[0] = sizesOfLayer;
-    this->cellNumbers[0] = cellsOfLayer;
+    this->dim[0] = sDim;
+    this->cellSizes[0] = sSize;
+    this->cellNumbers[0] = sCell;
+    this->cellToCellRatio[0] = sRatio;
+
 }

@@ -25,9 +25,13 @@ class Array {
         T& operator[] (unsigned);
         bool operator==(const Array<T>&);
         bool operator!=(const Array<T>&);
+        istream& read(istream&);
     protected:
         unsigned size;
         T *array;
+        friend istream& operator>>(istream& in, Array& arr) {
+            return arr.read(in);
+        }
     private:
         void allocate();
         void free();
@@ -190,5 +194,16 @@ template<class T>
 void Array<T>::free() {
 
      delete[] this->array;
+}
+
+template<class T>
+istream& Array<T>::read(istream& in) {
+
+    for(unsigned i = 0; i < this->size; i++) {
+
+        in >> this->array[i];
+
+    }
+    return in;
 }
 #endif // ARRAYTEMPLATE_H_INCLUDED

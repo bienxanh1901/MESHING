@@ -2,21 +2,24 @@
 
 void Mesh::cylinderInternalFacesandCells() {
 
-    arrUnsgn cellNums(CELL(1));
+    ArrUnsgn cellNums(CELL(1));
     unsigned baseP = cellNums[0]*cellNums[0]/8 + pow(cellNums[0]/4 + 1,2),
-             startP = 0;
+             baseC = cellNums[0]*cellNums[0]/8 + pow(cellNums[0]/4,2),
+             startP = 0,
+             startC = 0;
 
     for(unsigned layer = 1; layer <= this->shape.getNumberOfLayers(); layer ++) {
 
         if(layer > 1) {
 
             startP+= baseP*cellNums[1];
-            cellNums = arrUnsgn(CELL(layer));
+            startC+= baseC*cellNums[1];
+            cellNums = ArrUnsgn(CELL(layer));
         }
 
         for(unsigned k = 1; k <= cellNums[1]; k++) {
 
-            this->cylinderOuterPart(layer, k, startP);
+            this->cylinderOuterPart(layer, k, startP, startC);
             this->cylinderInnerPart(layer, k, startP);
 
         }
@@ -29,14 +32,16 @@ void Mesh::cylinderInternalFacesandCells() {
     this->meshInfo.numberOfInternalFaces = this->meshInfo.numberOfFaces;
 }
 
-void Mesh::cylinderOuterPart(unsigned layer, unsigned k, unsigned startP) {
+void Mesh::cylinderOuterPart(unsigned layer, unsigned k, unsigned startP, unsigned startC) {
 
-    arrUnsgn cellNums(CELL(layer));
+    ArrUnsgn cellNums(CELL(layer));
     unsigned sideP = cellNums[0]/8,
              outerP = cellNums[0]*sideP,
              baseP = outerP + pow(cellNums[0]/4 + 1, 2),
              baseC = outerP + pow(cellNums[0]/4, 2),
-             k1 = startP + (k - 1)*baseP, k2 = k1 + baseP;
+             k1 = startP + (k - 1)*baseP,
+             k2 = k1 + baseP,
+             k3 = startC + (k - 1)*baseC;
 
     for(unsigned j = 0; j < cellNums[0]; j++) {
 
@@ -82,22 +87,23 @@ void Mesh::cylinderOuterPart(unsigned layer, unsigned k, unsigned startP) {
         j1 = (j + 1)*sideP - 1;
         j2 = (j == (cellNums[0] - 1)?(sideP - 1):(j1 + sideP));
 
-        unsigned i1, i2;
-        this->meshConnected2D(layer, j, i1, i2);
+        unsigned i1, i2, i3;
+        this->meshConnected2D(layer, j, i1, i2, i3);
 
         this-> addCell(k1 + j1, k1 + i1, k1 + i2, k1 + j2,
                        k2 + j1, k2 + i1, k2 + i2, k2 + j2);
+
         this->mark.push_back(layer);
 
         this->addFace(k1 + i1, k1 + i2, k2 + i2, k2 + i1);
         this->addOwner(this->meshInfo.numberOfCells);
-        this->addNeighbor(i1 + 1);
+        this->addNeighbor(k3 + i3);
 
         if(j == 0) {
 
             this->addFace(k1 + j1, k1 + i1, k2 + i1, k2 + j1);
             this->addOwner(this->meshInfo.numberOfCells);
-            this->addNeighbor(outerP);
+            this->addNeighbor(k3 + outerP);
 
         }
 
@@ -105,7 +111,7 @@ void Mesh::cylinderOuterPart(unsigned layer, unsigned k, unsigned startP) {
 
             this->addFace(k1 + j2, k2 + j2, k2 + i2, k1 + i2);
             this->addOwner(this->meshInfo.numberOfCells);
-            this->addNeighbor(this->meshInfo.numberOfCells + 1);
+            this->addNeighbor(this->meshInfo.numberOfCells + sideP);
 
         }
 
@@ -121,12 +127,13 @@ void Mesh::cylinderOuterPart(unsigned layer, unsigned k, unsigned startP) {
 
 void Mesh::cylinderInnerPart(unsigned layer, unsigned k, unsigned startP) {
 
-    arrUnsgn cellNums(CELL(layer));
+    ArrUnsgn cellNums(CELL(layer));
     unsigned edgeP = cellNums[0]/4 + 1,
              outerP = cellNums[0]*cellNums[0]/8,
              baseP = outerP + pow(edgeP,2),
              baseC = outerP + pow(edgeP - 1,2),
-             k1 = startP + outerP + (k - 1)*baseP, k2 = k1 + baseP;
+             k1 = startP + outerP + (k - 1)*baseP,
+             k2 = k1 + baseP;
 
     for(unsigned j = 1; j < edgeP; j++) {
 

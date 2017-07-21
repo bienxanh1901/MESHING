@@ -8,9 +8,11 @@
 		<Build>
 			<Target title="Debug">
 				<Option output="bin/Debug/MeshBuilder" prefix_auto="1" extension_auto="1" />
+				<Option working_dir="debug" />
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option parameters="Input.dat" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -49,41 +51,47 @@
 		<Unit filename="include/paraviewExp.h" />
 		<Unit filename="include/typeVector.h" />
 		<Unit filename="main.cpp" />
-		<Unit filename="src/Cell.cpp" />
-		<Unit filename="src/Element.cpp" />
-		<Unit filename="src/Face.cpp" />
-		<Unit filename="src/Mesh.cpp" />
-		<Unit filename="src/MeshInfomation.cpp" />
-		<Unit filename="src/Point.cpp" />
-		<Unit filename="src/Shape.cpp" />
-		<Unit filename="src/cubicBoundaries.cpp" />
-		<Unit filename="src/cubicFacesandCells.cpp" />
-		<Unit filename="src/cubicGeneration.cpp" />
-		<Unit filename="src/cubicPoints.cpp" />
-		<Unit filename="src/cylinderBoundaries.cpp" />
-		<Unit filename="src/cylinderFacesandCells.cpp" />
-		<Unit filename="src/cylinderGeneration.cpp" />
-		<Unit filename="src/cylinderPoints.cpp" />
-		<Unit filename="src/hexahedral.cpp" />
-		<Unit filename="src/meshConnectivity.cpp" />
-		<Unit filename="src/meshTools.cpp" />
-		<Unit filename="src/quadrilateral.cpp" />
-		<Unit filename="src/shapeAddCUBOID.cpp" />
-		<Unit filename="src/shapeAddCYLINDER.cpp" />
-		<Unit filename="src/shapeAddLayer.cpp" />
-		<Unit filename="src/shapeAddOVAL.cpp" />
-		<Unit filename="src/shapeAddTRAPEZIOD.cpp" />
-		<Unit filename="src/shapeDeleteLayer.cpp" />
-		<Unit filename="src/shapeaddSPHERIC.cpp" />
-		<Unit filename="src/sphericBoundaries.cpp" />
-		<Unit filename="src/sphericFacesandCells.cpp" />
-		<Unit filename="src/sphericGeneration.cpp" />
-		<Unit filename="src/sphericPoints.cpp" />
-		<Unit filename="src/tetrahedral.cpp" />
-		<Unit filename="src/triangle.cpp" />
-		<Unit filename="src/typeVector.cpp" />
-		<Unit filename="src/writeParaviewFormat.cpp" />
-		<Unit filename="src/writeTeachFormat.cpp" />
+		<Unit filename="src/element/Cell.cpp" />
+		<Unit filename="src/element/Element.cpp" />
+		<Unit filename="src/element/Face.cpp" />
+		<Unit filename="src/element/hexahedral.cpp" />
+		<Unit filename="src/element/quadrilateral.cpp" />
+		<Unit filename="src/element/tetrahedral.cpp" />
+		<Unit filename="src/element/triangle.cpp" />
+		<Unit filename="src/mesh/Mesh.cpp" />
+		<Unit filename="src/mesh/MeshInfomation.cpp" />
+		<Unit filename="src/mesh/cubicBoundaries.cpp" />
+		<Unit filename="src/mesh/cubicFacesandCells.cpp" />
+		<Unit filename="src/mesh/cubicGeneration.cpp" />
+		<Unit filename="src/mesh/cubicPoints.cpp" />
+		<Unit filename="src/mesh/cylinderBoundaries.cpp" />
+		<Unit filename="src/mesh/cylinderFacesandCells.cpp" />
+		<Unit filename="src/mesh/cylinderGeneration.cpp" />
+		<Unit filename="src/mesh/cylinderPoints.cpp" />
+		<Unit filename="src/mesh/meshConnectivity.cpp" />
+		<Unit filename="src/mesh/meshTools.cpp" />
+		<Unit filename="src/mesh/sphericBoundaries.cpp" />
+		<Unit filename="src/mesh/sphericFacesandCells.cpp" />
+		<Unit filename="src/mesh/sphericGeneration.cpp" />
+		<Unit filename="src/mesh/sphericPoints.cpp" />
+		<Unit filename="src/mesh/writeParaviewFormat.cpp" />
+		<Unit filename="src/mesh/writeTeachFormat.cpp" />
+		<Unit filename="src/point/Point.cpp" />
+		<Unit filename="src/shape/Shape.cpp" />
+		<Unit filename="src/shape/shapeAddCUBOID.cpp" />
+		<Unit filename="src/shape/shapeAddCYLINDER.cpp" />
+		<Unit filename="src/shape/shapeAddLayer.cpp" />
+		<Unit filename="src/shape/shapeAddOVAL.cpp" />
+		<Unit filename="src/shape/shapeAddTRAPEZIOD.cpp" />
+		<Unit filename="src/shape/shapeDeleteLayer.cpp" />
+		<Unit filename="src/shape/shapeEditCUBOID.cpp" />
+		<Unit filename="src/shape/shapeEditCYLINDER.cpp" />
+		<Unit filename="src/shape/shapeEditLayer.cpp" />
+		<Unit filename="src/shape/shapeEditOVAL.cpp" />
+		<Unit filename="src/shape/shapeEditSPHERIC.cpp" />
+		<Unit filename="src/shape/shapeEditTRAPEZIOD.cpp" />
+		<Unit filename="src/shape/shapeaddSPHERIC.cpp" />
+		<Unit filename="src/typeVector/typeVector.cpp" />
 		<Extensions>
 			<code_completion />
 			<envvars />

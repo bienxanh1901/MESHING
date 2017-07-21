@@ -1,24 +1,27 @@
 #include "../../include/Shape.h"
 
-void Shape::addLayer() {
+void Shape::addLayer(ArrDouble& sDim, ArrDouble& sSize, ArrDouble& sRatio) {
+
+    if(this->numberOfLayers == 1 && this->type == SPHERIC) return;
 
     this->numberOfLayers+= 1;
+
     switch(this->type)
     {
         case SPHERIC:
-            this->addSPHERIC();
+            this->addSPHERIC(sDim, sSize, sRatio);
             break;
         case CYLINDER:
-            this->addCYLINDER();
+            this->addCYLINDER(sDim, sSize, sRatio);
             break;
         case CUBOID:
-            this->addCUBOID();
+            this->addCUBOID(sDim, sSize, sRatio);
             break;
         case OVAL:
-            this->addOVAL();
+            this->addOVAL(sDim, sSize, sRatio);
             break;
         case TRAPEZIOD:
-            this->addTRAPEZIOID();
+            this->addTRAPEZIOID(sDim, sSize, sRatio);
             break;
         case INVALID__SHAPE:
         default:

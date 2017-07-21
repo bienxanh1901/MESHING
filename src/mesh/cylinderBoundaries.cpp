@@ -2,10 +2,10 @@
 
 void Mesh::cylinderBoundaryBot(){
 
-    arrUnsgn cellNums(CELL(1));
+    ArrUnsgn cellNums(CELL(1));
     unsigned baseC = cellNums[0]*cellNums[0]/8 + pow(cellNums[0]/4,2);
 
-    containerIDs pointCells;
+    ContainerIDs pointCells;
 
     for(unsigned i = 0; i < baseC; i++) {
 
@@ -20,10 +20,10 @@ void Mesh::cylinderBoundaryBot(){
 
 
 void Mesh::cylinderBoundaryTop(){
-    arrUnsgn cellNums(CELL(1));
+    ArrUnsgn cellNums(CELL(1));
     unsigned baseC = cellNums[0]*cellNums[0]/8 + pow(cellNums[0]/4,2);
 
-    containerIDs pointCells;
+    ContainerIDs pointCells;
 
     for(unsigned i = this->meshInfo.numberOfCells - baseC; i < this->meshInfo.numberOfCells; i++) {
 
@@ -38,7 +38,7 @@ void Mesh::cylinderBoundaryTop(){
 
 void Mesh::cylinderBoundariesAround()
 {
-    arrUnsgn cellNums(CELL(1));
+    ArrUnsgn cellNums(CELL(1));
     unsigned sideP = cellNums[0]/8,
              baseP = cellNums[0]*sideP + pow(cellNums[0]/4 + 1, 2),
              baseC = cellNums[0]*sideP + pow(cellNums[0]/4, 2),
@@ -50,7 +50,7 @@ void Mesh::cylinderBoundariesAround()
         if(layer > 1) {
 
             startP+= baseP*cellNums[1];
-            cellNums = arrUnsgn(CELL(layer));
+            cellNums = ArrUnsgn(CELL(layer));
         }
 
         for(unsigned k = 1; k <= cellNums[1]; k++){
@@ -74,13 +74,13 @@ void Mesh::cylinderBoundariesAround()
 
     // right boundary
     startP = 0;
-    cellNums = arrUnsgn(CELL(1));
+    cellNums = ArrUnsgn(CELL(1));
     for(unsigned layer = 1; layer <= this->shape.getNumberOfLayers(); layer++) {
 
         if(layer > 1) {
 
             startP+= baseP*cellNums[1];
-            cellNums = arrUnsgn(CELL(layer));
+            cellNums = ArrUnsgn(CELL(layer));
         }
 
         for(unsigned k = 1; k <= cellNums[1]; k++) {
