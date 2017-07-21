@@ -4,19 +4,33 @@
 #include "typeVector.h"
 
 
-class Point : public typeVector<double>
+class Point : public TypeVector<double>
 {
     public:
-        Point(const double x= 0.0, const double y= 0.0, const double z= 0.0) :
-        typeVector<double> (x,y,z) {}
+        Point(const double x= 0.0, const double y= 0.0, const double z= 0.0, unsigned n = 0) : TypeVector<double> (x,y,z) {
+            this->ID = n;
+        }
+
         virtual ~Point() {}
-        Point(const Point& p) :
-        typeVector<double> (p) {}
-        Point(const typeVector<double>& p ) :
-        typeVector<double> (p) {}
+
+        Point(const Point& p) : TypeVector<double> (p) {
+            this->ID = p.ID;
+        }
+
+        Point(const TypeVector<double>& p, unsigned n = 0) : TypeVector<double> (p) {
+            this->ID = n;
+        }
+
+        Point& operator=(const Point&);
+
+        unsigned getID();
+
+        void setID(unsigned);
+
     protected:
-        friend class Node;
+
     private:
+        unsigned ID;
 };
 
 #endif // POINT_H

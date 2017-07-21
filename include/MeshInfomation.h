@@ -10,20 +10,27 @@
 
 using namespace std;
 
-class MeshInfomation
-{
+class MeshInfomation {
     public:
         MeshInfomation();
-        virtual ~MeshInfomation();
-        MeshInfomation(Shape&, double*);
-        MeshInfomation(const MeshInfomation& other);
-        MeshInfomation& operator=(const MeshInfomation& other);
-        void calculateNodenumbers();
+        MeshInfomation(const MeshInfomation&);
 
-        Shape meshShape;
-        double meshSize[3];
-        unsigned meshNode[3];
+        virtual ~MeshInfomation();
+
+        MeshInfomation& operator=(const MeshInfomation&);
+        bool operator==(const MeshInfomation&);
+        ostream& print(ostream&);
+        void clear();
+
+        unsigned numberOfPoints;
+        unsigned numberOfCells;
+        unsigned numberOfFaces;
+        unsigned numberOfInternalFaces;
+        unsigned numberOfBoundaries;
     protected:
+        friend ostream& operator<<(ostream& out, MeshInfomation info){
+            return info.print(out);
+        }
     private:
 
 };

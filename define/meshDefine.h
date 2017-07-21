@@ -4,7 +4,8 @@
 #include "../include/MeshInfomation.h"
 #include "../include/Mesh.h"
 
-#define DIM(i) meshInfo.meshShape.getDimension(i)
-#define NODE(i) meshInfo.meshNode[i]
-#define SIZE(i) meshInfo.meshSize[i]
+#define DIM(layer) this->shape.getDimsOfLayer(layer)
+#define CELL(layer) this->shape.getCellNumbersOfLayer(layer)
+#define SIZE(layer) this->shape.getSizesOfLayer(layer)
+#define RAT(layer) this->shape.getRatitoOfLayer(layer)
 #endif // MESHDEFINE_H_INCLUDED
