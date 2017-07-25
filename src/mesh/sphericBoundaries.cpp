@@ -10,12 +10,23 @@ void Mesh::sphericTopBoundary() {
 
     for(unsigned i = 0; i < cellNums[0]; i++) {
 
+<<<<<<< HEAD
         unsigned i1 = i*layerP, i2 = (i == cellNums[0] - 1?0:i1 + layerP),
+=======
+        unsigned i1 = i*layerP,
+                 i2 = (i == cellNums[0] - 1?0:i1 + layerP),
+>>>>>>> meshgrading
                  i3 = i*layerC + 1;
 
         for(unsigned j = 0; j < edgeC/2; j++) {
 
+<<<<<<< HEAD
             unsigned j1 = j*sideP, j2 = j1 + sideP, j3 = j*sideP;
+=======
+            unsigned j1 = j*sideP,
+                     j2 = j1 + sideP,
+                     j3 = j*sideP;
+>>>>>>> meshgrading
 
             this->addFace(i1 + j1, i2 + j1, i2 + j2, i1 + j2);
             this->addOwner(i3 + j3);
@@ -37,12 +48,23 @@ void Mesh::sphericBotBoundary() {
 
     for(unsigned i = 0; i < cellNums[0]; i++) {
 
+<<<<<<< HEAD
         unsigned i1 = i*layerP, i2 = (i == cellNums[0] - 1?0:i1 + layerP),
+=======
+        unsigned i1 = i*layerP,
+                 i2 = (i == cellNums[0] - 1?0:i1 + layerP),
+>>>>>>> meshgrading
                  i3 = i*layerC + 1;
 
         for(unsigned j = edgeC/2; j < edgeC; j++) {
 
+<<<<<<< HEAD
             unsigned j1 = j*sideP, j2 = j1 + sideP, j3 = j*sideP;
+=======
+            unsigned j1 = j*sideP,
+                     j2 = j1 + sideP,
+                     j3 = j*sideP;
+>>>>>>> meshgrading
 
             this->addFace(i1 + j1, i2 + j1, i2 + j2, i1 + j2);
             this->addOwner(i3 + j3);

@@ -12,9 +12,14 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+<<<<<<< HEAD
 				<Option parameters="Input.dat" />
+=======
+				<Option parameters="Input_O.dat" />
+>>>>>>> meshgrading
 				<Compiler>
 					<Add option="-g" />
+					<Add option="-std=c++11" />
 				</Compiler>
 			</Target>
 			<Target title="Release">

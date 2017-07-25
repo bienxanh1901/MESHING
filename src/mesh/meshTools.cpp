@@ -21,11 +21,15 @@ void Mesh::addFace(ContainerPoints& p) {
 
 void Mesh::addFace(unsigned p1, unsigned p2, unsigned p3, unsigned p4) {
 
+<<<<<<< HEAD
     ContainerPoints pointsList;
     pointsList.push_back(this->points[p1]);
     pointsList.push_back(this->points[p2]);
     pointsList.push_back(this->points[p3]);
     pointsList.push_back(this->points[p4]);
+=======
+    ContainerPoints pointsList {this->points[p1], this->points[p2], this->points[p3], this->points[p4]};
+>>>>>>> meshgrading
     this->faces.push_back(Face(pointsList, QUAD4, ++this->meshInfo.numberOfFaces));
     pointsList.clear();
 
@@ -41,6 +45,7 @@ void Mesh::addCell(ContainerPoints& p) {
 void Mesh::addCell(unsigned p1, unsigned p2, unsigned p3, unsigned p4,
                    unsigned p5, unsigned p6, unsigned p7, unsigned p8) {
 
+<<<<<<< HEAD
     ContainerPoints pointsList;
     pointsList.push_back(this->points[p1]);
     pointsList.push_back(this->points[p2]);
@@ -50,6 +55,10 @@ void Mesh::addCell(unsigned p1, unsigned p2, unsigned p3, unsigned p4,
     pointsList.push_back(this->points[p6]);
     pointsList.push_back(this->points[p7]);
     pointsList.push_back(this->points[p8]);
+=======
+    ContainerPoints pointsList {this->points[p1], this->points[p2], this->points[p3], this->points[p4],
+                                this->points[p5], this->points[p6], this->points[p7], this->points[p8]};
+>>>>>>> meshgrading
     this->cells.push_back(Cell(pointsList, HEX8, ++this->meshInfo.numberOfCells));
     pointsList.clear();
 }
