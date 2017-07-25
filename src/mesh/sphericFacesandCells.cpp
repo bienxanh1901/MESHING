@@ -16,12 +16,8 @@ void Mesh::leftRightBotTopPartsCells() {
 
     for(unsigned i = 0; i < cellNums[0]; i++) {
 
-<<<<<<< HEAD
-        unsigned i1 = i*layerP, i2 = (i == (cellNums[0] - 1)?0:i1 + layerP);
-=======
         unsigned i1 = i*layerP,
                  i2 = (i == (cellNums[0] - 1)?0:i1 + layerP);
->>>>>>> meshgrading
 
         // for cells connection with front
         if(i%edgeC != 0) i3+= sideP;
@@ -146,13 +142,6 @@ void Mesh::frontPartCells() {
 
     for(unsigned i = 1; i < edgeP - 2; i++) {
 
-<<<<<<< HEAD
-        unsigned i1 = baseP + (i - 1)*(edgeP - 2)*sideP, i2 = i1 + (edgeP - 2)*sideP;
-
-        for(unsigned j = 1; j < edgeP - 2; j++) {
-
-            unsigned j1 = (j - 1)*sideP, j2 = j1 + sideP;
-=======
         unsigned i1 = baseP + (i - 1)*(edgeP - 2)*sideP,
                  i2 = i1 + (edgeP - 2)*sideP;
 
@@ -160,7 +149,6 @@ void Mesh::frontPartCells() {
 
             unsigned j1 = (j - 1)*sideP,
                      j2 = j1 + sideP;
->>>>>>> meshgrading
 
             for(unsigned k = 1, k1 = 0; k < sideP; k++, k1++) {
 
@@ -241,13 +229,6 @@ void Mesh::rearPartCells() {
 
     for(unsigned i = 1; i < edgeP - 2; i++) {
 
-<<<<<<< HEAD
-        unsigned i1 = baseP + (i - 1)*(edgeP - 2)*sideP, i2 = i1 + (edgeP - 2)*sideP;
-
-        for(unsigned j = 1; j < edgeP - 2; j++) {
-
-            unsigned j1 = (j - 1)*sideP, j2 = j1 + sideP;
-=======
         unsigned i1 = baseP + (i - 1)*(edgeP - 2)*sideP,
                  i2 = i1 + (edgeP - 2)*sideP;
 
@@ -255,7 +236,6 @@ void Mesh::rearPartCells() {
 
             unsigned j1 = (j - 1)*sideP,
                      j2 = j1 + sideP;
->>>>>>> meshgrading
 
             for(unsigned k = 1, k1 = 0; k < sideP; k++, k1++) {
 
@@ -328,13 +308,6 @@ void Mesh::cubicPartCells() {
 
     for(unsigned k = 1; k < edgeP; k++) {
 
-<<<<<<< HEAD
-        unsigned k1 = outerP + (k - 1)*layerP, k2 = k1 + layerP;
-
-        for(unsigned i = 1; i < edgeP; i++) {
-
-            unsigned i1 = (i - 1)*edgeP, i2 = i1 + edgeP;
-=======
         unsigned k1 = outerP + (k - 1)*layerP,
                  k2 = k1 + layerP;
 
@@ -342,7 +315,6 @@ void Mesh::cubicPartCells() {
 
             unsigned i1 = (i - 1)*edgeP,
                      i2 = i1 + edgeP;
->>>>>>> meshgrading
 
             for(unsigned j = 1, j1 = 0; j < edgeP; j++, j1++) {
 

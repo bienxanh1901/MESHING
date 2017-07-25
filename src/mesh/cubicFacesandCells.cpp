@@ -19,12 +19,8 @@ void Mesh::cubicInternalFacesandCells() {
 
         for(unsigned k = 1; k <= cellNums[2]; k++) {
 
-<<<<<<< HEAD
-            unsigned k1 = startPoints + (k - 1)*basePoints, k2 = k1 + basePoints;
-=======
             unsigned k1 = startPoints + (k - 1)*basePoints,
                      k2 = k1 + basePoints;
->>>>>>> meshgrading
 
             for(unsigned j = 1; j <= cellNums[1]; j++) {
 
