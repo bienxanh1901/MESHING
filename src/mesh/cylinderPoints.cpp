@@ -28,7 +28,8 @@ void Mesh::basePoints(){
     //points of outer circular
     for(double theta = -PI/4; theta < 7*PI/4 - EPS; theta+= sizem[0]){
 
-        double costheta = cos(theta), sintheta = sin(theta),
+        double costheta = cos(theta),
+               sintheta = sin(theta),
                sizeX, sizeY,
                dimX, dimY;
 
@@ -51,9 +52,10 @@ void Mesh::basePoints(){
             sizeY = dimY/sideP;
 
         }else {
-
-            sizeX = dimX*(1.0 - ratiom[0])/(1.0 - pow(ratiom[0], sideP));
-            sizeY = dimY*(1.0 - ratiom[0])/(1.0 - pow(ratiom[0], sideP));
+            sizeX = dimX/sideP;
+            sizeY = dimY/sideP;
+            sizeX = (dimX - sizeX)*(1.0 - ratiom[0])/(1.0 - pow(ratiom[0], sideP - 1.0));
+            sizeY = (dimY - sizeY)*(1.0 - ratiom[0])/(1.0 - pow(ratiom[0], sideP - 1.0));
 
         }
 

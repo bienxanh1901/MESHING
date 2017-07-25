@@ -23,12 +23,14 @@ void Mesh::cubicBoundaryLeft(){
 
         for(unsigned k = 1; k <= cellNums[2]; k++){
 
-            unsigned k1 = startPoints + (k - 1)*basePoints, k2 = k1 + basePoints,
+            unsigned k1 = startPoints + (k - 1)*basePoints,
+                     k2 = k1 + basePoints,
                      k3 = startCells + (k - 1)*baseCells;
 
             for(unsigned j = 1; j <= cellNums[1]; j++){
 
-                unsigned j1 = (j - 1)*lengthPoints, j2 = j1 + lengthPoints,
+                unsigned j1 = (j - 1)*lengthPoints,
+                         j2 = j1 + lengthPoints,
                          j3 = (j - 1)*cellNums[1];
 
                 this->addFace(k1 + j1, k2 + j1, k2 + j2, k1 + j2);
@@ -64,12 +66,14 @@ void Mesh::cubicBoundaryRight(){
 
         for(unsigned k = 1; k <= cellNums[2]; k++){
 
-            unsigned k1 = startPoints + (k - 1)*basePoints, k2 = k1 + basePoints,
+            unsigned k1 = startPoints + (k - 1)*basePoints,
+                     k2 = k1 + basePoints,
                      k3 = startCells + (k - 1)*baseCells;
 
             for(unsigned j = 1; j <= cellNums[1]; j++){
 
-                unsigned j1 = j*lengthPoints - 1, j2 = j1 + lengthPoints,
+                unsigned j1 = j*lengthPoints - 1,
+                         j2 = j1 + lengthPoints,
                          j3 = j*cellNums[1];
 
                 this->addFace(k1 + j1, k1 + j2, k2 + j2, k2 + j1);
@@ -104,7 +108,8 @@ void Mesh::cubicBoundaryFront(){
 
         for(unsigned k = 1; k <= cellNums[2]; k++){
 
-            unsigned k1 = startPoints + (k - 1)*basePoints, k2 = k1 + basePoints,
+            unsigned k1 = startPoints + (k - 1)*basePoints,
+                     k2 = k1 + basePoints,
                      k3 = startCells + (k - 1)*baseCells;
 
             for(unsigned i = 1, i1 = 0; i <= cellNums[0]; i++, i1++){
@@ -142,7 +147,8 @@ void Mesh::cubicBoundaryRear() {
 
         for(unsigned k = 1; k <= cellNums[2]; k++){
 
-            unsigned k1 = startPoints + k*basePoints - lengthPoints, k2 = k1 + basePoints,
+            unsigned k1 = startPoints + k*basePoints - lengthPoints,
+                     k2 = k1 + basePoints,
                      k3 = startCells + k*baseCells - cellNums[0];
 
             for(unsigned i = 1, i1 = 0; i <= cellNums[0]; i++, i1++){
@@ -195,7 +201,8 @@ void Mesh::cubicBoundaryTop(){
 
     for(unsigned j = 1; j <= cellNums[1]; j++){
 
-        unsigned j1 = startPoints + (j - 1)*lengthPoints, j2 = j1 + lengthPoints,
+        unsigned j1 = startPoints + (j - 1)*lengthPoints,
+                 j2 = j1 + lengthPoints,
                  j3 = startCells + (j - 1)*cellNums[1];
 
         for(unsigned i = 1, i1 = 0; i <= cellNums[0]; i++, i1++){

@@ -11,24 +11,24 @@ void Mesh::topPartPoints() {
            sizeM = 2.0/(double)(cellNums[0]/4),
            sizeC = 2.0*corner/(double)(cellNums[0]/4);
 
-
+    TypeVector<double> unit, point;
     for (double x = -1.0, x2 = -corner; x <= 1.0 + EPS; x+= sizeM, x2+= sizeC) {
 
         for (double y = -1.0, y2 = -corner; y <= 1.0 + EPS; y+= sizeM, y2+= sizeC) {
 
-            TypeVector<double> unit(this->cubic2Spheric(x, y, 1.0)),
-                               point(unit - TypeVector<double>(x2, y2, corner));
+            unit = this->cubic2Spheric(x, y, 1.0),
+            point = unit - TypeVector<double>(x2, y2, corner);
             double norm = point.norm(),
-                   sizeM2,
-                   R2 = 1.0 - norm;
+                   R2 = 1.0 - norm,
+                   sizeM2;
 
                    if(ratiom[0] == 1.0) {
 
                         sizeM2 = norm/(double)(cellNums[0]/8);
 
                    } else {
-
-                        sizeM2 = norm*(1.0 - ratiom[0])/(1.0 - pow(ratiom[0], cellNums[0]/8));
+                        sizeM2 = norm/(double)(cellNums[0]/8);
+                        sizeM2 = (norm - sizeM2)*(1.0 - ratiom[0])/(1.0 - pow(ratiom[0], cellNums[0]/8 - 1));
 
                    }
 

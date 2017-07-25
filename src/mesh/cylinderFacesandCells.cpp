@@ -45,7 +45,8 @@ void Mesh::cylinderOuterPart(unsigned layer, unsigned k, unsigned startP, unsign
 
     for(unsigned j = 0; j < cellNums[0]; j++) {
 
-        unsigned j1 = j*sideP, j2 = (j == (cellNums[0] - 1)?0:(j1 + sideP));
+        unsigned j1 = j*sideP,
+                 j2 = (j == (cellNums[0] - 1)?0:(j1 + sideP));
 
         for(unsigned i = 1, i1 = 0; i < sideP; i++, i1++) {
 
@@ -107,7 +108,7 @@ void Mesh::cylinderOuterPart(unsigned layer, unsigned k, unsigned startP, unsign
 
         }
 
-        if(j < cellNums[0] -1) {
+        if(j < cellNums[0] - 1) {
 
             this->addFace(k1 + j2, k2 + j2, k2 + i2, k1 + i2);
             this->addOwner(this->meshInfo.numberOfCells);
@@ -137,7 +138,8 @@ void Mesh::cylinderInnerPart(unsigned layer, unsigned k, unsigned startP) {
 
     for(unsigned j = 1; j < edgeP; j++) {
 
-        unsigned j1 = (j - 1)*edgeP, j2 = j1 + edgeP;
+        unsigned j1 = (j - 1)*edgeP,
+                 j2 = j1 + edgeP;
 
         for(unsigned i = 1, i1 = 0; i < edgeP; i++, i1++) {
 

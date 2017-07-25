@@ -21,6 +21,7 @@ void Mesh::cubicPoints() {
 
         if(layer > 1) z0 = sizeZ;
 
+        // in case of TRAPEZIOD, we recalculate the dimension
         if(this->shape.getShape() == TRAPEZIOD){
 
             tanX = dimZ/((dimX - dim[3])/2.0);
@@ -56,6 +57,7 @@ void Mesh::cubicPoints() {
 
         for(double stepZ = z0; stepZ <= dimZ + EPS; stepZ+= sizeZ) {
 
+            // in case of TRAPEZIOD, we recalculate the dimension
             if(this->shape.getShape() == TRAPEZIOD && stepZ > z0){
 
                 dimX-= 2*sizeZ/tanX;

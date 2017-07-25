@@ -55,10 +55,7 @@ void Cell::calcVolumeCentroid(ContainerFaces& faces) {
 
 ContainerPoints Cell::findFace(unsigned vertice1, unsigned vertice2, unsigned vertice3, unsigned vertice4)
 {
-    ContainerPoints result;
-    result.push_back(this->points[vertice1]);
-    result.push_back(this->points[vertice2]);
-    result.push_back(this->points[vertice3]);
+    ContainerPoints result {this->points[vertice1], this->points[vertice2], this->points[vertice3]};
     if(this->elementType == HEX8) result.push_back(this->points[vertice4]);
     return result;
 }
