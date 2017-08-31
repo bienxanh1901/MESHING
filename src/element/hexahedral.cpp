@@ -2,7 +2,7 @@
 
 void Cell::hexahedralProperties() {
 
-    ContainerPoints pointsList;
+    ContainerPrtPoints pointsList;
     ContainerFaces faces;
     pointsList = findFace(0, 3, 7, 4);
     faces.push_back(Face(pointsList, QUAD4));

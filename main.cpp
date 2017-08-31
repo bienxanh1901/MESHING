@@ -36,6 +36,8 @@ int main(int argc, char* argv[])
         mesh.meshGeneration();
         mesh.writeTEACHMesh();
         mesh.writeVTUformat();
+        mesh.writeVTUtest();
+        mesh.writeVTUtest2();
     }
     cout << "bye bye World!" << "\n";
     return 0;

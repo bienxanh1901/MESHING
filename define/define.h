@@ -9,6 +9,7 @@ using namespace std;
 
 typedef vector<unsigned> ContainerIDs;
 typedef vector<Point> ContainerPoints;
+typedef vector<Point*> ContainerPrtPoints;
 typedef Array<double> ArrDouble;
 typedef Array<unsigned> ArrUnsgn;
 typedef vector<ArrDouble> ContainerArrD;

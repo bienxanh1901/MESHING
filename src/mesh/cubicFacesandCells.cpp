@@ -11,6 +11,7 @@ void Mesh::cubicInternalFacesandCells() {
 
     for(unsigned layer = 1; layer <= this->shape.getNumberOfLayers(); layer ++) {
 
+        unsigned ncells = this->meshInfo.numberOfCells;
         if(layer > 1) {
 
             startPoints+= basePoints*cellNums[2];
@@ -49,7 +50,7 @@ void Mesh::cubicInternalFacesandCells() {
                     //reach to the top boundaries
                     if(layer == this->shape.getNumberOfLayers() && k == cellNums[2]) continue;
 
-                    this->addFace(k1 + j1 + i1, k1 + j1 + i, k1 + j2 + i, k1 + j2 + i1);
+                    this->addFace(k2 + j1 + i1, k2 + j1 + i, k2 + j2 + i, k2 + j2 + i1);
                     this->addOwner(this->meshInfo.numberOfCells);
                     this->addNeighbor(this->meshInfo.numberOfCells + baseCells);
                 }
@@ -58,7 +59,7 @@ void Mesh::cubicInternalFacesandCells() {
 
         //restore cells of each layer
         if(layer == 1) this->cellsOfLayer.push_back(this->meshInfo.numberOfCells);
-        else this->cellsOfLayer.push_back(this->meshInfo.numberOfCells - this->cellsOfLayer[layer - 2]);
+        else this->cellsOfLayer.push_back(this->meshInfo.numberOfCells - ncells);
     }
 
     this->meshInfo.numberOfInternalFaces = this->meshInfo.numberOfFaces;

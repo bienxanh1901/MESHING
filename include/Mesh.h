@@ -37,6 +37,7 @@ class Mesh
         void meshGeneration();
         void writeVTUformat();
         void writeVTUtest();
+        void writeVTUtest2();
         void writeTEACHMesh();
     protected:
     private:
@@ -59,9 +60,9 @@ class Mesh
 
         void addPoint(double , double , double);
         void addPoint(TypeVector<double>);
-        void addFace(ContainerPoints&);
+        void addFace(ContainerPrtPoints&);
         void addFace(unsigned, unsigned, unsigned, unsigned);
-        void addCell(ContainerPoints&);
+        void addCell(ContainerPrtPoints&);
         void addCell(unsigned, unsigned, unsigned, unsigned,
                      unsigned, unsigned, unsigned, unsigned);
         void addOwner(unsigned);

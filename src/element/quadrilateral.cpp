@@ -7,8 +7,8 @@ void Face::quadrilateralProperties() {
 
 void Face::quadrilateralArea() {
     TypeVector<double> AC, BD, crossproduct;
-    AC = this->points[0] - this->points[2];
-    BD = this->points[1] - this->points[3];
+    AC = *(this->points[0]) - *(this->points[2]);
+    BD = *(this->points[1]) - *(this->points[3]);
     crossproduct = AC.cross(BD);
     this->area = 0.5*crossproduct.norm();
 }
@@ -18,10 +18,10 @@ void Face::quadrilateralCentroid() {
     TypeVector<double> bimedian1, bimedian2;
     TypeVector<double> V, V1, V2;
     double a;
-    centerAB = (this->points[0] + this->points[1])*0.5;
-    centerBC = (this->points[1] + this->points[2])*0.5;
-    centerCD = (this->points[2] + this->points[3])*0.5;
-    centerDA = (this->points[3] + this->points[0])*0.5;
+    centerAB = (*(this->points[0]) + *(this->points[1]))*0.5;
+    centerBC = (*(this->points[1]) + *(this->points[2]))*0.5;
+    centerCD = (*(this->points[2]) + *(this->points[3]))*0.5;
+    centerDA = (*(this->points[3]) + *(this->points[0]))*0.5;
 
     bimedian1 = centerCD - centerAB;
     bimedian2 = centerDA - centerBC;
@@ -35,7 +35,7 @@ void Face::quadrilateralCentroid() {
 
 void Face::quadrilateralNormal() {
     TypeVector<double> AC, BD;
-    AC = this->points[0] - this->points[2];
-    BD = this->points[1] - this->points[3];
+    AC = *(this->points[0]) - *(this->points[2]);
+    BD = *(this->points[1]) - *(this->points[3]);
     this->normalVector = AC.cross(BD)/(2.0*area);
 }

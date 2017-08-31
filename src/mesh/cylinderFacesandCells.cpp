@@ -10,6 +10,7 @@ void Mesh::cylinderInternalFacesandCells() {
 
     for(unsigned layer = 1; layer <= this->shape.getNumberOfLayers(); layer ++) {
 
+        unsigned ncells = this->meshInfo.numberOfCells;
         if(layer > 1) {
 
             startP+= baseP*cellNums[1];
@@ -26,7 +27,7 @@ void Mesh::cylinderInternalFacesandCells() {
 
         //restore cells of each layer
         if(layer == 1) this->cellsOfLayer.push_back(this->meshInfo.numberOfCells);
-        else this->cellsOfLayer.push_back(this->meshInfo.numberOfCells - this->cellsOfLayer[layer - 2]);
+        else this->cellsOfLayer.push_back(this->meshInfo.numberOfCells - ncells);
     }
 
     this->meshInfo.numberOfInternalFaces = this->meshInfo.numberOfFaces;

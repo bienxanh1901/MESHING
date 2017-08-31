@@ -20,25 +20,27 @@ void Mesh::topPartPoints() {
             point = unit - TypeVector<double>(x2, y2, corner);
             double norm = point.norm(),
                    R2 = 1.0 - norm,
-                   sizeM2;
+                   deltaS, deltaE;
 
-                   if(ratiom[0] == 1.0) {
+            if(ratiom[0] == 1.0) {
 
-                        sizeM2 = norm/(double)(cellNums[0]/8);
+                deltaS = norm/(double)(cellNums[0]/8);
+                deltaE = EPS;
 
-                   } else {
-                        sizeM2 = norm/(double)(cellNums[0]/8);
-                        sizeM2 = (norm - sizeM2)*(1.0 - ratiom[0])/(1.0 - pow(ratiom[0], cellNums[0]/8 - 1));
+            } else {
+                double k = pow(ratiom[0], cellNums[0]/8 - 1);
+                deltaS = norm*(1.0 - ratiom[0])/(1.0 - pow(ratiom[0], cellNums[0]/8));
+                deltaE = k*deltaS - EPS;
 
-                   }
+            }
 
-            for( double step = 1.0; step > R2 + EPS; step-= sizeM2) {
+            for( double step = 1.0; step > R2 + deltaE; step-= deltaS) {
 
                 this->addPoint(unit*(step*R));
 
                 if(step < 1.0 && ratiom[0] != 1.0) {
 
-                    sizeM2*= ratiom[0];
+                    deltaS*= ratiom[0];
 
                 }
 

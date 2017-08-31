@@ -42,22 +42,23 @@ void Mesh::cylinderBoundariesAround()
     unsigned sideP = cellNums[0]/8,
              baseP = cellNums[0]*sideP + pow(cellNums[0]/4 + 1, 2),
              baseC = cellNums[0]*sideP + pow(cellNums[0]/4, 2),
-             startP = 0;
+             startPoints = 0, startCells = 0, nfaces = 0;
 
     // left boundary
     for(unsigned layer = 1; layer <= this->shape.getNumberOfLayers(); layer++) {
 
         if(layer > 1) {
 
-            startP+= baseP*cellNums[1];
+            startPoints+= baseP*cellNums[1];
+            startCells+= baseC*cellNums[1];
             cellNums = ArrUnsgn(CELL(layer));
         }
 
         for(unsigned k = 1; k <= cellNums[1]; k++){
 
-            unsigned k1 = startP + (k - 1)*baseP,
+            unsigned k1 = startPoints + (k - 1)*baseP,
                      k2 = k1 + baseP,
-                     k3 = (k - 1)*baseC;
+                     k3 = startCells + (k - 1)*baseC;
 
             for(unsigned j = 1; j <= cellNums[0]/2; j++){
 
@@ -68,28 +69,32 @@ void Mesh::cylinderBoundariesAround()
                 this->addOwner(k3 + j1 + 1);
             }
         }
+        nfaces+= cellNums[0]*cellNums[1]/2;
     }
 
-    this->boundaries.push_back(this->shape.getNumberOfLayers()*cellNums[0]*cellNums[1]/2);
+    this->boundaries.push_back(nfaces);
 
 
     // right boundary
-    startP = 0;
+    startPoints = 0;
+    startCells = 0;
+    nfaces = 0;
     cellNums = ArrUnsgn(CELL(1));
 
     for(unsigned layer = 1; layer <= this->shape.getNumberOfLayers(); layer++) {
 
         if(layer > 1) {
 
-            startP+= baseP*cellNums[1];
+            startPoints+= baseP*cellNums[1];
+            startCells+= baseC*cellNums[1];
             cellNums = ArrUnsgn(CELL(layer));
         }
 
         for(unsigned k = 1; k <= cellNums[1]; k++) {
 
-            unsigned k1 = startP + (k - 1)*baseP,
+            unsigned k1 = startPoints + (k - 1)*baseP,
                      k2 = k1 + baseP,
-                     k3 = (k - 1)*baseC;
+                     k3 = startCells + (k - 1)*baseC;
 
             for(unsigned j = cellNums[0]/2 + 1; j <= cellNums[0]; j++){
 
@@ -100,7 +105,8 @@ void Mesh::cylinderBoundariesAround()
                 this->addOwner(k3 + j1 + 1);
             }
         }
+        nfaces+= cellNums[0]*cellNums[1]/2;
     }
 
-    this->boundaries.push_back(this->shape.getNumberOfLayers()*cellNums[0]*cellNums[1]/2);
+    this->boundaries.push_back(nfaces);
 }

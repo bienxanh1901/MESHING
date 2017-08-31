@@ -30,43 +30,48 @@ void Mesh::basePoints(){
 
         double costheta = cos(theta),
                sintheta = sin(theta),
-               sizeX, sizeY,
-               dimX, dimY;
+               dimX, dimY, x2, y2,
+               deltaSX, deltaSY, deltaEX, deltaEY;
 
         if(fabs(costheta) >= 1.0/sqrt(2.0)){
 
-            dimX = majorR - cornerX/fabs(costheta);
-            dimY = minorR - cornerY/fabs(costheta);
+            x2 = cornerX/fabs(costheta);
+            y2 = cornerY/fabs(costheta);
 
         }else {
 
-            dimX = majorR - cornerX/fabs(sintheta);
-            dimY = minorR - cornerY/fabs(sintheta);
+            x2 = cornerX/fabs(sintheta);
+            y2 = cornerY/fabs(sintheta);
 
         }
 
+        dimX = majorR - x2;
+        dimY = minorR - y2;
 
         if(ratiom[0] == 1.0){
 
-            sizeX = dimX/sideP;
-            sizeY = dimY/sideP;
+            deltaSX = dimX/sideP;
+            deltaSY = dimY/sideP;
+            deltaEX = EPS;
+            deltaEY = EPS;
 
         }else {
-            sizeX = dimX/sideP;
-            sizeY = dimY/sideP;
-            sizeX = (dimX - sizeX)*(1.0 - ratiom[0])/(1.0 - pow(ratiom[0], sideP - 1.0));
-            sizeY = (dimY - sizeY)*(1.0 - ratiom[0])/(1.0 - pow(ratiom[0], sideP - 1.0));
+            double k = pow(ratiom[0], sideP - 1.0);
+            deltaSX = dimX*(1.0 - ratiom[0])/(1.0 - pow(ratiom[0], sideP));
+            deltaSY = dimY*(1.0 - ratiom[0])/(1.0 - pow(ratiom[0], sideP));
+            deltaEX = k*deltaSX - EPS;
+            deltaEY = k*deltaSY - EPS;
 
         }
 
-        for(double x = 0.0, y = 0.0; x < dimX - EPS && y < dimY - EPS; x+= sizeX, y+= sizeY){
+        for(double x = majorR, y = minorR; x > x2 + deltaEX && y > y2 + deltaEY; x-= deltaSX, y-= deltaSY){
 
-            this->addPoint((majorR - x)*sintheta, (minorR - y)*costheta, 0.0);
+            this->addPoint(x*sintheta, y*costheta, 0.0);
 
-            if(x > 0.0 && y > 0.0 && ratiom[0] != 1.0) {
+            if(x < majorR && y < minorR && ratiom[0] != 1.0) {
 
-                    sizeX*= ratiom[0];
-                    sizeY*= ratiom[0];
+                    deltaSX*= ratiom[0];
+                    deltaSY*= ratiom[0];
 
             }
         }
@@ -102,7 +107,7 @@ void Mesh::extrudePoints() {
         double sizeZ = sizem[1];
 
 
-        for(double z = sizem[1]; z <= dim[1] + EPS; z+= sizeZ) {
+        for(double z = sizeZ; z <= dim[1] + EPS; z+= sizeZ) {
 
             for(unsigned i = 0; i < basePoints; i++){
 

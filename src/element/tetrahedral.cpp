@@ -1,7 +1,7 @@
 #include "../../include/Cell.h"
 
 void Cell::tetrahedralProperties() {
-    ContainerPoints pointsList;
+    ContainerPrtPoints pointsList;
     ContainerFaces faces;
     pointsList = findFace(0, 1, 2);
     faces.push_back(Face(pointsList, TRI3));

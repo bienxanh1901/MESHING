@@ -15,18 +15,21 @@ class Face : public Element {
             this->normalVector = p.normalVector;
         }
 
-        Face(Point*, elemType, unsigned , unsigned );
 
-        Face(const ContainerPoints&, elemType, unsigned = 0 );
+        Face(const ContainerPrtPoints&, elemType, unsigned = 0 );
 
         Face& operator=(const Face&);
 
         TypeVector<double> getNormalVector() {
+
             return this->normalVector;
+
         }
 
         double getArea() {
+
             return this->area;
+
         }
         ostream& printFaceProperties(ostream&);
 

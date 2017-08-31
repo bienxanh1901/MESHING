@@ -276,7 +276,7 @@ void Mesh::rearPartCells() {
 
             if(i < edgeP - 3) {
 
-                this->addFace(i2 + j1, k1 + edgeP, k1 + edgeP, i2 + j2);
+                this->addFace(i2 + j1, k1 + edgeP, k2 + edgeP, i2 + j2);
                 this->addOwner(this->meshInfo.numberOfCells);
                 this->addNeighbor(this->meshInfo.numberOfCells + (edgeP - 3)*sideP);
 
